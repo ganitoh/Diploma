@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application", "Ide
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.ApplicatinContract", "Identity\Identity.ApplicatinContract\Identity.ApplicatinContract.csproj", "{06ADBFA9-B4B0-45C0-91F8-73238DFABAA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.API", "Identity\Identity.API\Identity.API.csproj", "{B3A5AD36-4053-45E3-8E31-498AD91AE6F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,7 @@ Global
 		{196184FD-DE41-4023-9EE2-2B281D644220} = {473D9E9B-01D9-41B3-8BC5-88D8EA08118E}
 		{119B0DC8-2EB9-449D-945D-133643ED19AF} = {473D9E9B-01D9-41B3-8BC5-88D8EA08118E}
 		{06ADBFA9-B4B0-45C0-91F8-73238DFABAA1} = {473D9E9B-01D9-41B3-8BC5-88D8EA08118E}
+		{B3A5AD36-4053-45E3-8E31-498AD91AE6F4} = {473D9E9B-01D9-41B3-8BC5-88D8EA08118E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D612DDFB-D038-498A-9939-3D97F79E1055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -38,5 +41,9 @@ Global
 		{06ADBFA9-B4B0-45C0-91F8-73238DFABAA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06ADBFA9-B4B0-45C0-91F8-73238DFABAA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06ADBFA9-B4B0-45C0-91F8-73238DFABAA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3A5AD36-4053-45E3-8E31-498AD91AE6F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3A5AD36-4053-45E3-8E31-498AD91AE6F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3A5AD36-4053-45E3-8E31-498AD91AE6F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3A5AD36-4053-45E3-8E31-498AD91AE6F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

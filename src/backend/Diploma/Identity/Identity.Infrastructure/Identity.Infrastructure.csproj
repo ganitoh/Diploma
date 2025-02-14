@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Persistance\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Identity.Application\Identity.Application.csproj" />
       <ProjectReference Include="..\Identity.Domain\Identity.Domain.csproj" />
     </ItemGroup>
@@ -18,12 +14,17 @@
     <ItemGroup>
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="Common">
         <HintPath>..\..\..\Common\Common\bin\Debug\net8.0\Common.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Persistance\Migrations\" />
     </ItemGroup>
 
 </Project>
