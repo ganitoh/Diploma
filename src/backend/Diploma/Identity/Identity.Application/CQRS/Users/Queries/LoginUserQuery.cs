@@ -6,15 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Application.CQRS.Users.Queries;
 
-public record class  LoginUserRequest(string Password, string Email) : IQuery<string>;
+public record class  LoginUserQuery(string Password, string Email) : IQuery<string>;
 
-internal class LoginUserRequestHandler : IQueryHandler<LoginUserRequest, string>
+internal class LoginUserQueryHandler : IQueryHandler<LoginUserQuery, string>
 {
     private readonly IIdentityDbContext _identityDbContext;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
 
-    public LoginUserRequestHandler(
+    public LoginUserQueryHandler(
         IIdentityDbContext identityDbContext,
         IPasswordHasher passwordHasher,
         IJwtProvider jwtProvider)
@@ -24,15 +24,15 @@ internal class LoginUserRequestHandler : IQueryHandler<LoginUserRequest, string>
         _jwtProvider = jwtProvider;
     }
 
-    public async Task<string> Handle(LoginUserRequest request, CancellationToken cancellationToken)
+    public async Task<string> Handle(LoginUserQuery query, CancellationToken cancellationToken)
     {
         var user = await _identityDbContext.Users
-            .FirstOrDefaultAsync(u => u.Email == request.Email,cancellationToken);
+            .FirstOrDefaultAsync(u => u.Email == query.Email,cancellationToken);
 
         if (user is null)
             throw new NotFoundException("Пользователь не найден");
 
-        if (!_passwordHasher.Verify(request.Password, user.PasswordHash))
+        if (!_passwordHasher.Verify(query.Password, user.PasswordHash))
             throw new ApplicationException("Неверный пароль");
 
         var token = _jwtProvider.GenerateToken(user);

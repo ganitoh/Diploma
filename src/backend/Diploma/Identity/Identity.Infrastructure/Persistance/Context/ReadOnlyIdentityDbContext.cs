@@ -6,7 +6,7 @@ namespace Identity.Infrastructure.Persistance.Context;
 
 public class ReadOnlyIdentityDbContext : IIdentityDbContext
 {
-    public IQueryable<User> Users { get; }
+    public IQueryable<User> Users => Set<User>();
     
     private readonly IdentityDbContext _dbContext;
 
