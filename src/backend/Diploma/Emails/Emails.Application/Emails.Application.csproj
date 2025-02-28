@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Emails.Domain\Emails.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Common">
+        <HintPath>..\..\..\Common\Common\bin\Debug\net8.0\Common.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="14.0.0" />
+      <PackageReference Include="MailKit" Version="4.10.0" />
+      <PackageReference Include="MediatR" Version="12.4.1" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="CQRS\Emails\Comamnds\" />
+    </ItemGroup>
+
+</Project>

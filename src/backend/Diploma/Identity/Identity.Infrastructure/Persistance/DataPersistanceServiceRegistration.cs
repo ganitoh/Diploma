@@ -1,6 +1,4 @@
-﻿using Common.Infrastructure.UnitOfWork;
-using Common.Infrastructure.UserProvider;
-using Identity.Application.Common.Persistance;
+﻿using Common.Infrastructure;
 using Identity.Infrastructure.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,12 +15,8 @@ public static class DataPersistanceServiceRegistration
         services.AddDbContext<IdentityDbContext>(options => options
             .UseNpgsql(configuration.GetConnectionString("IdentityDbContext"))
         );
-
-        services.AddScoped<IUserProvider, UserProvider>();
-        services.AddScoped<IUnitOfWork, UnitOfWork<IdentityDbContext>>();
-        services.AddScoped<IIdentityDbContext, ReadOnlyIdentityDbContext>();
         
-        services.AddHttpContextAccessor();
+        services.AddInfrastructureCommonService<IdentityDbContext>();
 
         return services;
     }

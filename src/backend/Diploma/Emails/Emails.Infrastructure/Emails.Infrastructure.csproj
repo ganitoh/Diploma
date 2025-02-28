@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Persistance\MIgrations\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.2" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Common">
+        <HintPath>..\..\..\Common\Common\bin\Debug\net8.0\Common.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Emails.Application\Emails.Application.csproj" />
+      <ProjectReference Include="..\Emails.Domain\Emails.Domain.csproj" />
+    </ItemGroup>
+
+</Project>
