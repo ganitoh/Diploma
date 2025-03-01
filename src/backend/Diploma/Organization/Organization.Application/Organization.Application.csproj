@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Emails.Domain\Emails.Domain.csproj" />
+      <ProjectReference Include="..\Organization.ApplicationContract\Organization.ApplicationContract.csproj" />
+      <ProjectReference Include="..\Organization.Domain\Organization.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,10 +18,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="CQRS\Organization\Queries\" />
+      <Folder Include="CQRS\Organization\Validators\" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="AutoMapper" Version="14.0.0" />
-      <PackageReference Include="MailKit" Version="4.10.0" />
       <PackageReference Include="MediatR" Version="12.4.1" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
     </ItemGroup>
 
 </Project>

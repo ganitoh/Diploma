@@ -2,14 +2,16 @@
 using System.Text.Json;
 using Common.API;
 using Common.Application.Exceptions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
-namespace Identity.API.MIddlewares;
+namespace Common.API;
 
 public class ExceptionHandlingMiddleware
 {
 
     private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly ILogger _logger;
 
     public ExceptionHandlingMiddleware(
         RequestDelegate next,

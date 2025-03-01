@@ -1,9 +1,9 @@
 using Common.API;
 using Common.Infrastructure.Migrator;
-using Identity.API.Cors;
-using Identity.Application;
-using Identity.Infrastructure;
-using Identity.Infrastructure.Persistance.Context;
+using Organization.API.Cors;
+using Organization.Application;
+using Organization.Infrastructure;
+using Organization.Infrastructure.Persistance.Context;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,10 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSerilog();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.AddIdentityApplication();
-builder.Services.AddIdentityInfrastructure(builder.Configuration);
+builder.Services.AddOrganizationApplication();
+builder.Services.AddOrganizationInfrastructure(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
-
 
 var app = builder.Build();
 
@@ -29,6 +28,6 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseCorsPolicy();
-app.UseDbMigrator<IdentityDbContext>();
+app.UseDbMigrator<OrganizationDbContext>();
 
 app.Run();
