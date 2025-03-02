@@ -1,9 +1,11 @@
 ﻿using Common.API;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Application.CQRS.Organization.Commands;
 
 namespace Organization.API.Controllers;
 
+[Authorize]
 public class OrganizationController : BaseApiController
 {
     [HttpPost(nameof(CreateOrganization))]

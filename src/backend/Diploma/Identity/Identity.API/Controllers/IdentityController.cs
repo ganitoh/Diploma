@@ -15,7 +15,7 @@ public class IdentityController : BaseApiController
     public async Task<IActionResult> Login([FromQuery] LoginUserQuery command)
     {
         var jwtToken =  await Mediator.Send(command);
-        Response.Cookies.Append("jwt-token", jwtToken);
+        Response.Cookies.Append("access_token", jwtToken);
         return Ok(ApiResponse<string>.Success(jwtToken));
     }
     
