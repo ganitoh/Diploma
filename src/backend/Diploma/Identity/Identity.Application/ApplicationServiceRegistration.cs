@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Application;
@@ -11,6 +12,7 @@ public static class ApplicationServiceRegistration
         
         services.AddMediatR(cfg=> cfg.RegisterServicesFromAssembly(assembly));
         services.AddAutoMapper(assembly);
+        services.AddValidatorsFromAssembly(assembly);
         
         return services;
     }
