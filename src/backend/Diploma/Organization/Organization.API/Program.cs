@@ -1,3 +1,4 @@
+using System.Reflection;
 using Common.API;
 using Common.Infrastructure.Migrator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,6 +16,10 @@ builder.Services.AddSerilog();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo() { Title = "My API", Version = "v1" });
+    
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
     
     options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
