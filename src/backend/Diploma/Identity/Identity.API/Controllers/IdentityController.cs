@@ -7,8 +7,9 @@ namespace Identity.API.Controllers;
 
 public class IdentityController : BaseApiController
 {
+    
     /// <summary>
-    /// Регистрация пользователя
+    /// Вход пользователя в систему
     /// </summary>
     [HttpGet(nameof(Login))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<string>))]
@@ -20,7 +21,7 @@ public class IdentityController : BaseApiController
     }
     
     /// <summary>
-    /// Вход пользователя в систему
+    /// Регистрация пользователя
     /// </summary>
     [HttpPost(nameof(Registration))]
     [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(ApiResponse<string>))]

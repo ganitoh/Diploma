@@ -1,25 +1,14 @@
-﻿using Common.Domain;
-using Organization.Domain.Enums;
+﻿using Organization.Domain.Enums;
 
-namespace Organization.Domain.Models;
+namespace Organization.ApplicationContract.Dtos;
 
-/// <summary>
-/// Заказ
-/// </summary>
-public class Order : Entity<int>
+public class OrderDto
 {
-    public Order(int sellerOrganizationId, int buyerOrganizationId, ICollection<Product> products)
-    {
-        SellerOrganizationId = sellerOrganizationId;
-        BuyerOrganizationId = buyerOrganizationId;
-        Products = products;
-        CreateDate = DateTime.Now;
-        Status =  OrderStatus.Created;
-        CalculateTotalPrice();
-    }
-
-    private Order() { }
-
+    /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
     /// <summary>
     /// Итоговая стоимость закзаа
     /// </summary>
@@ -48,7 +37,7 @@ public class Order : Entity<int>
     /// <summary>
     /// Продающая организация
     /// </summary>
-    public Organization SellerOrganization { get; set; }
+    public OrganizationDto SellerOrganization { get; set; }
     
     /// <summary>
     /// Идентификатор покупающей организации
@@ -58,15 +47,10 @@ public class Order : Entity<int>
     /// <summary>
     /// Покупающая организация
     /// </summary>
-    public Organization BuyerOrganization { get; set; }
+    public OrganizationDto BuyerOrganization { get; set; }
     
     /// <summary>
     /// Товары
     /// </summary>
-    public ICollection<Product> Products { get; set; }
-
-    private void CalculateTotalPrice()
-    {
-        TotalPrice = Products.Sum(x => x.Price);
-    }
+    public ICollection<ProductDto> Products { get; set; }
 }

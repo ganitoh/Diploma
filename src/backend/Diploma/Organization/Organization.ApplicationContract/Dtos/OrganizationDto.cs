@@ -1,12 +1,12 @@
-﻿using Common.Domain;
+﻿namespace Organization.ApplicationContract.Dtos;
 
-namespace Organization.Domain.Models;
-
-/// <summary>
-/// Организация
-/// </summary>
-public class Organization : Entity<int>
+public class OrganizationDto
 {
+    /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
     /// <summary>
     /// Название
     /// </summary>
@@ -35,15 +35,15 @@ public class Organization : Entity<int>
     /// <summary>
     /// Продукция для продажи
     /// </summary>
-    public ICollection<Product> Products { get; set; }
+    public ICollection<ProductDto> Products { get; set; }
     
     /// <summary>
     /// Заказы на продажу
     /// </summary>
-    public ICollection<Order> SellOrders { get; set; }
+    public ICollection<OrderDto> SellOrders { get; set; }
     
     /// <summary>
     /// Заказы на покупку
     /// </summary>
-    public ICollection<Order> BuyOrders { get; set; }
+    public ICollection<OrderDto> BuyOrders { get; set; }
 }

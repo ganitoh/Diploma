@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Organization.Application.CQRS.Products.Commands;
+using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Reqeusts;
 using Organization.Domain.Models;
 
@@ -10,5 +12,8 @@ public class OrganizationProfile : Profile
     {
         CreateMap<CreateOrganizationRequest, Domain.Models.Organization>();
         CreateMap<CreateProductRequest, Product>();
+
+        CreateMap<Product, ProductDto>();
+        CreateMap<CreateProductCommand, Product>();
     }
 }

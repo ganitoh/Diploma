@@ -11,7 +11,9 @@ public class OrganizationConfiguration  : IEntityTypeConfiguration<Domain.Models
         
         builder.HasKey(x => x.Id);
         
-        builder.Property(x => x.Email).HasMaxLength(255);
+        builder.Property(x=>x.Name).IsRequired();
+        builder.Property(x => x.Description).HasMaxLength(255);
+        builder.Property(x => x.Email).HasMaxLength(120);
         
         builder
             .HasMany(x=>x.Products)
