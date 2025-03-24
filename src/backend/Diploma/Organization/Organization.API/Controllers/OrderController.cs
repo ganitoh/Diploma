@@ -12,7 +12,7 @@ public class OrderController : BaseApiController
     /// Получить все закаазы на продажу для организации
     /// </summary>
     [HttpGet(nameof(GetSalesOrder))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<OrderDto>>))]
     public async Task<IActionResult> GetSalesOrder([FromQuery] int organizationId)
     {
         var result = await Mediator.Send(new GetSalesOrdersByOrganizationQuery(organizationId));

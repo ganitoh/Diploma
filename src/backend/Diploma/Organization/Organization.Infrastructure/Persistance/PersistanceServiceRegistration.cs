@@ -21,6 +21,8 @@ public static class PersistanceServiceRegistration
 
         services.AddScoped<IReadOnlyOrganizationDbContext, ReadOnlyOrganizationDbContext>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
         
         return services;
     }

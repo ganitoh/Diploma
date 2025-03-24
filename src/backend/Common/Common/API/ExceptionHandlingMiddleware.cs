@@ -29,8 +29,7 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            await HandleExceptionAsync(context, e);
         }
     }
 

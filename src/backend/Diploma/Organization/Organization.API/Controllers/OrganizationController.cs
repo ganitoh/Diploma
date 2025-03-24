@@ -14,7 +14,7 @@ public class OrganizationController : BaseApiController
     /// Получить список всех организаций
     /// </summary>
     [HttpPost(nameof(GetAll))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedList<OrganizationDto>))]
     public async Task<IActionResult> GetAll([FromQuery] PagedRequest request)
     {
         var result = await Mediator.Send(new GetAllOrganizationsQuery(request));
