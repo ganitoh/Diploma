@@ -12,8 +12,8 @@ using Organization.Infrastructure.Persistance.Context;
 namespace Organization.Infrastructure.Persistance.Migrations
 {
     [DbContext(typeof(OrganizationDbContext))]
-    [Migration("20250319151957_InitMainBuisnesLogic")]
-    partial class InitMainBuisnesLogic
+    [Migration("20250324162149_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,10 +83,15 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
 
                     b.Property<string>("INN")
                         .IsRequired()

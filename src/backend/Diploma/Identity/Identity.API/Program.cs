@@ -15,7 +15,6 @@ builder.Services.AddIdentityApplication();
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -25,10 +24,10 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseDbMigrator<IdentityDbContext>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseCorsPolicy();
-app.UseDbMigrator<IdentityDbContext>();
 
 app.Run();

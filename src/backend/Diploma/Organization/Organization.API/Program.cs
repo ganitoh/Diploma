@@ -31,11 +31,11 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseDbMigrator<OrganizationDbContext>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseCorsPolicy();
-app.UseDbMigrator<OrganizationDbContext>();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -17,7 +17,7 @@ public static class InfrastructureServiceRegistration
         services.AddDbMigrator();
 
         services.AddScoped<IEmailRepository, EmailRepository>();
-        services.AddScoped<ISmtpClient, SmtpClient>();
+        services.AddScoped<IMailService, MailService>();
 
         services.AddOptions<SmtpConfig>().Bind(configuration.GetSection(nameof(SmtpConfig)));
         

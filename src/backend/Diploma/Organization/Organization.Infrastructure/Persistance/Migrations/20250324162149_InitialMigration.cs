@@ -7,35 +7,31 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Organization.Infrastructure.Persistance.Migrations
 {
     /// <inheritdoc />
-    public partial class InitMainBuisnesLogic : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
-                schema: "organization",
-                table: "organization",
-                type: "character varying(255)",
-                maxLength: 255,
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.EnsureSchema(
+                name: "organization");
 
-            migrationBuilder.AddColumn<string>(
-                name: "INN",
+            migrationBuilder.CreateTable(
+                name: "organization",
                 schema: "organization",
-                table: "organization",
-                type: "text",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "LegalAddress",
-                schema: "organization",
-                table: "organization",
-                type: "text",
-                nullable: false,
-                defaultValue: "");
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    INN = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: false),
+                    LegalAddress = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_organization", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "order",
@@ -164,20 +160,9 @@ namespace Organization.Infrastructure.Persistance.Migrations
                 name: "product",
                 schema: "organization");
 
-            migrationBuilder.DropColumn(
-                name: "Email",
-                schema: "organization",
-                table: "organization");
-
-            migrationBuilder.DropColumn(
-                name: "INN",
-                schema: "organization",
-                table: "organization");
-
-            migrationBuilder.DropColumn(
-                name: "LegalAddress",
-                schema: "organization",
-                table: "organization");
+            migrationBuilder.DropTable(
+                name: "organization",
+                schema: "organization");
         }
     }
 }
