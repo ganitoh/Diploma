@@ -2,16 +2,13 @@
 
 namespace Organization.Domain.Enums;
 
-/// <summary>
-/// Статусы заказа
-/// </summary>
 public enum OrderStatus
 {
     [Description("Создан")]
     Created = 1,
-    [Description("Формируется")]
+    [Description("Собирается")]
     Collected,
-    [Description("В доставке")]
+    [Description("На доставке")]
     InDelivery,
     [Description("Закрыт")]
     Close

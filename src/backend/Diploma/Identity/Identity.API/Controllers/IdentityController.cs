@@ -15,7 +15,7 @@ public class IdentityController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<string>))]
     public async Task<IActionResult> Login([FromQuery] LoginUserQuery command)
     {
-        var jwtToken =  await Mediator.Send(command);
+        var jwtToken = await Mediator.Send(command);
         Response.Cookies.Append("access_token", jwtToken);
         return Ok(ApiResponse<string>.Success(jwtToken));
     }

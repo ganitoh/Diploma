@@ -1,6 +1,7 @@
+using System.Reflection;
 using Common.API;
+using Common.API.Extenisions;
 using Common.Infrastructure.Migrator;
-using Identity.API.Cors;
 using Identity.Application;
 using Identity.Infrastructure;
 using Identity.Infrastructure.Persistance.Context;
@@ -9,7 +10,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSerilog();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerDocumentation(Assembly.GetExecutingAssembly().GetName().Name!);
 builder.Services.AddControllers();
 builder.Services.AddIdentityApplication();
 builder.Services.AddIdentityInfrastructure(builder.Configuration);

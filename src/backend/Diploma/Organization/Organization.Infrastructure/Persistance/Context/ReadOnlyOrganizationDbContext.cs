@@ -1,23 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Organization.Application.Common.Persistance;
+using Organization.Application.Commnon.Persistance;
+using Organization.Domain.ManyToMany;
 using Organization.Domain.Models;
 
 namespace Organization.Infrastructure.Persistance.Context;
 
-public class ReadOnlyOrganizationDbContext : IReadOnlyOrganizationDbContext
+public class ReadonlyOrganizationDbContext : IReadonlyOrganizationDbContext
 {
-    public IQueryable<Domain.Models.Organization> Organizations { get; set; }
-    public IQueryable<Order> Orders { get; set; }
-    public IQueryable<Product> Products { get; set; }
+    public IQueryable<Order> Orders => Set<Order>();
+    public IQueryable<Product> Products => Set<Product>();
+    public IQueryable<Domain.Models.Organization> Organizations => Set<Domain.Models.Organization>();
+    public IQueryable<OrderProduct> OrderProducts => Set<OrderProduct>();
     
-    private readonly OrganizationDbContext  _dbContext;
+    private readonly OrganizationDbContext _dbContext;
 
-    public ReadOnlyOrganizationDbContext(OrganizationDbContext context)
+    public ReadonlyOrganizationDbContext(OrganizationDbContext dbContext)
     {
-        _dbContext = context;
+        _dbContext = dbContext;
     }
-    
-    private IQueryable<TEntity> Set<TEntity>() where TEntity : class
+
+    public IQueryable<TEntity> Set<TEntity>() where TEntity : class
     {
         return _dbContext.Set<TEntity>().AsNoTracking();
     }

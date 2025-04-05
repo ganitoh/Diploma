@@ -7,7 +7,6 @@ namespace Common.API;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
-
 public class BaseApiController : ControllerBase
 {
     private ISender _mediator = null!;

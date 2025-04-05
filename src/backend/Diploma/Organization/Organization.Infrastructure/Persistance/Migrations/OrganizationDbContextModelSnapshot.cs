@@ -22,7 +22,7 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Organization.Domain.Models.ManyToMany.ProductOrder", b =>
+            modelBuilder.Entity("Organization.Domain.ManyToMany.OrderProduct", b =>
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
@@ -34,7 +34,7 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductOrders", "organization");
+                    b.ToTable("orderproduct", "organization");
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Order", b =>
@@ -81,16 +81,12 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("character varying(120)");
+                        .HasColumnType("text");
 
-                    b.Property<string>("INN")
+                    b.Property<string>("Inn")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -115,38 +111,36 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("AvailableCount")
-                        .HasColumnType("numeric");
+                    b.Property<int>("AvailableCount")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsStock")
                         .HasColumnType("boolean");
 
                     b.Property<int>("MeasurementType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal>("TotalSold")
-                        .HasColumnType("numeric");
+                    b.Property<int>("SellOrganizationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TotalSold")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("SellOrganizationId");
 
                     b.ToTable("product", "organization");
                 });
 
-            modelBuilder.Entity("Organization.Domain.Models.ManyToMany.ProductOrder", b =>
+            modelBuilder.Entity("Organization.Domain.ManyToMany.OrderProduct", b =>
                 {
                     b.HasOne("Organization.Domain.Models.Order", "Order")
                         .WithMany()
@@ -186,13 +180,13 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
             modelBuilder.Entity("Organization.Domain.Models.Product", b =>
                 {
-                    b.HasOne("Organization.Domain.Models.Organization", "Organization")
+                    b.HasOne("Organization.Domain.Models.Organization", "SellOrganization")
                         .WithMany("Products")
-                        .HasForeignKey("OrganizationId")
+                        .HasForeignKey("SellOrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Organization");
+                    b.Navigation("SellOrganization");
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Organization", b =>

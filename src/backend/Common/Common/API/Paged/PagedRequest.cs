@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 
 namespace Common.API.Paged;
 
@@ -11,12 +11,12 @@ public class PagedRequest
     public PagedRequest() { }
     
     /// <summary>Номер запрашиваемой страницы.</summary>
-    [BindRequired]
+    [Required]
     [DefaultValue(1)]
     public int PageNumber { get; set; } = 1;
 
     /// <summary>Количество элементов на странице.</summary>
-    [BindRequired]
+    [Required]
     [DefaultValue(10)]
     public int PageSize { get; set; } = 10;
 }

@@ -1,24 +1,31 @@
 ﻿using System.Reflection;
 using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Organization.Domain.ManyToMany;
 using Organization.Domain.Models;
-using Organization.Domain.Models.ManyToMany;
 
 namespace Organization.Infrastructure.Persistance.Context;
 
-public class OrganizationDbContext : BaseDbContext
+public class OrganizationDbContext : DbContext
 {
+    public DbSet<Domain.Models.Organization> Organizations { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderProduct> OrderProducts { get; set; }
+    
     public OrganizationDbContext(DbContextOptions options) 
         : base(options) { }
 
-    public DbSet<Domain.Models.Organization> Organization { get; set; }
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Order> Orders { get; set; }
-    public DbSet<ProductOrder> ProductOrders { get; set; }
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
     }
 }

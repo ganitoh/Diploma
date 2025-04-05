@@ -2,9 +2,6 @@
 
 namespace Organization.Domain.Enums;
 
-/// <summary>
-/// Тип измерения товара
-/// </summary>
 public enum MeasurementType
 {
     [Description("Штука")]
@@ -14,5 +11,5 @@ public enum MeasurementType
     [Description("Килограмм")]
     Kg,
     [Description("Тона")]
-    Tones,
+    Tones
 }

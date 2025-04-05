@@ -1,56 +1,56 @@
-﻿using System.Security.AccessControl;
-using Common.Domain;
+﻿using Common.Domain;
 using Organization.Domain.Enums;
+using Organization.Domain.ManyToMany;
 
 namespace Organization.Domain.Models;
 
 /// <summary>
-/// Продукция
+/// Товар (продукт)
 /// </summary>
 public class Product : Entity<int>
 {
     /// <summary>
-    /// Название
+    /// Наиминование
     /// </summary>
-    public string Name { get; set; } = string.Empty;
-    
+    public required string Name { get; set; }
+
     /// <summary>
-    /// Цена
+    /// Цена за ед.
     /// </summary>
     public decimal Price { get; set; }
-    
-    /// <summary>
-    /// Доступное количество
-    /// </summary>
-    public decimal AvailableCount { get; set; }
-    
-    /// <summary>
-    /// Всего продано 
-    /// </summary>
-    public decimal TotalSold { get; set; }
 
     /// <summary>
-    /// Тип измерения
+    /// Доступное количество 
     /// </summary>
-    public MeasurementType  MeasurementType { get; set; }
+    public int AvailableCount { get; set; }
 
     /// <summary>
-    /// Флаг наличия
+    /// Всего продано
+    /// </summary>
+    public int TotalSold { get; set; }
+
+    /// <summary>
+    /// Единица измерения
+    /// </summary>
+    public MeasurementType MeasurementType { get; set; }
+
+    /// <summary>
+    /// Есть в наличии
     /// </summary>
     public bool IsStock { get; set; }
-    
-    /// <summary>
-    /// Идентификатор организации
-    /// </summary>
-    public int OrganizationId { get; set; }
-    
-    /// <summary>
-    /// Организация
-    /// </summary>
-    public Organization? Organization { get; set; }
 
     /// <summary>
-    /// Заказаы с данным продуктом
+    /// Идентификатор продающей организации
     /// </summary>
-    public ICollection<Order> Orders { get; set; }
+    public int SellOrganizationId { get; set; }
+    
+    /// <summary>
+    /// Продающая организация
+    /// </summary>
+    public virtual Organization? SellOrganization { get; set; }
+
+    /// <summary>
+    /// Заказы
+    /// </summary>
+    public virtual ICollection<Order> Orders { get; set; }
 }

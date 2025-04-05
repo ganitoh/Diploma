@@ -3,47 +3,52 @@
 namespace Organization.ApplicationContract.Dtos;
 
 /// <summary>
-/// Модель товара
+/// Продукт
 /// </summary>
 public class ProductDto
 {
     /// <summary>
-    /// Идентификатор
+    /// Наиминование
     /// </summary>
-    public int Id { get; set; }
-    
+    public required string Name { get; set; }
+
     /// <summary>
-    /// Название
-    /// </summary>
-    public string Name { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Цена
+    /// Цена за ед.
     /// </summary>
     public decimal Price { get; set; }
-    
-    /// <summary>
-    /// Доступное количество
-    /// </summary>
-    public decimal AvailableCount { get; set; }
-    
-    /// <summary>
-    /// Всего продано 
-    /// </summary>
-    public decimal TotalSold { get; set; }
 
     /// <summary>
-    /// Тип измерения
+    /// Доступное количество 
     /// </summary>
-    public MeasurementType  MeasurementType { get; set; }
+    public int AvailableCount { get; set; }
 
     /// <summary>
-    /// Флаг наличия
+    /// Всего продано
+    /// </summary>
+    public int TotalSold { get; set; }
+
+    /// <summary>
+    /// Единица измерения
+    /// </summary>
+    public MeasurementType MeasurementType { get; set; }
+
+    /// <summary>
+    /// Есть в наличии
     /// </summary>
     public bool IsStock { get; set; }
+
+    /// <summary>
+    /// Идентификатор продающей организации
+    /// </summary>
+    public int SellOrganizationId { get; set; }
     
     /// <summary>
-    /// Идентификатор организации
+    /// Продающая организация
     /// </summary>
-    public int OrganizationId { get; set; }
+    public virtual OrganizationDto? SellOrganization { get; set; }
+
+    /// <summary>
+    /// Заказы
+    /// </summary>
+    public virtual ICollection<OrderDto> Orders { get; set; }
 }

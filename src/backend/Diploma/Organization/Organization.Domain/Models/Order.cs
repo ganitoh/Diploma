@@ -1,5 +1,6 @@
 ﻿using Common.Domain;
 using Organization.Domain.Enums;
+using Organization.Domain.ManyToMany;
 
 namespace Organization.Domain.Models;
 
@@ -8,25 +9,13 @@ namespace Organization.Domain.Models;
 /// </summary>
 public class Order : Entity<int>
 {
-    public Order(int sellerOrganizationId, int buyerOrganizationId, ICollection<Product> products)
-    {
-        SellerOrganizationId = sellerOrganizationId;
-        BuyerOrganizationId = buyerOrganizationId;
-        Products = products;
-        CreateDate = DateTime.Now;
-        Status =  OrderStatus.Created;
-        CalculateTotalPrice();
-    }
-
-    private Order() { }
-
     /// <summary>
-    /// Итоговая стоимость закзаа
+    /// Полная стоимость
     /// </summary>
     public decimal TotalPrice { get; set; }
-    
+
     /// <summary>
-    /// Дата доставки
+    /// Дата и время доставки
     /// </summary>
     public DateTime DeliveryDate { get; set; }
 
@@ -34,22 +23,22 @@ public class Order : Entity<int>
     /// Дата создания
     /// </summary>
     public DateTime CreateDate { get; set; }
-    
+
     /// <summary>
     /// Статус заказа
     /// </summary>
     public OrderStatus Status { get; set; }
-    
+
     /// <summary>
     /// Идентификатор продающей организации
     /// </summary>
     public int SellerOrganizationId { get; set; }
     
     /// <summary>
-    /// Продающая организация
+    /// Продающая организации
     /// </summary>
-    public Organization SellerOrganization { get; set; }
-    
+    public Organization? SellerOrganization { get; set; }
+
     /// <summary>
     /// Идентификатор покупающей организации
     /// </summary>
@@ -58,15 +47,10 @@ public class Order : Entity<int>
     /// <summary>
     /// Покупающая организация
     /// </summary>
-    public Organization BuyerOrganization { get; set; }
-    
+    public Organization? BuyerOrganization { get; set; }
+
     /// <summary>
     /// Товары
     /// </summary>
-    public ICollection<Product> Products { get; set; }
-
-    private void CalculateTotalPrice()
-    {
-        TotalPrice = Products.Sum(x => x.Price);
-    }
+    public virtual ICollection<Product> Products { get; set; }
 }

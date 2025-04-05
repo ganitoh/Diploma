@@ -1,49 +1,47 @@
 ﻿namespace Organization.ApplicationContract.Dtos;
 
+/// <summary>
+/// Организация
+/// </summary>
 public class OrganizationDto
 {
     /// <summary>
-    /// Идентификатор
-    /// </summary>
-    public int Id { get; set; }
-    
-    /// <summary>
-    /// Название
+    /// Наиминование
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Описание
+    /// ИНН
     /// </summary>
-    public string Description { get; set; }
-    
-    /// <summary>
-    /// Инн
-    /// </summary>
-    public string INN { get; set; } = string.Empty;
+    public string Inn { get; set; } = string.Empty;
 
     /// <summary>
-    /// Электронаая почта 
+    /// Юридический адрес
     /// </summary>
-    public string Email { get; set; } = string.Empty;
+    public required string LegalAddress { get; set; }
     
     /// <summary>
-    /// Юредический адрес
+    /// Описание
     /// </summary>
-    public string LegalAddress { get; set; } = string.Empty;
+    public string? Description { get; set; }
     
     /// <summary>
-    /// Продукция для продажи
+    /// Электронная почта
     /// </summary>
-    public ICollection<ProductDto> Products { get; set; }
-    
+    public string? Email { get; set; }
+
+    /// <summary>
+    /// Продукты
+    /// </summary>
+    public virtual ICollection<ProductDto> Products { get; set; }  
+
     /// <summary>
     /// Заказы на продажу
     /// </summary>
-    public ICollection<OrderDto> SellOrders { get; set; }
+    public virtual ICollection<OrderDto> SellOrders { get; set; }
     
     /// <summary>
     /// Заказы на покупку
     /// </summary>
-    public ICollection<OrderDto> BuyOrders { get; set; }
+    public virtual ICollection<OrderDto> BuyOrders { get; set; }
 }

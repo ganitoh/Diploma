@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -23,13 +23,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Common">
-        <HintPath>..\..\..\Common\Common\bin\Debug\net8.0\Common.dll</HintPath>
-      </Reference>
+      <Folder Include="Persistance\Migrations\" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Persistance\Migrations\" />
+      <Reference Include="Common">
+        <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

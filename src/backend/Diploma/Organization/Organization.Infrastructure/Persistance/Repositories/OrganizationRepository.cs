@@ -1,6 +1,5 @@
-﻿using Common.Application.Persistance;
-using Common.Infrastructure;
-using Organization.Application.Common.Persistance.Repositories;
+﻿using Common.Infrastructure;
+using Organization.Application.Commnon.Persistance.Repositories;
 using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Infrastructure.Persistance.Repositories;

@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <Reference Include="Common">
-        <HintPath>..\..\..\Common\Common\bin\Debug\net8.0\Common.dll</HintPath>
+        <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
       </Reference>
     </ItemGroup>
 

@@ -1,5 +1,5 @@
 ﻿using Common.Infrastructure;
-using Organization.Application.Common.Persistance.Repositories;
+using Organization.Application.Commnon.Persistance.Repositories;
 using Organization.Domain.Models;
 using Organization.Infrastructure.Persistance.Context;
 

@@ -8,42 +8,42 @@ namespace Organization.Domain.Models;
 public class Organization : Entity<int>
 {
     /// <summary>
-    /// Название
+    /// Наиминование
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
+    /// <summary>
+    /// ИНН
+    /// </summary>
+    public required string Inn { get; set; }
+
+    /// <summary>
+    /// Юридический адрес
+    /// </summary>
+    public required string LegalAddress { get; set; }
+    
     /// <summary>
     /// Описание
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
     
     /// <summary>
-    /// Инн
+    /// Электронная почта
     /// </summary>
-    public string INN { get; set; } = string.Empty;
+    public string? Email { get; set; }
 
     /// <summary>
-    /// Электронаая почта 
+    /// Продукты
     /// </summary>
-    public string Email { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Юредический адрес
-    /// </summary>
-    public string LegalAddress { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Продукция для продажи
-    /// </summary>
-    public ICollection<Product> Products { get; set; }
-    
+    public virtual ICollection<Product> Products { get; set; }  
+
     /// <summary>
     /// Заказы на продажу
     /// </summary>
-    public ICollection<Order> SellOrders { get; set; }
+    public virtual ICollection<Order> SellOrders { get; set; }
     
     /// <summary>
     /// Заказы на покупку
     /// </summary>
-    public ICollection<Order> BuyOrders { get; set; }
+    public virtual ICollection<Order> BuyOrders { get; set; }
 }
