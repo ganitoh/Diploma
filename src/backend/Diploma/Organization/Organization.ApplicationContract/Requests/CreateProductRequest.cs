@@ -1,16 +1,16 @@
 ﻿using Organization.Domain.Enums;
 
-namespace Organization.ApplicationContract.Dtos;
+namespace Organization.ApplicationContract.Requests;
 
 /// <summary>
-/// Продукт
+/// Запрос на создание товара
 /// </summary>
-public class ProductDto
+public class CreateProductRequest
 {
     /// <summary>
     /// Наиминование
     /// </summary>
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Цена за ед.

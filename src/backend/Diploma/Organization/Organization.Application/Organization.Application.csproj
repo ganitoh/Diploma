@@ -27,7 +27,6 @@
 
     <ItemGroup>
       <Folder Include="CQRS\Orders\" />
-      <Folder Include="CQRS\Products\" />
     </ItemGroup>
 
 </Project>

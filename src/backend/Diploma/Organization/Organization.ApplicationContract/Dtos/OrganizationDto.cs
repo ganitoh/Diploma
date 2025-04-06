@@ -34,14 +34,4 @@ public class OrganizationDto
     /// Продукты
     /// </summary>
     public virtual ICollection<ProductDto> Products { get; set; }  
-
-    /// <summary>
-    /// Заказы на продажу
-    /// </summary>
-    public virtual ICollection<OrderDto> SellOrders { get; set; }
-    
-    /// <summary>
-    /// Заказы на покупку
-    /// </summary>
-    public virtual ICollection<OrderDto> BuyOrders { get; set; }
 }

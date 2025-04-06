@@ -30,6 +30,9 @@ internal class GetOrganizationByIdQueryHandler : IQueryHandler<GetOrganizationBy
     {
         var organization = await _dbContext
             .Organizations
+            .Include(x=>x.Products)
+            .Include(x=>x.SellOrders)
+            .Include(x=>x.BuyOrders)
             .FirstOrDefaultAsync(x=>x.Id == request.OrganizationId, cancellationToken) ?? throw new NotFoundException("Организация не найдена");
         
         return _mapper.Map<OrganizationDto>(organization);

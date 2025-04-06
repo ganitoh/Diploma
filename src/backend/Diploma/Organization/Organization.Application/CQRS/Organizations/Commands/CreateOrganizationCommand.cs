@@ -9,8 +9,8 @@ namespace Organization.Application.CQRS.Organizations.Commands;
 /// <summary>
 /// Команда для создания организации
 /// </summary>
-/// <param name="Data"></param>
-public record CreateOrganizationCommand(CreateOrganizationRequest Data) : ICommand<int>;
+/// <param name="OrganizaitonData"></param>
+public record CreateOrganizationCommand(CreateOrganizationRequest OrganizaitonData) : ICommand<int>;
 
 /// <summary>
 /// Хендлер команды для создания организации
@@ -30,7 +30,7 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
 
     public async Task<int> Handle(CreateOrganizationCommand request, CancellationToken cancellationToken)
     {
-        var organization = _mapper.Map<Domain.Models.Organization>(request.Data);
+        var organization = _mapper.Map<Domain.Models.Organization>(request.OrganizaitonData);
         _organizationRepository.Create(organization);
         await _unitOfWork.CommitAsync(cancellationToken);
         return organization.Id;
