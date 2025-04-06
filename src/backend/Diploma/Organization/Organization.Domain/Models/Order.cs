@@ -53,4 +53,24 @@ public class Order : Entity<int>
     /// Товары
     /// </summary>
     public virtual ICollection<Product> Products { get; set; }
+    
+    public Order(Organization? sellerOrganization, Organization? buyerOrganization, ICollection<Product> products)
+    {
+        SellerOrganization = sellerOrganization;
+        BuyerOrganization = buyerOrganization;
+        Products = products;
+        CreateDate = DateTime.UtcNow;
+        Status = OrderStatus.Created;
+        CalculateTotalPrice();
+    }
+
+    protected Order() { }
+    
+    /// <summary>
+    /// Расчитать полнусю стоимость заказа
+    /// </summary>
+    public void CalculateTotalPrice()
+    {
+        TotalPrice = Products.Sum(x => x.Price);
+    }
 }

@@ -5,7 +5,7 @@ using Organization.Application.Commnon.Persistance.Repositories;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
 
-namespace Organizaiton.Application.CQRS.Products.Commands;
+namespace Organization.Application.CQRS.Products.Commands;
 
 /// <summary>
 /// Команда для содания товара
