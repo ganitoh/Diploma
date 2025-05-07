@@ -37,8 +37,8 @@ public class MailService : IMailService
 
                 using var smtp = new MailKit.Net.Smtp.SmtpClient();
 
-                await smtp.ConnectAsync(_smtpConfig.SmtpServer, _smtpConfig.SmtpPort, _smtpConfig.EnableSSl, cancellationToken);
-                await smtp.AuthenticateAsync(_smtpConfig.SmtpUsername, _smtpConfig.SmtpPassword, cancellationToken);
+                await smtp.ConnectAsync(_smtpConfig.Host, _smtpConfig.Port, _smtpConfig.EnableSSl, cancellationToken);
+                await smtp.AuthenticateAsync(_smtpConfig.Username, _smtpConfig.Password, cancellationToken);
                 await smtp.SendAsync(emailData, cancellationToken);
                 await smtp.DisconnectAsync(true, cancellationToken);
             }

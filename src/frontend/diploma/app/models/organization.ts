@@ -8,6 +8,7 @@ export interface IOrganiaiton {
     inn: string
     email: string
     legalAddress: string
+    isApproval: boolean
     products: IProduct []
     sellOrders: IOrder[]
     buyOrders: IOrder[]

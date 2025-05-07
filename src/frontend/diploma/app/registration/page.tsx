@@ -6,28 +6,47 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import style from "./page.module.css"
 import { ConfirmEmail } from "../components/confirmEmail/confirmEmail";
+import { useUserMutation } from "../hooks/user/useUserMutation";
+import { log } from "console";
+
+interface RegistraitonFromValues{
+  email: string
+  password: string
+}
 
 export default function RegistrationPage() {
 
     const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState<string>("gan@yandex.ru");
-    const [emailCode, setEmailCode] = useState<number>(123);
+    const [form] = Form.useForm<RegistraitonFromValues>()
+    const [email, setEmail] = useState<string>();
+    const { registrationMutation } = useUserMutation()
     
-    const [isEmailCodeConfirmed, setIsEmailCodeConfirmed ] = useState<boolean>(false)
+    const [isEmailCodeConfirmedProcess, setIsEmailCodeConfirmedProcess ] = useState<boolean>(false)
     const router = useRouter();
   
-    const onFinish = async () => {
+    const onFinish = () => {
       setLoading(true);
-      //Отправка данных
-      setIsEmailCodeConfirmed(true)
+      registrationMutation.mutateAsync({
+        email : form.getFieldValue("email"),
+        password: form.getFieldValue("password")
+      }).then(res => {
+        console.log(res)
+        if (res.succeeded){
+          router.push("/")
+        }
+      })
+
+      //TODO: надо доделть подтверждение почты
+      //setIsEmailCodeConfirmed(true)
       setLoading(false);
     };
 
     return(
       <div className={style.container}>
-        {isEmailCodeConfirmed ? <ConfirmEmail email={email} emailCode={emailCode}/> : 
+        {isEmailCodeConfirmedProcess && email ? <ConfirmEmail email={email}/> : 
         (<Card title="Регистрация" className={style.card}>
           <Form 
+            form={form}
             name="register"
             layout="vertical"
             onFinish={onFinish}

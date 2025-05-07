@@ -90,6 +90,9 @@ namespace Organization.Infrastructure.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsApproval")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LegalAddress")
                         .IsRequired()
                         .HasColumnType("text");
@@ -103,6 +106,27 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.ToTable("organization", "organization");
                 });
 
+            modelBuilder.Entity("Organization.Domain.Models.OrganizationUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("organizationuser", "organization");
+                });
+
             modelBuilder.Entity("Organization.Domain.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -113,6 +137,10 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     b.Property<int>("AvailableCount")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsStock")
                         .HasColumnType("boolean");
@@ -178,6 +206,17 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.Navigation("SellerOrganization");
                 });
 
+            modelBuilder.Entity("Organization.Domain.Models.OrganizationUser", b =>
+                {
+                    b.HasOne("Organization.Domain.Models.Organization", "Organization")
+                        .WithMany("OrganizationUsers")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("Organization.Domain.Models.Product", b =>
                 {
                     b.HasOne("Organization.Domain.Models.Organization", "SellOrganization")
@@ -192,6 +231,8 @@ namespace Organization.Infrastructure.Persistance.Migrations
             modelBuilder.Entity("Organization.Domain.Models.Organization", b =>
                 {
                     b.Navigation("BuyOrders");
+
+                    b.Navigation("OrganizationUsers");
 
                     b.Navigation("Products");
 

@@ -8,6 +8,16 @@ namespace Organization.ApplicationContract.Dtos;
 public class ProductDto
 {
     /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
+    /// <summary>
+    /// Описание
+    /// </summary>
+    public string Description { get; set; }
+    
+    /// <summary>
     /// Наиминование
     /// </summary>
     public required string Name { get; set; }

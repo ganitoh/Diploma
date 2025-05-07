@@ -6,6 +6,11 @@
 public class OrganizationDto
 {
     /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
+    /// <summary>
     /// Наиминование
     /// </summary>
     public string Name { get; set; } = string.Empty;
@@ -29,9 +34,24 @@ public class OrganizationDto
     /// Электронная почта
     /// </summary>
     public string? Email { get; set; }
+    
+    /// <summary>
+    /// Флаг верефикации
+    /// </summary>
+    public bool IsApproval { get; set; }
 
     /// <summary>
     /// Продукты
     /// </summary>
-    public virtual ICollection<ProductDto> Products { get; set; }  
+    public ICollection<ProductDto> Products { get; set; }  
+    
+    /// <summary>
+    /// Заказы на продажу
+    /// </summary>
+    public ICollection<OrderDto> SellOrders { get; set; }
+    
+    /// <summary>
+    /// Заказы на покупку
+    /// </summary>
+    public  ICollection<OrderDto> BuyOrders { get; set; }
 }

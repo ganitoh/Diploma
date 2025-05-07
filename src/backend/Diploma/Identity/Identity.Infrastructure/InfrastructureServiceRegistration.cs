@@ -1,4 +1,5 @@
-﻿using Common.Infrastructure.Migrator;
+﻿using Common.Infrastructure;
+using Common.Infrastructure.Migrator;
 using Identity.Application.Common.Persistance;
 using Identity.Application.Common.Persistance.Repositories;
 using Identity.Infrastructure.Auth;
@@ -17,6 +18,7 @@ public static class InfrastructureServiceRegistration
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
         services.AddDbMigrator();
+        services.AddInfrastructureCommonService<IdentityDbContext>();
         
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IIdentityDbContext, ReadOnlyIdentityDbContext>();

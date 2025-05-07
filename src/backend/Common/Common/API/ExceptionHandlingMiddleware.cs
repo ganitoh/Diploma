@@ -11,7 +11,7 @@ public class ExceptionHandlingMiddleware
 {
 
     private readonly RequestDelegate _next;
-    private readonly ILogger _logger;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
     public ExceptionHandlingMiddleware(
         RequestDelegate next,
@@ -30,6 +30,7 @@ public class ExceptionHandlingMiddleware
         catch (Exception e)
         {
             await HandleExceptionAsync(context, e);
+            _logger.LogError(e, e.Message);
         }
     }
 
@@ -44,6 +45,7 @@ public class ExceptionHandlingMiddleware
         {
             ApplicationException e => (int) HttpStatusCode.InternalServerError,
             ValidationException e => (int) HttpStatusCode.BadRequest,
+            NotFoundException e => (int)HttpStatusCode.BadRequest,
             _ => (int) HttpStatusCode.InternalServerError
         };
         

@@ -1,6 +1,7 @@
 using System.Reflection;
 using Common.API;
 using Common.API.Extenisions;
+using Common.Infrastructure;
 using Common.Infrastructure.Migrator;
 using Identity.Application;
 using Identity.Infrastructure;

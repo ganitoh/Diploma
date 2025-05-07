@@ -4,7 +4,9 @@ export interface IUser {
     password: string
 }
 
-export interface ICreateUser{
+export interface ILoginUser{
     email: string
     password: string
 }
+
+export interface ICreateUser extends ILoginUser { }

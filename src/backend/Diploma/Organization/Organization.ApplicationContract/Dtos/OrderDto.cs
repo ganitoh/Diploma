@@ -8,6 +8,11 @@ namespace Organization.ApplicationContract.Dtos;
 public class OrderDto
 {
     /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
+    /// <summary>
     /// Полная стоимость
     /// </summary>
     public decimal TotalPrice { get; set; }
@@ -50,5 +55,5 @@ public class OrderDto
     /// <summary>
     /// Товары
     /// </summary>
-    public virtual ICollection<ProductDto> Products { get; set; }
+    public ICollection<ProductDto> Products { get; set; }
 }

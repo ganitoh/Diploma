@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddOrganizaitonApplication();
 builder.Services.AddOrganizaitonInfrastructure(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
+builder.Services.AddApiAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
@@ -25,10 +26,12 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseDbMigrator<OrganizationDbContext>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseDbMigrator<OrganizationDbContext>();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseCorsPolicy();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

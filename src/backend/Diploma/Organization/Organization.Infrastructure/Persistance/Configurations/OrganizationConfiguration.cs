@@ -28,5 +28,10 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Domain.Models.
             .HasMany(x=>x.BuyOrders)
             .WithOne(x=>x.BuyerOrganization)
             .HasForeignKey(x=>x.BuyerOrganizationId);
+        
+        builder
+            .HasMany(x=>x.OrganizationUsers)
+            .WithOne(x=>x.Organization)
+            .HasForeignKey(x=>x.OrganizationId);
     }
 }

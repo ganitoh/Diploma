@@ -1,4 +1,6 @@
-﻿namespace Common.Infrastructure.Kafka;
+﻿using StackExchange.Redis;
+
+namespace Common.Infrastructure.Kafka;
 
 public class KafkaConfig
 {

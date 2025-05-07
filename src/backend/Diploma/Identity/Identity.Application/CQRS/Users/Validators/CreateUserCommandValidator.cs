@@ -7,7 +7,7 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
     public CreateUserCommandValidator()
     {
-        RuleFor(x => x.Email).NotEmpty().EmailAddress();
-        RuleFor(x => x.Password).NotEmpty().MaximumLength(250);
+        RuleFor(x => x.RequestData.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.RequestData.Password).NotEmpty().MaximumLength(250);
     }
 }

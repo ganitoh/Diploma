@@ -1,4 +1,6 @@
 ﻿using Common.API;
+using Identity.ApplicatinContract.Dtos;
+using Identity.ApplicatinContract.Requests;
 using Identity.Application.CQRS.Users.Commands;
 using Identity.Application.CQRS.Users.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +13,12 @@ public class IdentityController : BaseApiController
     /// <summary>
     /// Вход пользователя в систему
     /// </summary>
-    [HttpGet(nameof(Login))]
+    [HttpPost(nameof(Login))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<string>))]
-    public async Task<IActionResult> Login([FromQuery] LoginUserQuery command)
+    public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
     {
-        var jwtToken = await Mediator.Send(command);
-        Response.Cookies.Append("access_token", jwtToken);
-        return Ok(ApiResponse<string>.Success(jwtToken));
+        var result = await Mediator.Send(new LoginUserQuery(request));
+        return Ok(ApiResponse<string>.Success(result));
     }
     
     /// <summary>
@@ -25,6 +26,6 @@ public class IdentityController : BaseApiController
     /// </summary>
     [HttpPost(nameof(Registration))]
     [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(ApiResponse<string>))]
-    public async Task<IActionResult> Registration([FromBody]CreateUserCommand command) =>
-        Ok(ApiResponse<Guid>.Success(await Mediator.Send(command)));
+    public async Task<IActionResult> Registration([FromBody]CreateUserRequest request) =>
+        Ok(ApiResponse<Guid>.Success(await Mediator.Send(new CreateUserCommand(request))));
 }

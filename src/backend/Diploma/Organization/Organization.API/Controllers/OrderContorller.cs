@@ -1,6 +1,7 @@
 ﻿using Common.API;
 using Common.API.Paged;
 using Microsoft.AspNetCore.Mvc;
+using Organizaiton.Application.CQRS.Orders.Queries;
 using Organization.Application.CQRS.Orders.Commands;
 using Organization.Application.CQRS.Orders.Queries;
 using Organization.ApplicationContract.Dtos;
@@ -11,11 +12,22 @@ namespace Organization.API.Controllers;
 public class OrderContorller : BaseApiController
 {
     /// <summary>
+    /// Получить заказ по идентификатору
+    /// </summary>
+    [HttpGet(nameof(GetOrderById))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<OrderDto>))]
+    public async Task<IActionResult> GetOrderById([FromQuery] int organizationId)
+    {
+        var result = await Mediator.Send(new GetOrderByIdQuery(organizationId));
+        return Ok(ApiResponse<OrderDto>.Success(result));
+    }
+    
+    /// <summary>
     /// Получить заказы на покупку для организации
     /// </summary>
-    [HttpGet(nameof(GetBuyOrderByOrganizaiton))]
+    [HttpGet(nameof(GetBuyOrderByOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
-    public async Task<IActionResult> GetBuyOrderByOrganizaiton([FromQuery] PagedRequest pagedRequest, [FromQuery] int organizationId)
+    public async Task<IActionResult> GetBuyOrderByOrganization([FromQuery] PagedRequest pagedRequest, [FromQuery] int organizationId)
     {
         var result = await Mediator.Send(new GetBuyOrdersByOrganizationQuery(pagedRequest, organizationId));
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
@@ -24,9 +36,9 @@ public class OrderContorller : BaseApiController
     /// <summary>
     /// Получить заказы на продужу для организации
     /// </summary>
-    [HttpGet(nameof(GetSellOrderByOrganizaiton))]
+    [HttpGet(nameof(GetSellOrderByOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
-    public async Task<IActionResult> GetSellOrderByOrganizaiton([FromQuery] PagedRequest pagedRequest, [FromQuery] int organizationId)
+    public async Task<IActionResult> GetSellOrderByOrganization([FromQuery] PagedRequest pagedRequest, [FromQuery] int organizationId)
     {
         var result = await Mediator.Send(new GetSellOrdersByOrganizationQuery(pagedRequest, organizationId));
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));

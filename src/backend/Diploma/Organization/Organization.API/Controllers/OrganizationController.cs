@@ -1,5 +1,6 @@
 ﻿using Common.API;
 using Common.API.Paged;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Organizaiton.Application.CQRS.Organizations.Queries;
 using Organization.Application.CQRS.Organizations.Commands;
@@ -34,13 +35,37 @@ public class OrganizationController : BaseApiController
     }
     
     /// <summary>
+    /// Получить организацию по идентификатору пользователя
+    /// </summary>
+    [HttpGet(nameof(GetOrganizationByUserId))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<OrganizationDto>))]
+    public async Task<IActionResult> GetOrganizationByUserId([FromQuery] string userId)
+    {
+        var result = await Mediator.Send(new GetOrganizationByUserIdQuery(Guid.Parse(userId)));
+        return Ok(ApiResponse<OrganizationDto>.Success(result));
+    }
+    
+    /// <summary>
     /// Создание организации
     /// </summary>
+    [Authorize]
     [HttpPost(nameof(CreateOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
     public async Task<IActionResult> CreateOrganization([FromBody] CreateOrganizationRequest requestData)
     {
         var result = await Mediator.Send(new CreateOrganizationCommand(requestData));
+        return Ok(ApiResponse<int>.Success(result));
+    }
+    
+    /// <summary>
+    /// Обновление данных организации
+    /// </summary>
+    [Authorize]
+    [HttpPut(nameof(UpdateOrganization))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
+    public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationDataRequest requestData)
+    {
+        var result = await Mediator.Send(new UpdateOrganizationDataCommand(requestData));
         return Ok(ApiResponse<int>.Success(result));
     }
 }

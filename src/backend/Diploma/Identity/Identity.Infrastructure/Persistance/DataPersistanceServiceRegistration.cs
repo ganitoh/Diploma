@@ -16,8 +16,6 @@ public static class DataPersistanceServiceRegistration
             .UseNpgsql(configuration.GetConnectionString("IdentityDbContext"))
         );
         
-        services.AddInfrastructureCommonService<IdentityDbContext>();
-
         return services;
     }
 

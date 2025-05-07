@@ -7,7 +7,6 @@ const { Title, Text } = Typography;
 
 
 interface IConfirmEmailProps{
-    emailCode: number
     email: string
 }
 

@@ -15,6 +15,11 @@ public class Product : Entity<int>
     public required string Name { get; set; }
 
     /// <summary>
+    /// Описание
+    /// </summary>
+    public string Description { get; set; }
+
+    /// <summary>
     /// Цена за ед.
     /// </summary>
     public decimal Price { get; set; }

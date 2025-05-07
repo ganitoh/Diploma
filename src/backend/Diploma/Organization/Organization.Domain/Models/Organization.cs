@@ -33,6 +33,11 @@ public class Organization : Entity<int>
     public string? Email { get; set; }
 
     /// <summary>
+    /// Флаг верефикации
+    /// </summary>
+    public bool IsApproval { get; set; }
+
+    /// <summary>
     /// Продукты
     /// </summary>
     public virtual ICollection<Product> Products { get; set; }  
@@ -46,4 +51,9 @@ public class Organization : Entity<int>
     /// Заказы на покупку
     /// </summary>
     public virtual ICollection<Order> BuyOrders { get; set; }
+
+    /// <summary>
+    /// Пользователи
+    /// </summary>
+    public ICollection<OrganizationUser> OrganizationUsers { get; set; }
 }
