@@ -24,4 +24,9 @@ public class User : Entity<Guid>
     /// Захешрованный пароль
     /// </summary>
     public string PasswordHash { get; set; }
+
+    /// <summary>
+    /// Роли
+    /// </summary>
+    public virtual ICollection<Role> Roles { get; set; }
 }

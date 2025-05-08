@@ -11,5 +11,10 @@ public class UserMappingProfile : Profile
     {
         CreateMap<CreateUserCommand, User>();
         CreateMap<User, UserDto>();
+
+        CreateMap<Role, RoleDto>();
+        
+        CreateMap<Permission, PermissionDto>();
+
     }
 }

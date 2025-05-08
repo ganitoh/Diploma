@@ -2,30 +2,40 @@
 
 import { useGetOrganizationByUserIdQuery } from '@/app/hooks/organization/useOrganizationQuery';
 import { useParams, useRouter } from 'next/navigation';
-import { Button, Card, Descriptions, Empty, Form, Input, InputNumber, List, Modal, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Descriptions,
+  Drawer,
+  Empty,
+  List,
+  Space,
+  Typography,
+} from 'antd';
 import { useState } from 'react';
+import { MeasurementType } from '@/app/models/product';
+import { AddProductForm } from '@/app/components/addProductForm/addProductForm';
 
 const { Title } = Typography
 
-interface IProductFromValues {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-}
+const MeasurementTypeLabels: Record<MeasurementType, string> = {
+  [MeasurementType.Thing]: 'Шт',
+  [MeasurementType.Gram]: 'Грамм',
+  [MeasurementType.Kg]: 'Килограмм',
+  [MeasurementType.Tones]: 'Тонны',
+};
 
 export default function ProfilePage() {
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
   const params = useParams();
   const router = useRouter();
-  const [form] = Form.useForm<IProductFromValues>();
   const id = params.id;
 
-  const { data, isLoading } = useGetOrganizationByUserIdQuery(id?.toString() ?? "")
+  const { data, isLoading, refetch } = useGetOrganizationByUserIdQuery(id?.toString() ?? "")
 
-  const handleCancel = () => setIsAddProductModalOpen(false);
-
-  const handleAddProduct = async () => {}
+  const closeDrawer = () => {
+    setIsAddProductModalOpen(false);
+  };
 
   return (
     <div>
@@ -103,42 +113,24 @@ export default function ProfilePage() {
               <Empty description="Нет заказов на покупку" />
             )}
           </Card>
+          <Drawer
+            title="Добавление товара"
+            width="60%"
+            onClose={closeDrawer}
+            open={isAddProductModalOpen}
+            extra={
+              <Space>
+                <Button onClick={closeDrawer}>Отмена</Button>
+              </Space>
+            }
+          >
+            <AddProductForm organizationId={data.response.id} onClose={() => {
+              setIsAddProductModalOpen(false)
+              refetch()
+            }} />
+          </Drawer>
         </div>
       )}
-      <Modal
-        title="Добавить товар"
-        open={isAddProductModalOpen}
-        onCancel={handleCancel}
-        onOk={handleAddProduct}
-        okText="Сохранить"
-        cancelText="Отмена"
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            label="Название"
-            name="name"
-            rules={[{ required: true, message: 'Введите название товара' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Описание"
-            name="description"
-            rules={[{ required: true, message: 'Введите описание' }]}
-          >
-            <Input.TextArea rows={3} />
-          </Form.Item>
-
-          <Form.Item
-            label="Цена"
-            name="price"
-            rules={[{ required: true, message: 'Введите цену' }]}
-          >
-            <InputNumber style={{ width: '100%' }} min={0} />
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 }

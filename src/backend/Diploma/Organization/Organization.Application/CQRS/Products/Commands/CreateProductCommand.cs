@@ -31,8 +31,11 @@ internal class CreateProductCommandHandler : ICommandHandler<CreateProductComman
     public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var product = _mapper.Map<Product>(request.ProductData);
+        product.IsStock = product.AvailableCount > 0;
+        
         _repository.Create(product);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
         return product.Id;
     }
 }

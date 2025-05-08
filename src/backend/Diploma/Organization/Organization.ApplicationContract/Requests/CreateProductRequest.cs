@@ -11,6 +11,11 @@ public class CreateProductRequest
     /// Наиминование
     /// </summary>
     public string? Name { get; set; }
+    
+    /// <summary>
+    /// Описание
+    /// </summary>
+    public string? Description { get; set; }
 
     /// <summary>
     /// Цена за ед.
@@ -30,12 +35,7 @@ public class CreateProductRequest
     /// <summary>
     /// Единица измерения
     /// </summary>
-    public MeasurementType MeasurementType { get; set; }
-
-    /// <summary>
-    /// Есть в наличии
-    /// </summary>
-    public bool IsStock { get; set; }
+    public int MeasurementType { get; set; }
 
     /// <summary>
     /// Идентификатор продающей организации

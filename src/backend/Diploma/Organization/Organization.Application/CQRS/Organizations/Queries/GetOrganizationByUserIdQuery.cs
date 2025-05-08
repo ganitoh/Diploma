@@ -30,7 +30,10 @@ internal class GetOrganizationByUserIdQueryHandler : IQueryHandler<GetOrganizati
     {
         var organization = await _context.Organizations
             .AsNoTracking()
-            .Include(x=>x.OrganizationUsers)
+            .Include(x => x.OrganizationUsers)
+            .Include(x => x.Products)
+            .Include(x => x.BuyOrders)
+            .Include(x => x.SellOrders)
             .FirstOrDefaultAsync(x=>x.OrganizationUsers.Select(user => user.UserId)
                 .Contains(request.UserId), cancellationToken);
 

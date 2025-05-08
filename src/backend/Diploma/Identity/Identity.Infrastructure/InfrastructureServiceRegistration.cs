@@ -1,11 +1,9 @@
 ﻿using Common.Infrastructure;
 using Common.Infrastructure.Migrator;
 using Identity.Application.Common.Persistance;
-using Identity.Application.Common.Persistance.Repositories;
 using Identity.Infrastructure.Auth;
 using Identity.Infrastructure.Persistance;
 using Identity.Infrastructure.Persistance.Context;
-using Identity.Infrastructure.Persistance.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +18,6 @@ public static class InfrastructureServiceRegistration
         services.AddDbMigrator();
         services.AddInfrastructureCommonService<IdentityDbContext>();
         
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IIdentityDbContext, ReadOnlyIdentityDbContext>();
 
         return services;

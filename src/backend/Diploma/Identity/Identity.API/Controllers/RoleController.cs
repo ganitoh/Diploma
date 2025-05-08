@@ -1,0 +1,45 @@
+﻿using Common.API;
+using Identity.ApplicatinContract.Dtos;
+using Identity.ApplicatinContract.Requests;
+using Identity.Application.CQRS.Roles.Commands;
+using Identity.Application.CQRS.Roles.Queries;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Identity.API.Controllers;
+
+public class RoleController : BaseApiController
+{
+    /// <summary>
+    /// Получить все роли
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet(nameof(GetRoles))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<RoleDto>>))]
+    public async Task<IActionResult> GetRoles()
+    {
+        var result = await Mediator.Send(new GetRolesQuery());
+        return Ok(ApiResponse<ICollection<RoleDto>>.Success(result));
+    }
+    
+    /// <summary>
+    /// Получить роль по названию
+    /// </summary>
+    [HttpGet(nameof(GetRoleByName))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<RoleDto>))]
+    public async Task<IActionResult> GetRoleByName([FromQuery] string roleName)
+    {
+        var result = await Mediator.Send(new GetRoleByNameQuery(roleName));
+        return Ok(ApiResponse<RoleDto>.Success(result));
+    }
+    
+    /// <summary>
+    /// Обновить разрешения для роли
+    /// </summary>
+    [HttpPut(nameof(UpdateRolePermission))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
+    public async Task<IActionResult> UpdateRolePermission([FromBody] UpdateRolePermissionRequest request)
+    {
+        var result = await Mediator.Send(new UpdateRolePermissionCommand(request));
+        return Ok(ApiResponse<int>.Success(result));
+    }
+}

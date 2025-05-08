@@ -1,5 +1,6 @@
-﻿using Common.Infrastructure;
+﻿using Identity.Application.Common.Persistance.Repositories;
 using Identity.Infrastructure.Persistance.Context;
+using Identity.Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,11 @@ public static class DataPersistanceServiceRegistration
         services.AddDbContext<IdentityDbContext>(options => options
             .UseNpgsql(configuration.GetConnectionString("IdentityDbContext"))
         );
+        
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IPermissionRepository, PermissionRepository>();
+        services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
         
         return services;
     }

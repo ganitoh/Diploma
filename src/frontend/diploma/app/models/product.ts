@@ -20,9 +20,9 @@ export interface ICreateProduct {
     name: string
     price: number
     availableCount: number
-    measurementType: MeasurementType
-    isStock: boolean
+    measurementType: number
     sellOrganizationId: number
+    description: string
 }
 
 

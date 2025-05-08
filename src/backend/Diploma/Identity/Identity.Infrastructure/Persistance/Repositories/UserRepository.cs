@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure.Persistance.Repositories;
 
-public class UserRepository : Repository<User, IdentityDbContext>,IUserRepository
+public class UserRepository : Repository<User, IdentityDbContext>, IUserRepository
 {
     public UserRepository(IdentityDbContext dbContext) 
         : base(dbContext) { }

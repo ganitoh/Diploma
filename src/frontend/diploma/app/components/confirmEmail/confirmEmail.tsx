@@ -5,7 +5,6 @@ import styles from "./page.module.css"
 
 const { Title, Text } = Typography;
 
-
 interface IConfirmEmailProps{
     email: string
 }
