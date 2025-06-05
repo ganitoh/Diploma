@@ -4,7 +4,7 @@ using Common.API.Paged;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Dtos;
-using Organization.Application.Commnon.Persistance;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
@@ -18,10 +18,10 @@ public record GetPagedOrganizationQuery(PagedRequest RequestData) : IQuery<Paged
 /// </summary>
 internal class GetPagedOrganizationQueryHandler : IQueryHandler<GetPagedOrganizationQuery, PagedList<OrganizationDto>>
 {
+    private readonly OrganizationDbContext _dbContext;
     private readonly IMapper _mapper;
-    private readonly IReadonlyOrganizationDbContext _dbContext;
 
-    public GetPagedOrganizationQueryHandler(IMapper mapper, IReadonlyOrganizationDbContext dbContext)
+    public GetPagedOrganizationQueryHandler(IMapper mapper, OrganizationDbContext dbContext)
     {
         _mapper = mapper;
         _dbContext = dbContext;
@@ -30,6 +30,7 @@ internal class GetPagedOrganizationQueryHandler : IQueryHandler<GetPagedOrganiza
     public async Task<PagedList<OrganizationDto>> Handle(GetPagedOrganizationQuery request, CancellationToken cancellationToken)
     {
         var pagedListOrganization = await _dbContext.Organizations
+            .AsNoTracking()
             .PagedQueryable(request.RequestData.PageNumber, request.RequestData.PageSize)
             .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

@@ -8,7 +8,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable(nameof(User).ToLower(), "Identity");
+        builder.ToTable(nameof(User).ToLower(), "identity");
 
         builder.HasKey(x => x.Id);
 
@@ -16,10 +16,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.PasswordHash).IsRequired();
 
         builder
-            .HasMany(x => x.Roles)
-            .WithMany(x => x.Users)
-            .UsingEntity<UserRole>(
-                l => l.HasOne<Role>().WithMany().HasForeignKey(r=>r.RoleId),
-                r => r.HasOne<User>().WithMany().HasForeignKey(u=>u.UserId));
+            .HasOne(x=>x.Role)
+            .WithMany(x=>x.Users)
+            .HasForeignKey(x=>x.RoleId);
     }
 }

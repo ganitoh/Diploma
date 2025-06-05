@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using Identity.Infrastructure.Auth.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,18 @@ public static class AuthorizationExtensions
                 };
             });
         
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(PolicyConst.UserPolicy, policy =>
+            {
+                policy.RequireRole(PolicyConst.UserRole, PolicyConst.AdminRole);
+            });
+            
+            options.AddPolicy(PolicyConst.AdminPolicy, policy =>
+            {
+                policy.RequireRole(PolicyConst.AdminRole);
+            });
+        });
         
         return services;
     }

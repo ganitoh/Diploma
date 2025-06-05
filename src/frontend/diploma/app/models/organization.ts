@@ -14,6 +14,12 @@ export interface IOrganiaiton {
     buyOrders: IOrder[]
 }
 
+export interface IShortOrganiaiton{
+    name: string
+    ratingValue: number
+    id: number
+}
+
 export interface ICreateOrganiaiton{
     name: string
     description: string

@@ -17,4 +17,9 @@ public class Permission : Entity<int>
     /// Роли
     /// </summary>
     public virtual ICollection<Role> Roles { get; set; } = [];
+    
+    /// <summary>
+    /// Связть роли и разрешения
+    /// </summary>
+    public virtual ICollection<RolePermission> RolePermissions { get; set; } = [];
 }

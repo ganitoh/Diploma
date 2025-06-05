@@ -2,8 +2,8 @@
 using Common.Application;
 using Common.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Organization.Application.Commnon.Persistance;
 using Organization.ApplicationContract.Dtos;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
@@ -17,10 +17,10 @@ public record GetOrganizationByUserIdQuery(Guid UserId) : IQuery<OrganizationDto
 /// </summary>
 internal class GetOrganizationByUserIdQueryHandler : IQueryHandler<GetOrganizationByUserIdQuery, OrganizationDto>
 {
-    private readonly IReadonlyOrganizationDbContext _context;
+    private readonly OrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetOrganizationByUserIdQueryHandler(IReadonlyOrganizationDbContext context, IMapper mapper)
+    public GetOrganizationByUserIdQueryHandler(OrganizationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Common.Application;
 using Common.Application.Exceptions;
-using Common.Infrastructure.UnitOfWork;
-using Organization.Application.Commnon.Persistance.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Orders.Commands;
 
@@ -16,44 +16,40 @@ public record CreateOrderCommand(CreateOrderRequest OrderData) : ICommand<int>;
 
 internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, int>
 {
-    private readonly IProductRepository  _productRepository;
-    private readonly IOrderRepository _orderRepository;
-    private readonly IOrganizationRepository _organizationRepository;
+    private readonly OrganizationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateOrderCommandHandler(
-        IProductRepository productRepository,
-        IOrderRepository orderRepository,
-        IOrganizationRepository organizationRepository,
-        IMapper mapper,
-        IUnitOfWork unitOfWork)
+    public CreateOrderCommandHandler(OrganizationDbContext context, IMapper mapper)
     {
-        _productRepository = productRepository;
-        _orderRepository = orderRepository;
-        _organizationRepository = organizationRepository;
+        _context = context;
         _mapper = mapper;
-        _unitOfWork = unitOfWork;
     }
-
 
     public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var sellerOrganization = await _organizationRepository.GetById(request.OrderData.SellerOrganizationId, cancellationToken)
-                                 ?? throw new NotFoundException("Продающая организация не найдена");
+        var sellerOrganization = await _context.Organizations
+                                     .FirstOrDefaultAsync(x=>x.Id == request.OrderData.SellerOrganizationId, cancellationToken);
+
+        if (sellerOrganization is null)
+            throw new NotFoundException("Продающая организация не найдена");
         
-        var buyerOrganization = await _organizationRepository.GetById(request.OrderData.BuyerOrganizationId, cancellationToken)
-                                ?? throw new NotFoundException("Покупающая организация не найдена");
-        
-        var products = await _productRepository.GetByIds(request.OrderData.ProductsIds, cancellationToken);
+        var buyerOrganization = await _context.Organizations
+                .FirstOrDefaultAsync(x=>x.Id == request.OrderData.SellerOrganizationId, cancellationToken);
+                                
+        if (buyerOrganization is null)
+            throw new NotFoundException("Покупающая организация не найдена");
+
+        var products = await _context.Products
+            .Where(x => request.OrderData.ProductsIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
 
         if (products.Count == 0)
             throw new NotFoundException("Товары не найдены");
         
         var order = new Order(sellerOrganization, buyerOrganization, products);
-        
-        _orderRepository.Create(order);
-        await _unitOfWork.CommitAsync(cancellationToken);
+
+        _context.Orders.Add(order);
+        await _context.SaveChangesAsync(cancellationToken);
         
         return order.Id;
     }

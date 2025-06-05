@@ -12,6 +12,7 @@ public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissi
 {
     public void Configure(EntityTypeBuilder<RolePermission> builder)
     {
+        builder.ToTable(nameof(RolePermission).ToLower(), "identity");
         builder.HasKey(r=> new {r.RoleId, r.PermissionId});
     }
 }

@@ -8,5 +8,4 @@ public interface IIdentityDbContext
     IQueryable<Role> Roles { get; }
     IQueryable<Permission> Permissions { get; }
     IQueryable<RolePermission> RolePermissions { get; }
-    IQueryable<UserRole> UserRoles { get; }
 }

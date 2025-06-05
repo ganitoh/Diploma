@@ -34,7 +34,8 @@ internal class LoginUserQueryHandler : IQueryHandler<LoginUserQuery, string>
     public async Task<string> Handle(LoginUserQuery query, CancellationToken cancellationToken)
     {
         var user = await _identityDbContext.Users
-            .FirstOrDefaultAsync(u => u.Email == query.queryData.Email,cancellationToken);
+            .Include(x => x.Role)
+            .FirstOrDefaultAsync(u => u.Email == query.queryData.Email, cancellationToken);
 
         if (user is null)
             throw new NotFoundException("Пользователь не найден");

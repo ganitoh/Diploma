@@ -1,9 +1,8 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
-using Common.Infrastructure.UnitOfWork;
-using MediatR;
-using Organization.Application.Commnon.Persistance.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Requests;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Organizations.Commands;
 
@@ -17,19 +16,22 @@ public record class UpdateOrganizationDataCommand(UpdateOrganizationDataRequest 
 /// </summary>
 internal class UpdateOrganizationDataCommandHandler : ICommandHandler<UpdateOrganizationDataCommand, int>
 {
-    private readonly IOrganizationRepository _repository;
-    private readonly IUnitOfWork  _unitOfWork;
+    private readonly OrganizationDbContext _context;
 
-    public UpdateOrganizationDataCommandHandler(IOrganizationRepository repository, IUnitOfWork unitOfWork)
+    public UpdateOrganizationDataCommandHandler(OrganizationDbContext context)
     {
-        _repository = repository;
-        _unitOfWork = unitOfWork;
+        _context = context;
     }
 
     public async Task<int> Handle(UpdateOrganizationDataCommand request, CancellationToken cancellationToken)
     {
-        var organization = await _repository.GetById(request.RequestData.OrganizationId, cancellationToken) ??
-                           throw new NotFoundException("Организация не найдена");
+        var organization =
+            await _context.Organizations.FirstOrDefaultAsync(x => x.Id == request.RequestData.OrganizationId,
+                cancellationToken);
+        
+        if (organization is null)
+            throw new NotFoundException("Организация не найдена");
+                           
         
         organization.Name = request.RequestData.Name;
         organization.Email = request.RequestData.Email;
@@ -38,7 +40,7 @@ internal class UpdateOrganizationDataCommandHandler : ICommandHandler<UpdateOrga
         organization.LegalAddress = request.RequestData.LegalAddress;
         organization.IsApproval = false;
         
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         return organization.Id;
     }
 }

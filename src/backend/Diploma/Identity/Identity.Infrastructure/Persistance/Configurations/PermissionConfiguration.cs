@@ -8,6 +8,8 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {
     public void Configure(EntityTypeBuilder<Permission> builder)
     {
+        builder.ToTable(nameof(Permission).ToLower(), "identity");
+        
         builder.HasKey(x => x.Id);
 
         var permissions = Enum

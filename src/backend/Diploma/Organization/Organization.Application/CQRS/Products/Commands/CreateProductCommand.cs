@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Common.Application;
-using Common.Infrastructure.UnitOfWork;
-using Organization.Application.Commnon.Persistance.Repositories;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Products.Commands;
 
@@ -17,14 +16,12 @@ public record  CreateProductCommand(CreateProductRequest ProductData) : ICommand
 /// </summary>
 internal class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, int>
 {
-    private readonly IProductRepository  _repository;
-    private readonly IUnitOfWork  _unitOfWork;
+    private readonly OrganizationDbContext _context;
     private readonly IMapper  _mapper;
 
-    public CreateProductCommandHandler(IProductRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateProductCommandHandler(OrganizationDbContext context, IMapper mapper)
     {
-        _repository = repository;
-        _unitOfWork = unitOfWork;
+        _context = context;
         _mapper = mapper;
     }
 
@@ -33,8 +30,8 @@ internal class CreateProductCommandHandler : ICommandHandler<CreateProductComman
         var product = _mapper.Map<Product>(request.ProductData);
         product.IsStock = product.AvailableCount > 0;
         
-        _repository.Create(product);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        _context.Add(product);
+        await _context.SaveChangesAsync(cancellationToken);
         
         return product.Id;
     }

@@ -1,13 +1,11 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using Common.Application;
-using Common.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Organization.Application.Commnon.Persistance;
 using Organization.ApplicationContract.Requests;
-using Organization.Application.Commnon.Persistance.Repositories;
 using Organization.Domain.Models;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Organizations.Commands;
 
@@ -22,23 +20,17 @@ public record CreateOrganizationCommand(CreateOrganizationRequest OrganizaitonDa
 /// </summary>
 internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganizationCommand, int>
 {
-    private readonly IOrganizationRepository _organizationRepository;
-    private readonly IReadonlyOrganizationDbContext _context;
+    private readonly OrganizationDbContext _context;
     private readonly IHttpContextAccessor _httpContext;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper  _mapper;
 
     public CreateOrganizationCommandHandler(
-        IOrganizationRepository organizationRepository,
-        IReadonlyOrganizationDbContext readonlyOrganizationDbContext,
+        OrganizationDbContext context,
         IHttpContextAccessor httpContext,
-        IUnitOfWork unitOfWork,
         IMapper mapper)
     {
-        _organizationRepository = organizationRepository;
-        _context = readonlyOrganizationDbContext;
+        _context = context;
         _httpContext = httpContext;
-        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -58,15 +50,15 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
         
         var organization = _mapper.Map<Domain.Models.Organization>(request.OrganizaitonData);
         
-        _organizationRepository.Create(organization);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        _context.Organizations.Add(organization);
+        await _context.SaveChangesAsync(cancellationToken);
         
         organization.OrganizationUsers = new  List<OrganizationUser>
         {
             new() {UserId = Guid.Parse(userId), OrganizationId = organization.Id}
         };
         
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         
         return organization.Id;
     }

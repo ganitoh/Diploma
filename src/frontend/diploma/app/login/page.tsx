@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import style from "./page.module.css"
 import { useUserMutation } from "../hooks/user/useUserMutation";
+import Link from "antd/es/typography/Link";
 
 interface LoginFromValues{
   email: string
@@ -27,6 +28,7 @@ export default function LoginPage() {
       }).then(res => {
         console.log(res)
         if (res.succeeded){
+          localStorage.setItem("userId", res.response)
           router.push(`/profile/${res.response}`)
         }
       })
@@ -70,6 +72,7 @@ export default function LoginPage() {
               <Button type="primary" htmlType="submit" loading={loading} block>
                 Войти
               </Button>
+            <Link href="/registration">Регистарция</Link>
             </Form.Item>
           </Form>
         </Card>

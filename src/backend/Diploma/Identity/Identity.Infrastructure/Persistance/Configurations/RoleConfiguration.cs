@@ -8,15 +8,24 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.ToTable(nameof(Role).ToLower(), "Identity");
+        builder.ToTable(nameof(Role).ToLower(), "identity");
 
         builder.HasKey(x => x.Id);
+
         builder
-            .HasMany(x=>x.Permissions)
-            .WithMany(x=>x.Roles)
+            .HasMany(r => r.Permissions)
+            .WithMany(p => p.Roles)
             .UsingEntity<RolePermission>(
-                l=>l.HasOne<Permission>().WithMany().HasForeignKey(x=>x.PermissionId),
-                r=> r.HasOne<Role>().WithMany().HasForeignKey(x=>x.RoleId));
+                j => j
+                    .HasOne(rp => rp.Permission)
+                    .WithMany(p => p.RolePermissions)
+                    .HasForeignKey(rp => rp.PermissionId)
+                    .OnDelete(DeleteBehavior.Cascade),
+                j => j
+                    .HasOne(rp => rp.Role)
+                    .WithMany(r => r.RolePermissions)
+                    .HasForeignKey(rp => rp.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade));
 
         var roles = Enum
             .GetValues<Auth.Jwt.Role>()

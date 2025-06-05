@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
-using Organization.Application.Commnon.Persistance;
 using Organization.ApplicationContract.Dtos;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Products.Queries;
 
@@ -17,10 +17,10 @@ public record class SearchProductsQuery(string SearchString) : IQuery<ICollectio
 /// </summary>
 internal class SearchProductsQueryHandler : IQueryHandler<SearchProductsQuery, ICollection<ShortProductDto> >
 {
-    private readonly IReadonlyOrganizationDbContext  _context;
+    private readonly OrganizationDbContext  _context;
     private readonly IMapper _mapper;
 
-    public SearchProductsQueryHandler(IReadonlyOrganizationDbContext context, IMapper mapper)
+    public SearchProductsQueryHandler(OrganizationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -29,6 +29,7 @@ internal class SearchProductsQueryHandler : IQueryHandler<SearchProductsQuery, I
     public async Task<ICollection<ShortProductDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
     {
         return await _context.Products
+            .AsNoTracking()
             .Where(x => x.Name.Contains(request.SearchString) && x.IsStock)
             .ProjectTo<ShortProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

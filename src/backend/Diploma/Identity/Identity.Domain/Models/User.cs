@@ -26,7 +26,12 @@ public class User : Entity<Guid>
     public string PasswordHash { get; set; }
 
     /// <summary>
+    /// Идентификатор роли
+    /// </summary>
+    public int? RoleId { get; set; }
+    
+    /// <summary>
     /// Роли
     /// </summary>
-    public virtual ICollection<Role> Roles { get; set; }
+    public virtual Role? Role { get; set; }
 }

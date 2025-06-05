@@ -6,6 +6,7 @@ using Identity.Application.Common.Auth;
 using Identity.Application.Common.Persistance;
 using Identity.Application.Common.Persistance.Repositories;
 using Identity.Domain.Models;
+using Role = Identity.Infrastructure.Auth.Jwt.Role;
 
 namespace Identity.Application.CQRS.Users.Commands;
 
@@ -40,8 +41,9 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
         
         var passwordHash = _passwordHasher.Generate(request.RequestData.Password);
 
-        var user = _mapper.Map<User>(request);
+        var user = _mapper.Map<User>(request.RequestData);
         user.PasswordHash = passwordHash;
+        user.RoleId = (int)Role.User;
         
         _userRepository.Create(user);
         await _unitOfWork.CommitAsync(cancellationToken);

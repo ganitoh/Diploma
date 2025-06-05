@@ -3,7 +3,7 @@ using Common.Application;
 using Common.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Dtos;
-using Organization.Application.Commnon.Persistance;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
@@ -17,19 +17,20 @@ public record GetOrganizationByIdQuery(int OrganizationId) : IQuery<Organization
 /// </summary>
 internal class GetOrganizationByIdQueryHandler : IQueryHandler<GetOrganizationByIdQuery, OrganizationDto>
 {
-    private readonly IReadonlyOrganizationDbContext _dbContext;
+    private readonly OrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetOrganizationByIdQueryHandler(IReadonlyOrganizationDbContext dbContext, IMapper mapperl)
+    public GetOrganizationByIdQueryHandler(OrganizationDbContext context, IMapper mapperl)
     {
-        _dbContext = dbContext;
+        _context = context;
         _mapper = mapperl;
     }
 
     public async Task<OrganizationDto> Handle(GetOrganizationByIdQuery request, CancellationToken cancellationToken)
     {
-        var organization = await _dbContext
+        var organization = await _context
             .Organizations
+            .AsNoTracking()
             .Include(x=>x.Products)
             .Include(x=>x.SellOrders)
             .Include(x=>x.BuyOrders)

@@ -3,6 +3,7 @@ using Identity.ApplicatinContract.Dtos;
 using Identity.ApplicatinContract.Requests;
 using Identity.Application.CQRS.Roles.Commands;
 using Identity.Application.CQRS.Roles.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers;
@@ -30,6 +31,18 @@ public class RoleController : BaseApiController
     {
         var result = await Mediator.Send(new GetRoleByNameQuery(roleName));
         return Ok(ApiResponse<RoleDto>.Success(result));
+    }
+    
+    /// <summary>
+    /// Проверить роль
+    /// </summary>
+    [Authorize]
+    [HttpGet(nameof(CheckRole))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<bool>))]
+    public async Task<IActionResult> CheckRole([FromQuery] string roleName)
+    {
+        var result = await Mediator.Send(new CheckRoleQuery(roleName));
+        return Ok(ApiResponse<bool>.Success(result));
     }
     
     /// <summary>

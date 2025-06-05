@@ -9,7 +9,6 @@ namespace Identity.API.Controllers;
 
 public class IdentityController : BaseApiController
 {
-    
     /// <summary>
     /// Вход пользователя в систему
     /// </summary>

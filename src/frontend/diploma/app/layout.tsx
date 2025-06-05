@@ -5,7 +5,6 @@ import Layout, { Content, Footer, Header } from "antd/es/layout/layout";
 import Link from "next/link";
 import ReactQueryProvider from "./providers/ReactQueryProvider";
 import { UserOutlined, SearchOutlined } from "@ant-design/icons";
-
 import { useRouter } from "next/navigation";
 
 const items = [
@@ -22,7 +21,14 @@ export default function RootLayout({
   const router = useRouter();
 
   const handleAuthClick = () => {
-    router.push("/login");
+    var userId = localStorage.getItem("userId")
+
+    if (userId){
+      router.push(`/profile/${userId}`);
+    }
+    else{
+      router.push("/login");
+    }
   };
 
   return (

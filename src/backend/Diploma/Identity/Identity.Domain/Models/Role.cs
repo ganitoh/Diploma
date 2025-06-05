@@ -18,6 +18,11 @@ public class Role : Entity<int>
     public virtual ICollection<Permission> Permissions { get; set; } = [];
     
     /// <summary>
+    /// Связть роли и разрешения
+    /// </summary>
+    public virtual ICollection<RolePermission> RolePermissions { get; set; } = [];
+    
+    /// <summary>
     /// Пользователи с данной ролью
     /// </summary>
     public virtual ICollection<User> Users { get; set; } = [];

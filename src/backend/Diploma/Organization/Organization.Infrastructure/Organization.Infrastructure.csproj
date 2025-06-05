@@ -7,11 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Persistance\Migrations\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Organization.Application\Organization.Application.csproj" />
       <ProjectReference Include="..\Organization.Domain\Organization.Domain.csproj" />
     </ItemGroup>
 

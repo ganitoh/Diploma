@@ -10,7 +10,6 @@ public class ReadOnlyIdentityDbContext : IIdentityDbContext
     public IQueryable<Role> Roles => Set<Role>();
     public IQueryable<Permission> Permissions => Set<Permission>();
     public IQueryable<RolePermission> RolePermissions => Set<RolePermission>();
-    public IQueryable<UserRole> UserRoles => Set<UserRole>();
 
     private readonly IdentityDbContext _dbContext;
 

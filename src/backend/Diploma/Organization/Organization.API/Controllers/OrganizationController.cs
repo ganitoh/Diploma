@@ -11,7 +11,6 @@ namespace Organization.API.Controllers;
 
 public class OrganizationController : BaseApiController
 {
-    
     /// <summary>
     /// Получить пагинированый список оргинизация
     /// </summary>
@@ -37,6 +36,7 @@ public class OrganizationController : BaseApiController
     /// <summary>
     /// Получить организацию по идентификатору пользователя
     /// </summary>
+    [Authorize(Policy = PolicyConst.UserPolicy )]
     [HttpGet(nameof(GetOrganizationByUserId))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<OrganizationDto>))]
     public async Task<IActionResult> GetOrganizationByUserId([FromQuery] string userId)

@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
-using Organization.Application.Commnon.Persistance;
 using Organization.ApplicationContract.Dtos;
+using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Products.Queries;
 
@@ -17,10 +17,10 @@ public record class GetTopSellingProductsQuery(int Top) : IQuery<ICollection<Sho
 /// </summary>
 internal class GetTopSellingProductsQueryHandler : IQueryHandler<GetTopSellingProductsQuery, ICollection<ShortProductDto>>
 {
-    private IReadonlyOrganizationDbContext  _context;
+    private OrganizationDbContext  _context;
     private IMapper _mapper;
 
-    public GetTopSellingProductsQueryHandler(IReadonlyOrganizationDbContext context, IMapper mapper)
+    public GetTopSellingProductsQueryHandler(OrganizationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -29,6 +29,7 @@ internal class GetTopSellingProductsQueryHandler : IQueryHandler<GetTopSellingPr
     public async Task<ICollection<ShortProductDto>> Handle(GetTopSellingProductsQuery request, CancellationToken cancellationToken)
     {
         return await _context.Products
+            .AsNoTracking()
             .OrderByDescending(x=>x.TotalSold).Take(request.Top)
             .ProjectTo<ShortProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

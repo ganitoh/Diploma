@@ -8,17 +8,17 @@ public class CreateOrganizationRequest
     /// <summary>
     /// Наиминование
     /// </summary>
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// ИНН
     /// </summary>
-    public string? Inn { get; set; }
+    public string Inn { get; set; }
 
     /// <summary>
     /// Юридический адрес
     /// </summary>
-    public string? LegalAddress { get; set; }
+    public string LegalAddress { get; set; }
     
     /// <summary>
     /// Описание

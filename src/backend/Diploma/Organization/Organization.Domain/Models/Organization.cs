@@ -1,4 +1,5 @@
-﻿using Common.Domain;
+﻿using System.Security.AccessControl;
+using Common.Domain;
 
 namespace Organization.Domain.Models;
 

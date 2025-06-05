@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Identity.ApplicatinContract.Dtos;
+using Identity.ApplicatinContract.Requests;
 using Identity.Application.CQRS.Users.Commands;
 using Identity.Domain.Models;
 
@@ -9,7 +10,7 @@ public class UserMappingProfile : Profile
 {
     public UserMappingProfile()
     {
-        CreateMap<CreateUserCommand, User>();
+        CreateMap<CreateUserRequest, User>();
         CreateMap<User, UserDto>();
 
         CreateMap<Role, RoleDto>();

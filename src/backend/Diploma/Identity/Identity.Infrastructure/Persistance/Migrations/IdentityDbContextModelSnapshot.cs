@@ -36,7 +36,7 @@ namespace Identity.Infrastructure.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permission");
+                    b.ToTable("permission", "identity");
 
                     b.HasData(
                         new
@@ -75,7 +75,7 @@ namespace Identity.Infrastructure.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("role", "Identity");
+                    b.ToTable("role", "identity");
 
                     b.HasData(
                         new
@@ -92,27 +92,17 @@ namespace Identity.Infrastructure.Persistance.Migrations
 
             modelBuilder.Entity("Identity.Domain.Models.RolePermission", b =>
                 {
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PermissionId1")
+                    b.Property<int>("PermissionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("RoleId1")
-                        .HasColumnType("integer");
+                    b.HasKey("RoleId", "PermissionId");
 
-                    b.HasKey("PermissionId", "RoleId");
+                    b.HasIndex("PermissionId");
 
-                    b.HasIndex("PermissionId1");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("RoleId1");
-
-                    b.ToTable("RolePermission");
+                    b.ToTable("rolepermission", "identity");
                 });
 
             modelBuilder.Entity("Identity.Domain.Models.User", b =>
@@ -129,59 +119,27 @@ namespace Identity.Infrastructure.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.ToTable("user", "Identity");
-                });
+                    b.HasIndex("RoleId");
 
-            modelBuilder.Entity("Identity.Domain.Models.UserRole", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("RoleId1")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("RoleId", "UserId");
-
-                    b.HasIndex("RoleId1");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("UserRole", "Identity");
+                    b.ToTable("user", "identity");
                 });
 
             modelBuilder.Entity("Identity.Domain.Models.RolePermission", b =>
                 {
-                    b.HasOne("Identity.Domain.Models.Permission", null)
-                        .WithMany()
+                    b.HasOne("Identity.Domain.Models.Permission", "Permission")
+                        .WithMany("RolePermissions")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Identity.Domain.Models.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Identity.Domain.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Identity.Domain.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId1")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -190,35 +148,25 @@ namespace Identity.Infrastructure.Persistance.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Identity.Domain.Models.UserRole", b =>
+            modelBuilder.Entity("Identity.Domain.Models.User", b =>
                 {
-                    b.HasOne("Identity.Domain.Models.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Identity.Domain.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Identity.Domain.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Identity.Domain.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("Identity.Domain.Models.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("Identity.Domain.Models.Role", b =>
+                {
+                    b.Navigation("RolePermissions");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
