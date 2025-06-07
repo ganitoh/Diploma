@@ -30,6 +30,7 @@ internal class GetProductByIdQueryHandler : IQueryHandler<GetProductByIdQuery, P
     {
         var product = await _context.Products
             .AsNoTracking()
+            .Include(x=>x.SellOrganization)
             .FirstOrDefaultAsync(x => x.Id==request.ProductId, cancellationToken) 
                       ?? throw new NotFoundException("Товар не найден");
         

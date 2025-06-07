@@ -9,7 +9,7 @@ using Organization.ApplicationContract.Requests;
 
 namespace Organization.API.Controllers;
 
-public class OrderContorller : BaseApiController
+public class OrderController : BaseApiController
 {
     /// <summary>
     /// Получить заказ по идентификатору

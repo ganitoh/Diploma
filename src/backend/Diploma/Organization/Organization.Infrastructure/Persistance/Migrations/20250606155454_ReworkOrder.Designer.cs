@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Organization.Infrastructure.Persistance.Context;
@@ -11,9 +12,11 @@ using Organization.Infrastructure.Persistance.Context;
 namespace Organization.Infrastructure.Persistance.Migrations
 {
     [DbContext(typeof(OrganizationDbContext))]
-    partial class OrganizationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250606155454_ReworkOrder")]
+    partial class ReworkOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("DeliveryDate")
+                    b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ProductId")
@@ -94,12 +97,7 @@ namespace Organization.Infrastructure.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("RatingId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RatingId");
 
                     b.ToTable("organization", "organization");
                 });
@@ -152,9 +150,6 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<int?>("RatingId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("SellOrganizationId")
                         .HasColumnType("integer");
 
@@ -163,61 +158,9 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RatingId");
-
                     b.HasIndex("SellOrganizationId");
 
                     b.ToTable("product", "organization");
-                });
-
-            modelBuilder.Entity("Organization.Domain.Models.Rating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Total")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Vale")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("rating", "organization");
-                });
-
-            modelBuilder.Entity("Organization.Domain.Models.RatingCommentary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Commentary")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("RatingId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("RatingValue")
-                        .HasColumnType("numeric");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RatingId");
-
-                    b.ToTable("ratingcommentary", "organization");
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Order", b =>
@@ -247,15 +190,6 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.Navigation("SellerOrganization");
                 });
 
-            modelBuilder.Entity("Organization.Domain.Models.Organization", b =>
-                {
-                    b.HasOne("Organization.Domain.Models.Rating", "Rating")
-                        .WithMany()
-                        .HasForeignKey("RatingId");
-
-                    b.Navigation("Rating");
-                });
-
             modelBuilder.Entity("Organization.Domain.Models.OrganizationUser", b =>
                 {
                     b.HasOne("Organization.Domain.Models.Organization", "Organization")
@@ -269,30 +203,13 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
             modelBuilder.Entity("Organization.Domain.Models.Product", b =>
                 {
-                    b.HasOne("Organization.Domain.Models.Rating", "Rating")
-                        .WithMany()
-                        .HasForeignKey("RatingId");
-
                     b.HasOne("Organization.Domain.Models.Organization", "SellOrganization")
                         .WithMany("Products")
                         .HasForeignKey("SellOrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Rating");
-
                     b.Navigation("SellOrganization");
-                });
-
-            modelBuilder.Entity("Organization.Domain.Models.RatingCommentary", b =>
-                {
-                    b.HasOne("Organization.Domain.Models.Rating", "Rating")
-                        .WithMany("Commentaries")
-                        .HasForeignKey("RatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Rating");
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Organization", b =>
@@ -309,11 +226,6 @@ namespace Organization.Infrastructure.Persistance.Migrations
             modelBuilder.Entity("Organization.Domain.Models.Product", b =>
                 {
                     b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("Organization.Domain.Models.Rating", b =>
-                {
-                    b.Navigation("Commentaries");
                 });
 #pragma warning restore 612, 618
         }

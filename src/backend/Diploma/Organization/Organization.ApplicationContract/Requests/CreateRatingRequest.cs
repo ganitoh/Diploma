@@ -1,11 +1,11 @@
-﻿using Common.Domain;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Organization.Domain.Models;
+namespace Organization.ApplicationContract.Requests;
 
 /// <summary>
-/// Коментарий к рейнтигу
+/// Данные запроса на создание оценки рейтинга
 /// </summary>
-public class RatingCommentary : Entity<int>
+public class CreateRatingRequest
 {
     /// <summary>
     /// Оцена пользователя
@@ -18,22 +18,17 @@ public class RatingCommentary : Entity<int>
     public string? Commentary { get; set; }
     
     /// <summary>
-    /// Дата создания
-    /// </summary>
-    public DateTime CreateDate { get; set; }
-    
-    /// <summary>
     /// Идентификатор пользователя
     /// </summary>
     public Guid UserId { get; set; }
 
     /// <summary>
-    /// Идентификатор рейтинга
+    /// Идентификато сущности
     /// </summary>
-    public int RatingId { get; set; }
-    
+    public int EntityId { get; set; }
+
     /// <summary>
-    /// Рейтинг
+    /// Флаг - для чего пришла оценка (продукт/организация)
     /// </summary>
-    public virtual Rating Rating { get; set; }
+    public bool IsProduct { get; set; }
 }

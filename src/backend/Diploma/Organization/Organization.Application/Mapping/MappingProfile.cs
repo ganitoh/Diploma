@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Domain.Extensions;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
@@ -12,10 +13,18 @@ public class MappingProfile : Profile
         CreateMap<CreateOrganizationRequest, Organization.Domain.Models.Organization>();
         CreateMap<Organization.Domain.Models.Organization, OrganizationDto>();
 
-        CreateMap<Order, OrderDto>();
+        CreateMap<Order, OrderDto>()
+            .ForMember(x => x.StatusText, o => o.MapFrom(x => x.Status.GetDescription()))
+            .ForMember(x => x.BuyerOrganizationName, o => o.MapFrom(x => x.BuyerOrganization.Name))
+            .ForMember(x => x.SellerOrganizationName, o => o.MapFrom(x => x.SellerOrganization.Name));
 
         CreateMap<CreateProductRequest, Product>();
-        CreateMap<Product, ProductDto>();
         CreateMap<Product, ShortProductDto>();
+        CreateMap<Product, ProductDto>()
+            .ForMember(x => x.SellOrganizationName,
+                y => y.MapFrom(x => x.SellOrganization.Name));
+
+        CreateMap<Rating, RatingDto>();
+        CreateMap<RatingCommentary, RatingCommentaryDto>();
     }
 }

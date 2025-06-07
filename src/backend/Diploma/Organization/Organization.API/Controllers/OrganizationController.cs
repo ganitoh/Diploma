@@ -23,6 +23,17 @@ public class OrganizationController : BaseApiController
     }
     
     /// <summary>
+    /// Получить топ организаций по рейтингу
+    /// </summary>
+    [HttpGet(nameof(GetTopOrganizationByRating))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<ShortOrganizationDto>>))]
+    public async Task<IActionResult> GetTopOrganizationByRating([FromQuery] int top)
+    {
+        var result = await Mediator.Send(new GetTopOrganizationByRatingQuery(top));
+        return Ok(ApiResponse<ICollection<ShortOrganizationDto>>.Success(result));
+    }
+    
+    /// <summary>
     /// Получить организацию по идентификатору
     /// </summary>
     [HttpGet(nameof(GetOrganizationById))]

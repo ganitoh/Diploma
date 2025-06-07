@@ -39,14 +39,13 @@ internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, i
         if (buyerOrganization is null)
             throw new NotFoundException("Покупающая организация не найдена");
 
-        var products = await _context.Products
-            .Where(x => request.OrderData.ProductsIds.Contains(x.Id))
-            .ToListAsync(cancellationToken);
+        var product = await _context.Products
+            .FirstOrDefaultAsync(x => x.Id == request.OrderData.ProductId, cancellationToken);
 
-        if (products.Count == 0)
-            throw new NotFoundException("Товары не найдены");
+        if (product is null)
+            throw new NotFoundException("Товар не найден");
         
-        var order = new Order(sellerOrganization, buyerOrganization, products);
+        var order = new Order(sellerOrganization, buyerOrganization, product, request.OrderData.Quantity);
 
         _context.Orders.Add(order);
         await _context.SaveChangesAsync(cancellationToken);

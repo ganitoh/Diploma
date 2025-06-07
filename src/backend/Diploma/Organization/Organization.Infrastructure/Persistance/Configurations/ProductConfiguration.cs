@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Organization.Domain.ManyToMany;
 using Organization.Domain.Models;
 
 namespace Organization.Infrastructure.Persistance.Configurations;
@@ -19,10 +18,5 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasOne(x => x.SellOrganization)
             .WithMany(x => x.Products)
             .HasForeignKey(x => x.SellOrganizationId);
-        
-        builder
-            .HasMany(x => x.Orders)
-            .WithMany(x => x.Products)
-            .UsingEntity<OrderProduct>();
     }
 }

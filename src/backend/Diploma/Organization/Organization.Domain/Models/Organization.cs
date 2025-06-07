@@ -37,6 +37,16 @@ public class Organization : Entity<int>
     /// Флаг верефикации
     /// </summary>
     public bool IsApproval { get; set; }
+    
+    /// <summary>
+    /// Идентификатор рейтинга
+    /// </summary>
+    public int? RatingId { get; set; }
+    
+    /// <summary>
+    /// Рейтинг
+    /// </summary>
+    public virtual Rating? Rating { get; set; }
 
     /// <summary>
     /// Продукты
@@ -56,5 +66,5 @@ public class Organization : Entity<int>
     /// <summary>
     /// Пользователи
     /// </summary>
-    public ICollection<OrganizationUser> OrganizationUsers { get; set; }
+    public virtual ICollection<OrganizationUser> OrganizationUsers { get; set; }
 }

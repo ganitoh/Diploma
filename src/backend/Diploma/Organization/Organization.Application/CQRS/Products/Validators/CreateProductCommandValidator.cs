@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Organization.Application.CQRS.Products.Commands;
 
-namespace OrganizationOrganization.Application.CQRS.Products.Validator;
+namespace Organization.Application.CQRS.Products.Validators;
 
 public class CreateProductCommandValidator :  AbstractValidator<CreateProductCommand>
 {

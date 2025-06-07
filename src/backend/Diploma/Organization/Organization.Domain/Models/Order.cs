@@ -1,6 +1,5 @@
 ﻿using Common.Domain;
 using Organization.Domain.Enums;
-using Organization.Domain.ManyToMany;
 
 namespace Organization.Domain.Models;
 
@@ -17,7 +16,7 @@ public class Order : Entity<int>
     /// <summary>
     /// Дата и время доставки
     /// </summary>
-    public DateTime DeliveryDate { get; set; }
+    public DateTime? DeliveryDate { get; set; }
 
     /// <summary>
     /// Дата создания
@@ -48,17 +47,28 @@ public class Order : Entity<int>
     /// Покупающая организация
     /// </summary>
     public Organization? BuyerOrganization { get; set; }
-
+    
+    /// <summary>
+    /// Идентификатор продукта
+    /// </summary>
+    public int ProductId { get; set; }
+    
     /// <summary>
     /// Товары
     /// </summary>
-    public virtual ICollection<Product> Products { get; set; }
+    public virtual Product Product { get; set; }
+
+    /// <summary>
+    /// Количество
+    /// </summary>
+    public int Quantity { get; set; }
     
-    public Order(Organization? sellerOrganization, Organization? buyerOrganization, ICollection<Product> products)
+    public Order(Organization? sellerOrganization, Organization? buyerOrganization, Product product, int quantity)
     {
         SellerOrganization = sellerOrganization;
         BuyerOrganization = buyerOrganization;
-        Products = products;
+        Product = product;
+        Quantity = quantity;
         CreateDate = DateTime.UtcNow;
         Status = OrderStatus.Created;
         CalculateTotalPrice();
@@ -69,8 +79,8 @@ public class Order : Entity<int>
     /// <summary>
     /// Расчитать полнусю стоимость заказа
     /// </summary>
-    public void CalculateTotalPrice()
+    private void CalculateTotalPrice()
     {
-        TotalPrice = Products.Sum(x => x.Price);
+        TotalPrice = Product.Price * Quantity;
     }
 }

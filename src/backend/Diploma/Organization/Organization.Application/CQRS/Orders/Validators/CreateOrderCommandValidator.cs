@@ -7,7 +7,6 @@ public class CreateOrderCommandValidator :  AbstractValidator<CreateOrderCommand
 {
     public CreateOrderCommandValidator()
     {
-        RuleFor(x=>x.OrderData.BuyerOrganizationId).NotEmpty();
         RuleFor(x=>x.OrderData.SellerOrganizationId).NotEmpty();
     }
 }

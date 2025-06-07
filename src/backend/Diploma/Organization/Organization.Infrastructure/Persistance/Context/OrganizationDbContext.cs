@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Organization.Domain.ManyToMany;
 using Organization.Domain.Models;
 
 namespace Organization.Infrastructure.Persistance.Context;
@@ -12,7 +10,7 @@ public class OrganizationDbContext : DbContext
     public DbSet<Domain.Models.Organization> Organizations { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<OrderProduct> OrderProducts { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
     
     public OrganizationDbContext(DbContextOptions options) 
         : base(options) { }

@@ -8,7 +8,7 @@ namespace Organization.Domain.Models;
 public class Rating : Entity<int>
 {
     /// <summary>
-    /// Общее значение
+    /// Среднее значение
     /// </summary>
     public decimal Vale { get; set; }
     
@@ -18,7 +18,13 @@ public class Rating : Entity<int>
     public int Total { get; set; }
     
     /// <summary>
-    /// Коментарии о оценки каждого пользователя
+    /// Коментарии и оценки каждого пользователя
     /// </summary>
     public ICollection<RatingCommentary> Commentaries { get; set; }
+
+    public void CalculateRatingValue()
+    {
+        Total = Commentaries.Count;
+        Vale = Commentaries.Select(x => x.RatingValue).Sum() / Total;
+    }
 }

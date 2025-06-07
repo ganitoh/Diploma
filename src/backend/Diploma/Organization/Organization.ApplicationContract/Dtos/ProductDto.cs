@@ -51,4 +51,9 @@ public class ProductDto
     /// Идентификатор продающей организации
     /// </summary>
     public int SellOrganizationId { get; set; }
+    
+    /// <summary>
+    /// Название организации
+    /// </summary>
+    public string SellOrganizationName { get; set; }
 }

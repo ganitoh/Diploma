@@ -1,7 +1,7 @@
 "use client";
 
-import { useGetOrganizationByUserIdQuery } from '@/app/hooks/organization/useOrganizationQuery';
-import { useParams, useRouter } from 'next/navigation';
+import { useGetOrganizationByUserIdQuery } from "@/app/hooks/organization/useOrganizationQuery";
+import { useParams, useRouter } from "next/navigation";
 import {
   Button,
   Card,
@@ -12,40 +12,42 @@ import {
   Space,
   Typography,
   Alert,
-  Col
-} from 'antd';
-import { useEffect, useState } from 'react';
-import { MeasurementType } from '@/app/models/product';
-import { AddProductForm } from '@/app/components/addProductForm/addProductForm';
-import { useCheckRoleUserQuery } from '@/app/hooks/user/useUserQuery';
-import { AdminPanel } from '@/app/components/adminPanel/adminPanel';
+  Col,
+} from "antd";
+import { useEffect, useState } from "react";
+import { MeasurementType } from "@/app/models/product";
+import { AddProductForm } from "@/app/components/addProductForm/addProductForm";
+import { useCheckRoleUserQuery } from "@/app/hooks/user/useUserQuery";
+import { AdminPanel } from "@/app/components/adminPanel/adminPanel";
 
-const { Title } = Typography
+const { Title } = Typography;
 
 const MeasurementTypeLabels: Record<MeasurementType, string> = {
-  [MeasurementType.Thing]: 'Шт',
-  [MeasurementType.Gram]: 'Грамм',
-  [MeasurementType.Kg]: 'Килограмм',
-  [MeasurementType.Tones]: 'Тонны',
+  [MeasurementType.Thing]: "Шт",
+  [MeasurementType.Gram]: "Грамм",
+  [MeasurementType.Kg]: "Килограмм",
+  [MeasurementType.Tones]: "Тонны",
 };
 
 export default function ProfilePage() {
-  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] =
+    useState<boolean>(false);
   const params = useParams();
   const router = useRouter();
   const id = params.id;
 
-  const { data: resultCheck } = useCheckRoleUserQuery("Admin")
-  const { data, isLoading, refetch } = useGetOrganizationByUserIdQuery(id?.toString() ?? "")
-
+  const { data: resultCheck } = useCheckRoleUserQuery("Admin");
+  const { data, isLoading, refetch } = useGetOrganizationByUserIdQuery(
+    id?.toString() ?? ""
+  );
 
   useEffect(() => {
-    var userId = localStorage.getItem("userId")
+    var userId = localStorage.getItem("userId");
 
     if (!userId) {
       router.push("/login");
     }
-  })
+  }, []);
 
   const closeDrawer = () => {
     setIsAddProductModalOpen(false);
@@ -58,45 +60,84 @@ export default function ProfilePage() {
       ) : (
         <div>
           {!data?.succeeded && (
-            <div style={{ textAlign: 'center', marginTop: 50 }}>
+            <div style={{ textAlign: "center", marginTop: 50 }}>
               <Title level={3}>Организация не найдена</Title>
-              <Button type="primary" onClick={() => router.push('/organization/create')}>
+              <Button
+                type="primary"
+                onClick={() => router.push("/organization/create")}
+              >
                 Добавить организацию
               </Button>
             </div>
           )}
           {data?.succeeded && data.response && (
-            <div style={{ padding: 24, maxWidth: 1000, margin: '0 auto' }}>
-
-              <Card title={<>Организация: {data.response.name}</>} style={{ marginBottom: 24 }}>
-                <Descriptions title="Информация об организации" bordered column={1}>
-                  <Descriptions.Item label="ИНН">{data.response.inn}</Descriptions.Item>
-                  <Descriptions.Item label="Email">{data.response.email}</Descriptions.Item>
-                  <Descriptions.Item label="Юридический адрес">{data.response.legalAddress}</Descriptions.Item>
-                  <Descriptions.Item label="Описание">{data.response.description}</Descriptions.Item>
-                  <Descriptions.Item label="Прошла верефикацию">{data.response.isApproval ? 'Да' : 'Нет'}</Descriptions.Item>
+            <div style={{ padding: 24, maxWidth: 1000, margin: "0 auto" }}>
+              <Card
+                title={<>Организация: {data.response.name}</>}
+                style={{ marginBottom: 24 }}
+              >
+                <Descriptions
+                  title="Информация об организации"
+                  bordered
+                  column={1}
+                >
+                  <Descriptions.Item label="ИНН">
+                    {data.response.inn}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Email">
+                    {data.response.email}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Юридический адрес">
+                    {data.response.legalAddress}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Описание">
+                    {data.response.description}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Прошла верефикацию">
+                    {data.response.isApproval ? "Да" : "Нет"}
+                  </Descriptions.Item>
                 </Descriptions>
               </Card>
               {!data.response.isApproval && (
-                <Col span={24} style={{ marginBottom: 16 }} >
-                  <Alert message="Организация еще не прошла проверку, вы не моежет добавит товар" type="warning" showIcon />
+                <Col span={24} style={{ marginBottom: 16 }}>
+                  <Alert
+                    message="Организация еще не прошла проверку, вы не моежет добавит товар"
+                    type="warning"
+                    showIcon
+                  />
                 </Col>
               )}
-              <Card title={
-                <Space style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                  <span>Товары</span>
-                  <Button type="primary" disabled={!data.response.isApproval} onClick={() => setIsAddProductModalOpen(true)}>
-                    Добавить товар
-                  </Button>
-                </Space>
-              } style={{ marginBottom: 24 }}>
+              <Card
+                title={
+                  <Space
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
+                    <span>Товары</span>
+                    <Button
+                      type="primary"
+                      disabled={!data.response.isApproval}
+                      onClick={() => setIsAddProductModalOpen(true)}
+                    >
+                      Добавить товар
+                    </Button>
+                  </Space>
+                }
+                style={{ marginBottom: 24 }}
+              >
                 {data.response.products.length > 0 ? (
                   <List
                     itemLayout="vertical"
                     dataSource={data.response.products}
                     renderItem={(product) => (
                       <List.Item key={product.id}>
-                        <List.Item.Meta title={product.name} description={product.description} />
+                        <List.Item.Meta
+                          title={product.name}
+                          description={product.description}
+                        />
                         Цена: {product.price} ₽
                       </List.Item>
                     )}
@@ -146,10 +187,13 @@ export default function ProfilePage() {
                   </Space>
                 }
               >
-                <AddProductForm organizationId={data.response.id} onClose={() => {
-                  setIsAddProductModalOpen(false)
-                  refetch()
-                }} />
+                <AddProductForm
+                  organizationId={data.response.id}
+                  onClose={() => {
+                    setIsAddProductModalOpen(false);
+                    refetch();
+                  }}
+                />
               </Drawer>
             </div>
           )}

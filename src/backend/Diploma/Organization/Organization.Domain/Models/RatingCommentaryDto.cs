@@ -1,11 +1,9 @@
-﻿using Common.Domain;
-
-namespace Organization.Domain.Models;
+﻿namespace Organization.Domain.Models;
 
 /// <summary>
-/// Коментарий к рейнтигу
+/// Dto - оценка с комментом
 /// </summary>
-public class RatingCommentary : Entity<int>
+public class RatingCommentaryDto
 {
     /// <summary>
     /// Оцена пользователя
@@ -26,14 +24,4 @@ public class RatingCommentary : Entity<int>
     /// Идентификатор пользователя
     /// </summary>
     public Guid UserId { get; set; }
-
-    /// <summary>
-    /// Идентификатор рейтинга
-    /// </summary>
-    public int RatingId { get; set; }
-    
-    /// <summary>
-    /// Рейтинг
-    /// </summary>
-    public virtual Rating Rating { get; set; }
 }

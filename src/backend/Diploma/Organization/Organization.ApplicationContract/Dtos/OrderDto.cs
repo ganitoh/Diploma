@@ -1,4 +1,5 @@
-﻿using Organization.Domain.Enums;
+﻿using System.Globalization;
+using Organization.Domain.Enums;
 
 namespace Organization.ApplicationContract.Dtos;
 
@@ -33,6 +34,11 @@ public class OrderDto
     public OrderStatus Status { get; set; }
 
     /// <summary>
+    /// Текст статуса
+    /// </summary>
+    public string StatusText { get; set; }
+
+    /// <summary>
     /// Идентификатор продающей организации
     /// </summary>
     public int SellerOrganizationId { get; set; }
@@ -40,7 +46,7 @@ public class OrderDto
     /// <summary>
     /// Продающая организации
     /// </summary>
-    public OrganizationDto? SellerOrganization { get; set; }
+    public string? SellerOrganizationName { get; set; }
 
     /// <summary>
     /// Идентификатор покупающей организации
@@ -50,10 +56,15 @@ public class OrderDto
     /// <summary>
     /// Покупающая организация
     /// </summary>
-    public OrganizationDto? BuyerOrganization { get; set; }
+    public string? BuyerOrganizationName { get; set; }
 
+    /// <summary>
+    /// Идентификатор товара
+    /// </summary>
+    public int ProductId { get; set; }
+    
     /// <summary>
     /// Товары
     /// </summary>
-    public ICollection<ProductDto> Products { get; set; }
+    public ProductDto Product { get; set; }
 }

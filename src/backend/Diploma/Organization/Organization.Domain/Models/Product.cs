@@ -1,6 +1,5 @@
 ﻿using Common.Domain;
 using Organization.Domain.Enums;
-using Organization.Domain.ManyToMany;
 
 namespace Organization.Domain.Models;
 
@@ -53,6 +52,16 @@ public class Product : Entity<int>
     /// Продающая организация
     /// </summary>
     public virtual Organization? SellOrganization { get; set; }
+
+    /// <summary>
+    /// Идентификатор рейтинга
+    /// </summary>
+    public int? RatingId { get; set; }
+    
+    /// <summary>
+    /// Рейтинг
+    /// </summary>
+    public virtual Rating? Rating { get; set; }
 
     /// <summary>
     /// Заказы

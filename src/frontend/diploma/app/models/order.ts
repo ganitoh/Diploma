@@ -1,17 +1,29 @@
-export interface IOrder {
-    id: number
-    totalPrice: number
-    deliveryDate: Date
-    createDate: Date
-    status: OrderStatus
-    sellerOrganizationId: number
-    buyerOrganizationId: number
-} 
+import { IProduct } from "./product";
 
-enum OrderStatus
-{
-    Created = 1,
-    Collected,
-    InDelivery,
-    Close
+export interface IOrder {
+  id: number;
+  totalPrice: number;
+  deliveryDate: Date;
+  createDate: Date;
+  status: OrderStatus;
+  statusText: string;
+  sellerOrganizationId: number;
+  buyerOrganizationId: number;
+  sellerOrganizationName: string;
+  buyerOrganizationName: string;
+  productId: number;
+  product: IProduct;
+}
+
+export interface ICreateOrder {
+  sellerOrganizationId: number;
+  productId: number;
+  quantity: number;
+}
+
+export enum OrderStatus {
+  Created = 1,
+  Collected,
+  InDelivery,
+  Close,
 }

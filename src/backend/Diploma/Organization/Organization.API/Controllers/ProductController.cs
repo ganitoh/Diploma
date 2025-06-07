@@ -25,7 +25,6 @@ public class ProductController : BaseApiController
     /// <summary>
     /// Получить товар по идентификатору
     /// </summary>
-    [Authorize]
     [HttpGet(nameof(GetProductById))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ProductDto>))]
     public async Task<IActionResult> GetProductById([FromQuery] int productId)

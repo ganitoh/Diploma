@@ -10,14 +10,13 @@ public class CreateOrderRequest
     /// </summary>
     public int SellerOrganizationId { get; set; }
 
+    /// <summary>
+    /// Мдентификатор товара
+    /// </summary>
+    public virtual int ProductId { get; set; }
 
     /// <summary>
-    /// Идентификатор покупающей организации
+    /// Колличетво товара
     /// </summary>
-    public int BuyerOrganizationId { get; set; }
-
-    /// <summary>
-    /// Товары
-    /// </summary>
-    public virtual int[] ProductsIds { get; set; }
+    public int Quantity { get; set; }
 }
