@@ -15,22 +15,10 @@ import Link from "next/link";
 
 const { Title, Paragraph } = Typography;
 
-const topOrganizationsMok = {
-  response: [
-    { name: 'Сахарный завод "Кристал-2"', ratingValue: 4.9 },
-    { name: 'Поставщик "МолСнаб"', ratingValue: 4.8 },
-    { name: 'Торговая сеть "Фермерские продукты"', ratingValue: 4.8 },
-    { name: 'Склад запчастей "АвтоДеталь"', ratingValue: 4.5 },
-    { name: 'СТО "ТехАвто"', ratingValue: 4.6 },
-    { name: 'Поставщик "СахарТрейд"', ratingValue: 4.4 },
-  ],
-};
-
 export default function Home() {
   const router = useRouter();
   const { data: topProducts, isLoading } = useGetTopSellingProductsQuery(5);
-  //const { data: topOrganizations, isLoading } =
-  //useGetTopOrganizationByRatingQuery(5);
+  const { data: topOrganizations } = useGetTopOrganizationByRatingQuery(5);
 
   return (
     <div>
@@ -60,10 +48,18 @@ export default function Home() {
         </Title>
         <List
           grid={{ gutter: 16, column: 3 }}
-          dataSource={topOrganizationsMok?.response}
+          dataSource={topOrganizations?.response}
           renderItem={(item) => (
             <List.Item>
-              <Card title={item.name}>Рейтинг: {item.ratingValue}</Card>
+              <Card
+                title={
+                  <Link href={`/organization/${item.id}`}>{item.name}</Link>
+                }
+              >
+                <div style={{ marginTop: 8 }}>
+                  Оценка: {item.ratingValue === 0 ? "-" : item.ratingValue}
+                </div>
+              </Card>
             </List.Item>
           )}
         />

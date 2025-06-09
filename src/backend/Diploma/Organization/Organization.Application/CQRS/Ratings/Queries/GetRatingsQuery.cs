@@ -43,7 +43,7 @@ internal class GetRatingsQueryHandler : IQueryHandler<GetRatingsQuery, RatingDto
         }
         else
         {
-            var organization = await _context.Products
+            var organization = await _context.Organizations
                               .AsNoTracking()
                               .Include(x => x.Rating)
                               .ThenInclude(x => x.Commentaries)

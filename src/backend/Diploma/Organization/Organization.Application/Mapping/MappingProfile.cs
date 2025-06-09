@@ -12,6 +12,9 @@ public class MappingProfile : Profile
     {
         CreateMap<CreateOrganizationRequest, Organization.Domain.Models.Organization>();
         CreateMap<Organization.Domain.Models.Organization, OrganizationDto>();
+        CreateMap<Organization.Domain.Models.Organization, ShortOrganizationDto>()
+            .ForMember(x => x.RatingValue,
+                y => y.MapFrom(x => x.Rating.Vale));;
 
         CreateMap<Order, OrderDto>()
             .ForMember(x => x.StatusText, o => o.MapFrom(x => x.Status.GetDescription()))

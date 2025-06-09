@@ -31,7 +31,7 @@ internal class GetOrganizationByIdQueryHandler : IQueryHandler<GetOrganizationBy
         var organization = await _context
             .Organizations
             .AsNoTracking()
-            .Include(x=>x.Products)
+            .Include(x=>x.Products).ThenInclude(x=>x.Rating)
             .Include(x=>x.SellOrders)
             .Include(x=>x.BuyOrders)
             .FirstOrDefaultAsync(x=>x.Id == request.OrganizationId, cancellationToken) ?? throw new NotFoundException("Организация не найдена");

@@ -58,7 +58,9 @@ export const AddRatingForm = (props: IAddRatingFormProps) => {
           >
             <Input.TextArea
               rows={4}
-              placeholder="Поделитесь впечатлением о товаре..."
+              placeholder={`Поделитесь впечатлением ${
+                props.isProduct ? "о товаре" : "об организации"
+              }...`}
             />
           </Form.Item>
 
