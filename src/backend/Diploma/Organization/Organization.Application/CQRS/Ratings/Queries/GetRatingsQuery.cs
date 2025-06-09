@@ -36,10 +36,10 @@ internal class GetRatingsQueryHandler : IQueryHandler<GetRatingsQuery, RatingDto
                 .AsNoTracking()
                 .Include(x => x.Rating)
                 .ThenInclude(x => x.Commentaries)
-                .FirstOrDefaultAsync(x=>x.Id == request.EntityId, cancellationToken) 
-                          ?? throw new NotFoundException("Продует не найден");
+                .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken) 
+                          ?? throw new NotFoundException("Товар не найден");
             
-            ratingResult = _mapper.Map<RatingDto>(product);
+            ratingResult = _mapper.Map<RatingDto>(product.Rating);
         }
         else
         {
@@ -47,10 +47,10 @@ internal class GetRatingsQueryHandler : IQueryHandler<GetRatingsQuery, RatingDto
                               .AsNoTracking()
                               .Include(x => x.Rating)
                               .ThenInclude(x => x.Commentaries)
-                              .FirstOrDefaultAsync(x=>x.Id == request.EntityId, cancellationToken) 
-                          ?? throw new NotFoundException("Продует не найден");
+                              .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken) 
+                          ?? throw new NotFoundException("Организация не найдена");
             
-            ratingResult = _mapper.Map<RatingDto>(organization);
+            ratingResult = _mapper.Map<RatingDto>(organization.Rating);
         }
         
         return ratingResult;

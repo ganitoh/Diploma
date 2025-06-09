@@ -5,6 +5,11 @@ namespace Organization.ApplicationContract.Dtos;
 public class RatingDto
 {
     /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
+    /// <summary>
     /// Среднее значение
     /// </summary>
     public decimal Vale { get; set; }

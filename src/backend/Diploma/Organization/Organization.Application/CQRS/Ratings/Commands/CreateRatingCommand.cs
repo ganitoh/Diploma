@@ -1,5 +1,7 @@
-﻿using Common.Application;
+﻿using System.Security.Claims;
+using Common.Application;
 using Common.Application.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
@@ -16,18 +18,28 @@ public record CreateRatingCommand(CreateRatingRequest RequestData) : ICommand<in
 internal class CreateRatingCommandHandler : ICommandHandler<CreateRatingCommand, int>
 {
     private readonly OrganizationDbContext _context;
+    private readonly IHttpContextAccessor _httpContext;
 
-    public CreateRatingCommandHandler(OrganizationDbContext context)
+    public CreateRatingCommandHandler(OrganizationDbContext context, IHttpContextAccessor httpContext)
     {
         _context = context;
+        _httpContext = httpContext;
     }
 
     public async Task<int> Handle(CreateRatingCommand request, CancellationToken cancellationToken)
     {
+        var userId =
+            _httpContext.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
+            throw new ApplicationException("Идентификатор пользователя не нйден");
+
+        var userName =
+            _httpContext.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        
         var ratingCommentary = new RatingCommentary
         {
             Commentary = request.RequestData.Commentary,
-            UserId = request.RequestData.UserId,
+            UserId = Guid.Parse(userId),
+            UserName = userName,
             RatingValue = request.RequestData.RatingValue,
             CreateDate = DateTime.UtcNow
         };

@@ -20,7 +20,7 @@ function createAuthenticatedClient(baseURL: string) {
             {},
             { withCredentials: true }
           );
-          return client(err.config); // retry original
+          return client(err.config);
         } catch {
           window.location.href = "/login";
         }

@@ -28,6 +28,11 @@ public class RatingCommentary : Entity<int>
     public Guid UserId { get; set; }
 
     /// <summary>
+    /// Имя пользователя
+    /// </summary>
+    public string? UserName { get; set; }
+
+    /// <summary>
     /// Идентификатор рейтинга
     /// </summary>
     public int RatingId { get; set; }

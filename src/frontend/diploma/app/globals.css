@@ -1,6 +1,12 @@
 .header {
-    borderRadius: "10px";
-    display: "flex";
-    justifyContent: "space-between";
-    alignItems: "center"
+  borderradius: "10px";
+  display: "flex";
+  justifycontent: "space-between";
+  alignitems: "center";
+}
+
+.main-div {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
 }

@@ -25,6 +25,7 @@ public class MappingProfile : Profile
                 y => y.MapFrom(x => x.SellOrganization.Name));
 
         CreateMap<Rating, RatingDto>();
-        CreateMap<RatingCommentary, RatingCommentaryDto>();
+        CreateMap<RatingCommentary, RatingCommentaryDto>()
+            .ForMember(x => x.CreateDate, y => y.MapFrom(x => x.CreateDate.ToShortDateString()));
     }
 }

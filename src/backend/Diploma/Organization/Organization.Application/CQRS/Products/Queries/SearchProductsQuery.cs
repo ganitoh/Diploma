@@ -30,7 +30,7 @@ internal class SearchProductsQueryHandler : IQueryHandler<SearchProductsQuery, I
     {
         return await _context.Products
             .AsNoTracking()
-            .Where(x => x.Name.Contains(request.SearchString) && x.IsStock)
+            .Where(x => x.Name.ToLower().Contains(request.SearchString.ToLower()) && x.IsStock)
             .ProjectTo<ShortProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
     }

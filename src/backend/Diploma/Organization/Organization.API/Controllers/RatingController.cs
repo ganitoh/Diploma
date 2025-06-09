@@ -13,7 +13,7 @@ public class RatingController : BaseApiController
     /// <summary>
     /// Получить все отзывы для сущности
     /// </summary>
-    [HttpGet(nameof(CreateRating))]
+    [HttpGet(nameof(GetRatingForEntity))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<RatingDto>))]
     public async Task<IActionResult> GetRatingForEntity([FromQuery] int entityId, [FromQuery] bool isProduct)
     {

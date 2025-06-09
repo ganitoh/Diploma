@@ -13,12 +13,14 @@ import {
   Typography,
   Alert,
   Col,
+  Table,
 } from "antd";
 import { useEffect, useState } from "react";
 import { MeasurementType } from "@/app/models/product";
 import { AddProductForm } from "@/app/components/addProductForm/addProductForm";
 import { useCheckRoleUserQuery } from "@/app/hooks/user/useUserQuery";
 import { AdminPanel } from "@/app/components/adminPanel/adminPanel";
+import { productColumns } from "./columns";
 
 const { Title } = Typography;
 
@@ -129,18 +131,11 @@ export default function ProfilePage() {
                 style={{ marginBottom: 24 }}
               >
                 {data.response.products.length > 0 ? (
-                  <List
-                    itemLayout="vertical"
+                  <Table
+                    rowKey="id"
+                    columns={productColumns}
                     dataSource={data.response.products}
-                    renderItem={(product) => (
-                      <List.Item key={product.id}>
-                        <List.Item.Meta
-                          title={product.name}
-                          description={product.description}
-                        />
-                        Цена: {product.price} ₽
-                      </List.Item>
-                    )}
+                    pagination={false}
                   />
                 ) : (
                   <Empty description="Нет товаров" />

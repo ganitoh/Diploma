@@ -23,12 +23,14 @@ export const getTopSellingProducts = (
 ): Promise<IResponse<IProductShort[]>> =>
   organizaitonClient.get(`/Product/GetTopSellingProducts?top=${top}`);
 
-export const serarchProducts = (
+export const serarchProducts = async (
   searchString: string
 ): Promise<IResponse<IProductShort[]>> =>
-  organizaitonClient.get(
-    `/Product/SearchProducts?searchString=${searchString}`
-  );
+  (
+    await organizaitonClient.get(
+      `/Product/SearchProducts?searchString=${searchString}`
+    )
+  ).data;
 
 export const createProduct = async (
   productData: ICreateProduct

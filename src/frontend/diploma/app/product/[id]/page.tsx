@@ -12,7 +12,6 @@ import {
   Typography,
   Alert,
   Col,
-  message,
 } from "antd";
 import { useEffect, useState } from "react";
 import { MeasurementType } from "@/app/models/product";
@@ -20,6 +19,8 @@ import { useCheckRoleUserQuery } from "@/app/hooks/user/useUserQuery";
 import { AdminPanel } from "@/app/components/adminPanel/adminPanel";
 import Link from "next/link";
 import { useOrderMutation } from "@/app/hooks/order/useOrderMutation";
+import { AddRatingForm } from "@/app/components/addRating/addRatingForm";
+import "../../globals.css";
 
 const { Title } = Typography;
 
@@ -88,7 +89,7 @@ export default function ProductPage() {
     var response = await createOrderMutation.mutateAsync({
       sellerOrganizationId: data.response.sellOrganizationId,
       quantity: form.getFieldValue("quantity"),
-      productId: 1,
+      productId: data.response.id,
     });
 
     alert("Заказ создан");
@@ -96,7 +97,7 @@ export default function ProductPage() {
   };
 
   return (
-    <div style={{ padding: 24, maxWidth: 800, margin: "0 auto" }}>
+    <div className="main-div">
       {resultCheck?.response && <AdminPanel />}
 
       <Card
@@ -156,6 +157,9 @@ export default function ProductPage() {
           </Col>
         )}
       </Card>
+      <div>
+        <AddRatingForm isProduct={true} entityId={data.response.id} />
+      </div>
 
       {/* Модальное окно для создания заказа */}
       <Modal

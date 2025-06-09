@@ -6,6 +6,11 @@
 public class RatingCommentaryDto
 {
     /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
+    /// <summary>
     /// Оцена пользователя
     /// </summary>
     public decimal RatingValue { get; set; }
@@ -18,10 +23,15 @@ public class RatingCommentaryDto
     /// <summary>
     /// Дата создания
     /// </summary>
-    public DateTime CreateDate { get; set; }
+    public string CreateDate { get; set; }
     
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
     public Guid UserId { get; set; }
+
+    /// <summary>
+    /// Имя пользователя
+    /// </summary>
+    public string UserName { get; set; } = string.Empty;
 }

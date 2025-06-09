@@ -16,11 +16,6 @@ public class CreateRatingRequest
     /// Текст комментария
     /// </summary>
     public string? Commentary { get; set; }
-    
-    /// <summary>
-    /// Идентификатор пользователя
-    /// </summary>
-    public Guid UserId { get; set; }
 
     /// <summary>
     /// Идентификато сущности
