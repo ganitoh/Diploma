@@ -49,6 +49,7 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
             throw new ApplicationException("Организаци уже существует");
         
         var organization = _mapper.Map<Domain.Models.Organization>(request.OrganizaitonData);
+        organization.Rating = new Rating();
         
         _context.Organizations.Add(organization);
         await _context.SaveChangesAsync(cancellationToken);

@@ -29,6 +29,7 @@ internal class CreateProductCommandHandler : ICommandHandler<CreateProductComman
     {
         var product = _mapper.Map<Product>(request.ProductData);
         product.IsStock = product.AvailableCount > 0;
+        product.Rating = new Rating();
         
         _context.Add(product);
         await _context.SaveChangesAsync(cancellationToken);

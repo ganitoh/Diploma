@@ -1,4 +1,4 @@
-﻿using Identity.Application.Common.Auth;
+﻿using Identity.Infrastructure.Auth.Abstractions;
 
 namespace Identity.Infrastructure.Auth;
 

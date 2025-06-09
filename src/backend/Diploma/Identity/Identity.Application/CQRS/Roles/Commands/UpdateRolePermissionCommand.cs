@@ -1,8 +1,8 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
-using Common.Infrastructure.UnitOfWork;
 using Identity.ApplicatinContract.Requests;
-using Identity.Application.Common.Persistance.Repositories;
+using Identity.Infrastructure.Persistance.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Application.CQRS.Roles.Commands;
 
@@ -13,36 +13,27 @@ public record UpdateRolePermissionCommand(UpdateRolePermissionRequest RequestDat
 
 internal class UpdateRolePermissionCommandHandler : ICommandHandler<UpdateRolePermissionCommand, int>
 {
-    private readonly IUnitOfWork  _unitOfWork;
-    private readonly IRolePermissionRepository _rolePermissionRepository;
-    private readonly IRoleRepository _roleRepository;
-    private readonly IPermissionRepository _permissionRepository;
+    private readonly IdentityDbContext _context;
 
-    public UpdateRolePermissionCommandHandler(
-        IUnitOfWork unitOfWork, 
-        IRolePermissionRepository rolePermissionRepository, 
-        IRoleRepository roleRepository,
-        IPermissionRepository permissionRepository)
+    public UpdateRolePermissionCommandHandler(IdentityDbContext context)
     {
-        _unitOfWork = unitOfWork;
-        _rolePermissionRepository = rolePermissionRepository;
-        _roleRepository = roleRepository;
-        _permissionRepository = permissionRepository;
+        _context = context;
     }
 
     public async Task<int> Handle(UpdateRolePermissionCommand request, CancellationToken cancellationToken)
     {
-        var role = await _roleRepository.GetById(request.RequestData.RoleId, cancellationToken)
+        var role = await _context.Roles.FirstOrDefaultAsync(x => x.Id == request.RequestData.RoleId, cancellationToken)
                    ?? throw new NotFoundException("Role not found");
 
-        var permissions =
-            await _permissionRepository.GetPermissionsByIdsAsync(request.RequestData.PermissionIds, cancellationToken);
+        var permissions = await _context.Permissions
+            .Where(x=>request.RequestData.PermissionIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
 
         if (!permissions.Any())
             throw new NotFoundException("Permissions not found");
 
         role.Permissions = permissions;
-        await _unitOfWork.CommitAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         
         return role.Id;
     }

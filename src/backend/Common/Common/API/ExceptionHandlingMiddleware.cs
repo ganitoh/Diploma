@@ -46,6 +46,7 @@ public class ExceptionHandlingMiddleware
             ApplicationException e => (int) HttpStatusCode.InternalServerError,
             ValidationException e => (int) HttpStatusCode.BadRequest,
             NotFoundException e => (int)HttpStatusCode.BadRequest,
+            UnauthorizedAccessException e => (int) HttpStatusCode.Unauthorized,
             _ => (int) HttpStatusCode.InternalServerError
         };
         

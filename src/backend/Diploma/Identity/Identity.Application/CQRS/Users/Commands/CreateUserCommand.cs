@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Common.Application;
-using Common.Infrastructure.UnitOfWork;
 using Identity.ApplicatinContract.Requests;
-using Identity.Application.Common.Auth;
-using Identity.Application.Common.Persistance;
-using Identity.Application.Common.Persistance.Repositories;
 using Identity.Domain.Models;
+using Identity.Infrastructure.Auth.Abstractions;
+using Identity.Infrastructure.Persistance.Context;
+using Microsoft.EntityFrameworkCore;
 using Role = Identity.Infrastructure.Auth.Jwt.Role;
 
 namespace Identity.Application.CQRS.Users.Commands;
@@ -17,26 +16,23 @@ public record class CreateUserCommand(CreateUserRequest RequestData) : ICommand<
 
 public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IdentityDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
     public CreateUserCommandHandler(
-        IUserRepository userRepository,
+        IdentityDbContext context,
         IPasswordHasher passwordHasher,
-        IUnitOfWork unitOfWork,
         IMapper mapper)
     {
-        _userRepository = userRepository;
+        _context = context;
         _passwordHasher = passwordHasher;
-        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        if (await _userRepository.IsUserExistsByEmail(request.RequestData.Email, cancellationToken))
+        if (await IsUserEmailExist(request.RequestData.Email))
             throw new ApplicationException("Пользователь с такой почтой уже существует");
         
         var passwordHash = _passwordHasher.Generate(request.RequestData.Password);
@@ -44,10 +40,13 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
         var user = _mapper.Map<User>(request.RequestData);
         user.PasswordHash = passwordHash;
         user.RoleId = (int)Role.User;
-        
-        _userRepository.Create(user);
-        await _unitOfWork.CommitAsync(cancellationToken);
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return user.Id;
     }
+
+    private async Task<bool> IsUserEmailExist(string email) =>
+       await  _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email) is not null;
 }

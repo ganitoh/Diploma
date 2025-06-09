@@ -8,7 +8,6 @@ using Organization.ApplicationContract.Requests;
 
 namespace Organization.API.Controllers;
 
-
 public class RatingController : BaseApiController
 {
     /// <summary>
@@ -16,7 +15,6 @@ public class RatingController : BaseApiController
     /// </summary>
     [HttpGet(nameof(CreateRating))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<RatingDto>))]
-    [Authorize]
     public async Task<IActionResult> GetRatingForEntity([FromQuery] int entityId, [FromQuery] bool isProduct)
     {
         var result = await Mediator.Send(new GetRatingsQuery(entityId, isProduct));

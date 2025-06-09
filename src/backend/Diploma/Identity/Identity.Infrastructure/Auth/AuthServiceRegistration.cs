@@ -1,4 +1,4 @@
-﻿using Identity.Application.Common.Auth;
+﻿using Identity.Infrastructure.Auth.Abstractions;
 using Identity.Infrastructure.Auth.Jwt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -11,6 +11,7 @@ public class IdentityDbContext : BaseDbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<RefreshToken>  RefreshTokens { get; set; }
 
     public IdentityDbContext(DbContextOptions options)
         : base(options) { }

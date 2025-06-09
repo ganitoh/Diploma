@@ -1,7 +1,7 @@
-﻿namespace Identity.Application.Common.Auth;
+﻿namespace Identity.Infrastructure.Auth.Abstractions;
 
 /// <summary>
-/// Класс для работы с паролями
+/// Абстракция для работы с паролями
 /// </summary>
 public interface IPasswordHasher
 {

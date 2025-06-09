@@ -1,6 +1,5 @@
 ﻿using Common.Infrastructure;
 using Common.Infrastructure.Migrator;
-using Identity.Application.Common.Persistance;
 using Identity.Infrastructure.Auth;
 using Identity.Infrastructure.Persistance;
 using Identity.Infrastructure.Persistance.Context;
@@ -17,8 +16,6 @@ public static class InfrastructureServiceRegistration
         services.AddAuth(configuration);
         services.AddDbMigrator();
         services.AddInfrastructureCommonService<IdentityDbContext>();
-        
-        services.AddScoped<IIdentityDbContext, ReadOnlyIdentityDbContext>();
 
         return services;
     }
