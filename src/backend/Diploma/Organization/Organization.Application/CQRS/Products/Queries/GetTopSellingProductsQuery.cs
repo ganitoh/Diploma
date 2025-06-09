@@ -30,7 +30,9 @@ internal class GetTopSellingProductsQueryHandler : IQueryHandler<GetTopSellingPr
     {
         return await _context.Products
             .AsNoTracking()
-            .OrderByDescending(x=>x.TotalSold).Take(request.Top)
+            .Include(x=>x.Rating)
+            .OrderByDescending(x=>x.TotalSold)
+            .Take(request.Top)
             .ProjectTo<ShortProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
     }

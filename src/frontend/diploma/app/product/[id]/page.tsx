@@ -135,6 +135,7 @@ export default function ProductPage() {
               {product.sellOrganizationName}
             </Link>
           </Descriptions.Item>
+          <Descriptions.Item label="оценка">{product.rating}</Descriptions.Item>
         </Descriptions>
 
         <div style={{ textAlign: "right", marginTop: 16 }}>

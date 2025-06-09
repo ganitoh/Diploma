@@ -56,4 +56,9 @@ public class ProductDto
     /// Название организации
     /// </summary>
     public string SellOrganizationName { get; set; }
+
+    /// <summary>
+    /// Средняя оценка
+    /// </summary>
+    public decimal Rating { get; set; }
 }

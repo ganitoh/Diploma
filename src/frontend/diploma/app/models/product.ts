@@ -9,12 +9,14 @@ export interface IProduct {
   isStock: boolean;
   sellOrganizationId: number;
   sellOrganizationName: string;
+  rating: number;
 }
 
 export interface IProductShort {
   id: number;
   name: string;
   price: number;
+  rating: number;
 }
 
 export interface ICreateProduct {

@@ -19,10 +19,14 @@ public class MappingProfile : Profile
             .ForMember(x => x.SellerOrganizationName, o => o.MapFrom(x => x.SellerOrganization.Name));
 
         CreateMap<CreateProductRequest, Product>();
-        CreateMap<Product, ShortProductDto>();
+        CreateMap<Product, ShortProductDto>()
+            .ForMember(x => x.Rating,
+            y => y.MapFrom(x => x.Rating.Vale));;
         CreateMap<Product, ProductDto>()
             .ForMember(x => x.SellOrganizationName,
-                y => y.MapFrom(x => x.SellOrganization.Name));
+                y => y.MapFrom(x => x.SellOrganization.Name))
+            .ForMember(x => x.Rating,
+                y => y.MapFrom(x => x.Rating.Vale));
 
         CreateMap<Rating, RatingDto>();
         CreateMap<RatingCommentary, RatingCommentaryDto>()

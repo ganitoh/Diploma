@@ -18,10 +18,11 @@ export const getProductById = async (
     )
   ).data;
 
-export const getTopSellingProducts = (
+export const getTopSellingProducts = async (
   top: number
 ): Promise<IResponse<IProductShort[]>> =>
-  organizaitonClient.get(`/Product/GetTopSellingProducts?top=${top}`);
+  (await organizaitonClient.get(`/Product/GetTopSellingProducts?top=${top}`))
+    .data;
 
 export const serarchProducts = async (
   searchString: string

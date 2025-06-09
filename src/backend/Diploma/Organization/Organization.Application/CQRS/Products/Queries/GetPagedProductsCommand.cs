@@ -30,6 +30,8 @@ internal class GetPagedProductsCommandHandler : IQueryHandler<GetPagedProductsCo
     public async Task<PagedList<ProductDto>> Handle(GetPagedProductsCommand request, CancellationToken cancellationToken)
     {
         return await _context.Products
+            .Include(x=>x.SellOrganization)
+            .Include(x=>x.Rating)
             .AsNoTracking()
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .GetPagetListAsync(request.PagedRequest, cancellationToken);

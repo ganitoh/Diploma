@@ -19,4 +19,9 @@ public class ShortProductDto
     /// Цена за ед.
     /// </summary>
     public decimal Price { get; set; }
+
+    /// <summary>
+    /// Средняя оценка
+    /// </summary>
+    public decimal Rating { get; set; }
 }
