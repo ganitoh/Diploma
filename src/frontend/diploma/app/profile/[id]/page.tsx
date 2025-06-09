@@ -14,6 +14,7 @@ import {
   Alert,
   Col,
   Table,
+  Row,
 } from "antd";
 import { useEffect, useState } from "react";
 import { MeasurementType } from "@/app/models/product";
@@ -34,6 +35,8 @@ const MeasurementTypeLabels: Record<MeasurementType, string> = {
 export default function ProfilePage() {
   const [isAddProductModalOpen, setIsAddProductModalOpen] =
     useState<boolean>(false);
+
+  const [productId, setProductId] = useState<number | undefined>();
   const params = useParams();
   const router = useRouter();
   const id = params.id;
@@ -53,6 +56,7 @@ export default function ProfilePage() {
 
   const closeDrawer = () => {
     setIsAddProductModalOpen(false);
+    setProductId(undefined);
   };
 
   return (
@@ -136,6 +140,14 @@ export default function ProfilePage() {
                     columns={productColumns}
                     dataSource={data.response.products}
                     pagination={false}
+                    onRow={(record) => {
+                      return {
+                        onClick: () => {
+                          setIsAddProductModalOpen(true);
+                          setProductId(record.id);
+                        },
+                      };
+                    }}
                   />
                 ) : (
                   <Empty description="Нет товаров" />
@@ -185,9 +197,11 @@ export default function ProfilePage() {
                 <AddProductForm
                   organizationId={data.response.id}
                   onClose={() => {
+                    setProductId(undefined);
                     setIsAddProductModalOpen(false);
                     refetch();
                   }}
+                  productId={productId}
                 />
               </Drawer>
             </div>

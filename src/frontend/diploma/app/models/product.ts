@@ -28,6 +28,10 @@ export interface ICreateProduct {
   description: string;
 }
 
+export interface IUpdateProduct extends ICreateProduct {
+  id: number;
+}
+
 export enum MeasurementType {
   Thing,
   Gram,

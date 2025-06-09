@@ -66,4 +66,16 @@ public class ProductController : BaseApiController
         var result = await Mediator.Send(new CreateProductCommand(requestData));
         return Ok(ApiResponse<int>.Success(result));
     }
+    
+    /// <summary>
+    /// Обновление товара
+    /// </summary>
+    [HttpPut(nameof(UpdateProduct))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
+    [Authorize]
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequest requestData)
+    {
+        var result = await Mediator.Send(new UpdateProductCommand(requestData));
+        return Ok(ApiResponse<int>.Success(result));
+    }
 }

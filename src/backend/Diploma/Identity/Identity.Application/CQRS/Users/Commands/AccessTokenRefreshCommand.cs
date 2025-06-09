@@ -36,6 +36,7 @@ internal class AccessTokenRefreshCommandHandler : ICommandHandler<AccessTokenRef
 
         var storedToken = await _context.RefreshTokens
             .Include(rt => rt.User)
+            .ThenInclude(u => u.Role)
             .FirstOrDefaultAsync(rt => rt.Token == refreshToken && !rt.IsRevoked, cancellationToken);
 
         if (storedToken == null || storedToken.Expires < DateTime.UtcNow)

@@ -1,5 +1,10 @@
 import { IPagingResponse, IRequestParams, IResponse } from "../models/api";
-import { ICreateProduct, IProduct, IProductShort } from "../models/product";
+import {
+  ICreateProduct,
+  IProduct,
+  IProductShort,
+  IUpdateProduct,
+} from "../models/product";
 import { organizaitonClient } from "./client";
 
 export const getPagedProduct = (
@@ -35,5 +40,10 @@ export const serarchProducts = async (
 
 export const createProduct = async (
   productData: ICreateProduct
-): Promise<IResponse<IProductShort[]>> =>
+): Promise<IResponse<number>> =>
   (await organizaitonClient.post("/Product/CreateProduct", productData)).data;
+
+export const updateProduct = async (
+  productData: IUpdateProduct
+): Promise<IResponse<number>> =>
+  (await organizaitonClient.put("/Product/UpdateProduct", productData)).data;
