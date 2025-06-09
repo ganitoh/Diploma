@@ -1,7 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMessage } from "../useMessage";
 import { PRODUCT_QUERY_KEY } from "@/app/constans/query";
-import { createProduct, updateProduct } from "@/app/http/products";
+import {
+  createProduct,
+  deleteProduct,
+  updateProduct,
+} from "@/app/http/products";
 
 export const useProductMutation = () => {
   const client = useQueryClient();
@@ -34,8 +38,16 @@ export const useProductMutation = () => {
     onError: (e) => onError(e),
   });
 
+  const deleteProductMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => onSuccess(),
+    onMutate: () => onMutate(),
+    onError: (e) => onError(e),
+  });
+
   return {
     createProductMutation,
     updateProductMutation,
+    deleteProductMutation,
   };
 };

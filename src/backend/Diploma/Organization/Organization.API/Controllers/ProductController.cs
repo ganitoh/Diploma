@@ -1,5 +1,6 @@
 ﻿using Common.API;
 using Common.API.Paged;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Application.CQRS.Products.Commands;
@@ -77,5 +78,17 @@ public class ProductController : BaseApiController
     {
         var result = await Mediator.Send(new UpdateProductCommand(requestData));
         return Ok(ApiResponse<int>.Success(result));
+    }
+    
+    /// <summary>
+    /// Удаление товара
+    /// </summary>
+    [HttpDelete(nameof(DeleteProduct))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Unit>))]
+    [Authorize]
+    public async Task<IActionResult> DeleteProduct([FromBody] int[] Ids)
+    {
+        var result = await Mediator.Send(new DeleteProductCommand(Ids));
+        return Ok(ApiResponse<Unit>.Success(result));
     }
 }

@@ -1,4 +1,4 @@
-import { IPagingResponse, IRequestParams, IResponse } from "../models/api";
+import { IRequestParams, IResponse } from "../models/api";
 import {
   ICreateProduct,
   IProduct,
@@ -47,3 +47,12 @@ export const updateProduct = async (
   productData: IUpdateProduct
 ): Promise<IResponse<number>> =>
   (await organizaitonClient.put("/Product/UpdateProduct", productData)).data;
+
+export const deleteProduct = async (
+  ids: number[]
+): Promise<IResponse<number>> =>
+  (
+    await organizaitonClient.delete("/Product/DeleteProduct", {
+      data: ids,
+    })
+  ).data;

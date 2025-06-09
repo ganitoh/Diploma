@@ -15,28 +15,28 @@ import {
   Col,
   Table,
   Row,
+  Popconfirm,
 } from "antd";
-import { useEffect, useState } from "react";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Key, useEffect, useState } from "react";
 import { MeasurementType } from "@/app/models/product";
 import { AddProductForm } from "@/app/components/addProductForm/addProductForm";
 import { useCheckRoleUserQuery } from "@/app/hooks/user/useUserQuery";
 import { AdminPanel } from "@/app/components/adminPanel/adminPanel";
 import { productColumns } from "./columns";
+import { useProductMutation } from "@/app/hooks/product/useProductMutation";
 
 const { Title } = Typography;
-
-const MeasurementTypeLabels: Record<MeasurementType, string> = {
-  [MeasurementType.Thing]: "Шт",
-  [MeasurementType.Gram]: "Грамм",
-  [MeasurementType.Kg]: "Килограмм",
-  [MeasurementType.Tones]: "Тонны",
-};
 
 export default function ProfilePage() {
   const [isAddProductModalOpen, setIsAddProductModalOpen] =
     useState<boolean>(false);
 
   const [productId, setProductId] = useState<number | undefined>();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+
+  const { deleteProductMutation } = useProductMutation();
+
   const params = useParams();
   const router = useRouter();
   const id = params.id;
@@ -57,6 +57,21 @@ export default function ProfilePage() {
   const closeDrawer = () => {
     setIsAddProductModalOpen(false);
     setProductId(undefined);
+  };
+
+  const onSelectChange = (newSelectedRowKeys: Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const handleDelete = async () => {
+    await deleteProductMutation.mutateAsync(selectedRowKeys as number[]);
+    refetch();
+    setSelectedRowKeys([]);
   };
 
   return (
@@ -135,20 +150,38 @@ export default function ProfilePage() {
                 style={{ marginBottom: 24 }}
               >
                 {data.response.products.length > 0 ? (
-                  <Table
-                    rowKey="id"
-                    columns={productColumns}
-                    dataSource={data.response.products}
-                    pagination={false}
-                    onRow={(record) => {
-                      return {
+                  <>
+                    <Space style={{ marginBottom: 16 }}>
+                      <Popconfirm
+                        title="Вы уверены, что хотите удалить выбранные товары?"
+                        onConfirm={handleDelete}
+                        okText="Да"
+                        cancelText="Нет"
+                        disabled={selectedRowKeys.length === 0}
+                      >
+                        <Button
+                          type="primary"
+                          danger
+                          icon={<DeleteOutlined />}
+                          disabled={selectedRowKeys.length === 0}
+                        />
+                      </Popconfirm>
+                    </Space>
+
+                    <Table
+                      rowKey="id"
+                      columns={productColumns}
+                      dataSource={data.response.products}
+                      pagination={false}
+                      rowSelection={rowSelection}
+                      onRow={(record) => ({
                         onClick: () => {
                           setIsAddProductModalOpen(true);
                           setProductId(record.id);
                         },
-                      };
-                    }}
-                  />
+                      })}
+                    />
+                  </>
                 ) : (
                   <Empty description="Нет товаров" />
                 )}

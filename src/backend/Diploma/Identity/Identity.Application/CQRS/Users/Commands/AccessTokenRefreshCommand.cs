@@ -52,7 +52,8 @@ internal class AccessTokenRefreshCommandHandler : ICommandHandler<AccessTokenRef
         {
             Token = newRefreshToken,
             Expires = DateTime.UtcNow.AddDays(7),
-            UserId = user.Id
+            UserId = user.Id,
+            IsRevoked = false
         });
 
         await _context.SaveChangesAsync(cancellationToken);
