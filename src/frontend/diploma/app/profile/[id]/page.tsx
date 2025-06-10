@@ -22,6 +22,7 @@ import { useCheckRoleUserQuery } from "@/app/hooks/user/useUserQuery";
 import { AdminPanel } from "@/app/components/adminPanel/adminPanel";
 import { productColumns, sellOrderColumns } from "./columns";
 import { useProductMutation } from "@/app/hooks/product/useProductMutation";
+import { useUserMutation } from "@/app/hooks/user/useUserMutation";
 
 const { Title } = Typography;
 
@@ -33,6 +34,7 @@ export default function ProfilePage() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
   const { deleteProductMutation } = useProductMutation();
+  const { logoutMutation } = useUserMutation();
 
   const params = useParams();
   const router = useRouter();
@@ -42,14 +44,6 @@ export default function ProfilePage() {
   const { data, isLoading, refetch } = useGetOrganizationByUserIdQuery(
     id?.toString() ?? ""
   );
-
-  useEffect(() => {
-    var userId = localStorage.getItem("userId");
-
-    if (!userId) {
-      router.push("/login");
-    }
-  }, []);
 
   const closeDrawer = () => {
     setIsAddProductModalOpen(false);
@@ -69,6 +63,15 @@ export default function ProfilePage() {
     await deleteProductMutation.mutateAsync(selectedRowKeys as number[]);
     refetch();
     setSelectedRowKeys([]);
+  };
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync().then((res) => {
+      if (res.succeeded) {
+        localStorage.removeItem("userId");
+        router.push("/login");
+      }
+    });
   };
 
   return (
@@ -91,7 +94,16 @@ export default function ProfilePage() {
           {data?.succeeded && data.response && (
             <div style={{ padding: 24, maxWidth: 1000, margin: "0 auto" }}>
               <Card
-                title={<>Организация: {data.response.name}</>}
+                title={
+                  <Space
+                    style={{ justifyContent: "space-between", width: "100%" }}
+                  >
+                    <span>Организация: {data.response.name}</span>
+                    <Button danger onClick={handleLogout}>
+                      Выйти
+                    </Button>
+                  </Space>
+                }
                 style={{ marginBottom: 24 }}
               >
                 <Descriptions

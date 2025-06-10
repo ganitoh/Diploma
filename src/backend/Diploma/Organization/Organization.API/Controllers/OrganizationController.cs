@@ -13,7 +13,7 @@ namespace Organization.API.Controllers;
 public class OrganizationController : BaseApiController
 {
     /// <summary>
-    /// Получить пагинированый список оргинизация
+    /// Получить пагинированый список оргинизаций
     /// </summary>
     [HttpGet(nameof(GetPagedOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrganizationDto>>))]
@@ -94,7 +94,7 @@ public class OrganizationController : BaseApiController
     }
     
     /// <summary>
-    /// Вериыикация организации
+    /// Верификация организации
     /// </summary>
     [Authorize(Policy = PolicyConst.AdminPolicy )]
     [HttpPut(nameof(VerificationOrganization))]

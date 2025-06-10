@@ -1,15 +1,15 @@
 export interface IResponse<T> {
-  response: T
-  succeeded: boolean
-  message: string
+  response: T;
+  succeeded: boolean;
+  message: string;
 }
 
 export interface IPagingResponse<T> {
-  count: number
-  data: T[]
+  totalCount: number;
+  entities: T[];
 }
 
 export interface IRequestParams {
-  pageNumber?: number
-  pageSize?: number
+  pageNumber?: number;
+  pageSize?: number;
 }
