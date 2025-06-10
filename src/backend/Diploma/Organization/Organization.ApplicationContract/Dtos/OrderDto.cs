@@ -21,12 +21,12 @@ public class OrderDto
     /// <summary>
     /// Дата и время доставки
     /// </summary>
-    public DateTime DeliveryDate { get; set; }
+    public string DeliveryDate { get; set; }
 
     /// <summary>
     /// Дата создания
     /// </summary>
-    public DateTime CreateDate { get; set; }
+    public string CreateDate { get; set; }
 
     /// <summary>
     /// Статус заказа

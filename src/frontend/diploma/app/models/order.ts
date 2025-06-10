@@ -3,8 +3,8 @@ import { IProduct } from "./product";
 export interface IOrder {
   id: number;
   totalPrice: number;
-  deliveryDate: Date;
-  createDate: Date;
+  deliveryDate: string;
+  createDate: string;
   status: OrderStatus;
   statusText: string;
   sellerOrganizationId: number;

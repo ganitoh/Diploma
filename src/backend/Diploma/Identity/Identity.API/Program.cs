@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddIdentityApplication();
 builder.Services.AddIdentityInfrastructure(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
+builder.Services.AddApiAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
@@ -31,5 +32,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseCorsPolicy();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

@@ -17,6 +17,8 @@ public class MappingProfile : Profile
                 y => y.MapFrom(x => x.Rating.Vale));;
 
         CreateMap<Order, OrderDto>()
+            .ForMember(x => x.CreateDate, y => y.MapFrom(x => x.CreateDate.ToShortDateString()))
+            .ForMember(x => x.DeliveryDate, y => y.MapFrom(x => x.DeliveryDate.HasValue ? x.DeliveryDate.Value.ToShortDateString() : "-"))
             .ForMember(x => x.StatusText, o => o.MapFrom(x => x.Status.GetDescription()))
             .ForMember(x => x.BuyerOrganizationName, o => o.MapFrom(x => x.BuyerOrganization.Name))
             .ForMember(x => x.SellerOrganizationName, o => o.MapFrom(x => x.SellerOrganization.Name));

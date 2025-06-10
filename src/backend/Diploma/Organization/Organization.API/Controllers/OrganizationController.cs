@@ -1,5 +1,6 @@
 ﻿using Common.API;
 using Common.API.Paged;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Organizaiton.Application.CQRS.Organizations.Queries;
@@ -57,6 +58,18 @@ public class OrganizationController : BaseApiController
     }
     
     /// <summary>
+    /// Получить не подтвержденные организации
+    /// </summary>
+    [Authorize(Policy = PolicyConst.AdminPolicy )]
+    [HttpGet(nameof(GetNotVerifyOrganization))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<OrganizationDto>>))]
+    public async Task<IActionResult> GetNotVerifyOrganization()
+    {
+        var result = await Mediator.Send(new GetNotVerifyOrganizationQuery());
+        return Ok(ApiResponse<ICollection<OrganizationDto>>.Success(result));
+    }
+    
+    /// <summary>
     /// Создание организации
     /// </summary>
     [Authorize]
@@ -78,5 +91,17 @@ public class OrganizationController : BaseApiController
     {
         var result = await Mediator.Send(new UpdateOrganizationDataCommand(requestData));
         return Ok(ApiResponse<int>.Success(result));
+    }
+    
+    /// <summary>
+    /// Вериыикация организации
+    /// </summary>
+    [Authorize(Policy = PolicyConst.AdminPolicy )]
+    [HttpPut(nameof(VerificationOrganization))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Unit>))]
+    public async Task<IActionResult> VerificationOrganization([FromBody] int organizationId)
+    {
+        var result = await Mediator.Send(new VerifyOrganizationCommand(organizationId));
+        return Ok(ApiResponse<Unit>.Success(result));
     }
 }

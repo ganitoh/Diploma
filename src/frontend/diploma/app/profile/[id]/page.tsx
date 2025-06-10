@@ -8,22 +8,19 @@ import {
   Descriptions,
   Drawer,
   Empty,
-  List,
   Space,
   Typography,
   Alert,
   Col,
   Table,
-  Row,
   Popconfirm,
 } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Key, useEffect, useState } from "react";
-import { MeasurementType } from "@/app/models/product";
 import { AddProductForm } from "@/app/components/addProductForm/addProductForm";
 import { useCheckRoleUserQuery } from "@/app/hooks/user/useUserQuery";
 import { AdminPanel } from "@/app/components/adminPanel/adminPanel";
-import { productColumns } from "./columns";
+import { productColumns, sellOrderColumns } from "./columns";
 import { useProductMutation } from "@/app/hooks/product/useProductMutation";
 
 const { Title } = Typography;
@@ -189,14 +186,19 @@ export default function ProfilePage() {
 
               <Card title="Заказы на продажу" style={{ marginBottom: 24 }}>
                 {data.response.sellOrders.length > 0 ? (
-                  <List
-                    dataSource={data.response.sellOrders}
-                    renderItem={(order) => (
-                      <List.Item key={order.id}>
-                        Цена: {order.totalPrice} ₽
-                      </List.Item>
-                    )}
-                  />
+                  <>
+                    <Table
+                      rowKey="id"
+                      columns={sellOrderColumns}
+                      dataSource={data.response.sellOrders}
+                      pagination={false}
+                      onRow={(record) => ({
+                        onClick: () => {
+                          router.push(`/order/${record.id}`);
+                        },
+                      })}
+                    />
+                  </>
                 ) : (
                   <Empty description="Нет заказов на продажу" />
                 )}
@@ -204,14 +206,19 @@ export default function ProfilePage() {
 
               <Card title="Заказы на покупку">
                 {data.response.buyOrders.length > 0 ? (
-                  <List
-                    dataSource={data.response.buyOrders}
-                    renderItem={(order) => (
-                      <List.Item key={order.id}>
-                        Цена: {order.totalPrice} ₽
-                      </List.Item>
-                    )}
-                  />
+                  <>
+                    <Table
+                      rowKey="id"
+                      columns={sellOrderColumns}
+                      dataSource={data.response.buyOrders}
+                      pagination={false}
+                      onRow={(record) => ({
+                        onClick: () => {
+                          router.push(`/order/${record.id}`);
+                        },
+                      })}
+                    />
+                  </>
                 ) : (
                   <Empty description="Нет заказов на покупку" />
                 )}
