@@ -54,4 +54,15 @@ public class OrderController : BaseApiController
         var result = await Mediator.Send(new CreateOrderCommand(requestData));
         return Ok(ApiResponse<int>.Success(result));
     }
+    
+    /// <summary>
+    /// Изменение статуса заказа
+    /// </summary>
+    [HttpPut(nameof(ChangeOrderStatus))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
+    public async Task<IActionResult> ChangeOrderStatus([FromBody] ChangeOrderStatusRequest requestData)
+    {
+        var result = await Mediator.Send(new ChangeOrderStatusCommand(requestData));
+        return Ok(ApiResponse<int>.Success(result));
+    }
 }

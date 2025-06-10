@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Persistance\Migrations\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Notifications.Domain\Notifications.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Common">
+        <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
+    </ItemGroup>
+
+</Project>

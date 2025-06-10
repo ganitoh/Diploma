@@ -10,13 +10,7 @@ import { useEffect, useState } from "react";
 import { IProductShort } from "./models/product";
 import { serarchProducts } from "./http/products";
 
-const items = [
-  { key: "home", label: <Link href={"/"}>Home</Link> },
-  {
-    key: "organization",
-    label: <Link href={"/organization"}>Organization</Link>,
-  },
-];
+const items = [{ key: "home", label: <Link href={"/"}>Home</Link> }];
 
 export default function RootLayout({
   children,
