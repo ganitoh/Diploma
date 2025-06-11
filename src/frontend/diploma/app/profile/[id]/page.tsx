@@ -45,6 +45,12 @@ export default function ProfilePage() {
     id?.toString() ?? ""
   );
 
+  useEffect(() => {
+    if (data?.response.id) {
+      localStorage.setItem("organizationId", data.response.id.toString());
+    }
+  }, [data]);
+
   const closeDrawer = () => {
     setIsAddProductModalOpen(false);
     setProductId(undefined);
@@ -69,6 +75,7 @@ export default function ProfilePage() {
     await logoutMutation.mutateAsync().then((res) => {
       if (res.succeeded) {
         localStorage.removeItem("userId");
+        localStorage.removeItem("organizationId");
         router.push("/login");
       }
     });

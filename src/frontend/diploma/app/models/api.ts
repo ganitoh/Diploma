@@ -13,3 +13,9 @@ export interface IRequestParams {
   pageNumber?: number;
   pageSize?: number;
 }
+
+export interface IAnalyticsRequest {
+  startDate?: Date;
+  endDate?: Date;
+  entityId: number;
+}

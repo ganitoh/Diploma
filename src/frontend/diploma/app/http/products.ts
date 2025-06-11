@@ -38,6 +38,15 @@ export const serarchProducts = async (
     )
   ).data;
 
+export const getShortProductByOrganization = async (
+  organizationId: number
+): Promise<IResponse<IProductShort[]>> =>
+  (
+    await organizaitonClient.get("/Product/getShortProductByOrganization", {
+      params: { organizationId },
+    })
+  ).data;
+
 export const createProduct = async (
   productData: ICreateProduct
 ): Promise<IResponse<number>> =>

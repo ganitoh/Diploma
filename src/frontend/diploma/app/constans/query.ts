@@ -16,3 +16,5 @@ export const GET_ORGANIZATION_BY_USER_ID =
 export const GET_ORGANIZATION_BY_ID = "organization/GetOrganizationById";
 export const GET_NOT_VERIFY_ORGANIZATION = "organization/GetOrganizationById";
 export const GET_ORDER_BY_ID = "organization/GetOrderById";
+export const GET_SELL_ORDER_ANALYTICS = "analytics/GetSellOrderAnalytics";
+export const GET_PRODUCT_ANALYTICS = "analytics/GetProductAnalytics";

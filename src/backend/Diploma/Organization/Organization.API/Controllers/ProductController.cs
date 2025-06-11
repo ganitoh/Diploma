@@ -57,6 +57,17 @@ public class ProductController : BaseApiController
     }
     
     /// <summary>
+    /// Получить товары для организации (сокращенные данные)
+    /// </summary>
+    [HttpGet(nameof(GetShortProductByOrganization))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<ShortProductDto>>))]
+    public async Task<IActionResult> GetShortProductByOrganization([FromQuery] int organizationId)
+    {
+        var result = await Mediator.Send(new GetProductsByOrganizationQuery(organizationId));
+        return Ok(ApiResponse<ICollection<ShortProductDto>>.Success(result));
+    }
+    
+    /// <summary>
     /// Создание товара
     /// </summary>
     [HttpPost(nameof(CreateProduct))]
