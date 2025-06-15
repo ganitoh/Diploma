@@ -218,9 +218,9 @@ export default function OrderPage() {
         placement="right"
         onClose={() => setChatOpen(false)}
         open={chatOpen}
-        width={400}
+        width={600}
       >
-        <ChatForm order={data.response} />
+        <ChatForm order={data.response} isSellOrder={isMySellOrder} />
       </Drawer>
     </div>
   );

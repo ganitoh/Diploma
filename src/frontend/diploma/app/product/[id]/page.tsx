@@ -101,8 +101,8 @@ export default function ProductPage() {
         data.response.sellOrganizationId
       );
       await createChatMutation.mutateAsync({
-        SecondUserId: organization.response.userId,
-        OrderIsd: response.response,
+        secondUserId: organization.response.userId,
+        orderIsd: response.response,
       });
     }
 

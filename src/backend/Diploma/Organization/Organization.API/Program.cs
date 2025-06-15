@@ -9,7 +9,6 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSerilog();
 builder.Services.AddSwaggerDocumentation(Assembly.GetExecutingAssembly().GetName().Name!);
 builder.Services.AddControllers();
 builder.Services.AddOrganizaitonApplication();

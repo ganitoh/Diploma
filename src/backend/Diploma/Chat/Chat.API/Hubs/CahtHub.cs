@@ -15,21 +15,23 @@ public class CahtHub : Hub<IChatClient>
 {
     private readonly IMemoryCache _cache;
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
+    private readonly ILogger<CahtHub> _logger;
 
-    public CahtHub(IMemoryCache cache, IMediator mediator, IMapper mapper)
+    public CahtHub(IMemoryCache cache, IMediator mediator, ILogger<CahtHub> logger)
     {
         _cache = cache;
         _mediator = mediator;
-        _mapper = mapper;
+        _logger = logger;
     }
 
     /// <inheritdoc />
     public override async Task OnConnectedAsync()
     {
         var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        
         if (userId != null)
         { 
+            _logger.LogInformation("Присоединился пользователь {userId}", userId);
             _cache.Set(userId,  Context.ConnectionId);
         } 
         await base.OnConnectedAsync();
@@ -58,8 +60,9 @@ public class CahtHub : Hub<IChatClient>
         var response = await _mediator.Send(new CreateMessageCommand(request));
         var chat = await _mediator.Send(new GetChatQuery(request.OrderId));
         
-        if (_cache.TryGetValue(chat.SecondUserId, out var userConnection))
+        if (_cache.TryGetValue(Guid.Parse(userId) == chat.FirstUserId ? chat.SecondUserId.ToString() : chat.FirstUserId.ToString(), out var userConnection))
         {
+            _logger.LogInformation("Сообщение отправлено пользователю {userId} с коннектом {userConnection}", userId, userConnection);
             await Clients.Client(userConnection.ToString()).ReceiveMessagesAsync(new MessageDto
             {
                 Id = response,
@@ -68,5 +71,6 @@ public class CahtHub : Hub<IChatClient>
                 CreatedDatetime = DateTime.UtcNow
             });
         }
+
     }
 }

@@ -34,7 +34,8 @@ internal class GetChatQueryHandler :  IQueryHandler<GetChatQuery, ChatDto>
         
         var chat = await  _context.Chats
             .AsNoTracking()
-            .FirstOrDefaultAsync(x=>x.FirstUserId == Guid.Parse(firstUserId) && x.OrderId == request.OrderId, cancellationToken) 
+            .Include(x => x.Messages)
+            .FirstOrDefaultAsync(x => x.OrderId == request.OrderId, cancellationToken) 
                    ?? throw new NotFoundException("Чат не найден"); 
         
         return _mapper.Map<ChatDto>(chat);

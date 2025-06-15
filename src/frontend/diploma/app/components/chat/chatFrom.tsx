@@ -9,14 +9,15 @@ import { getCookie } from "@/app/utils/cookie";
 
 interface ChatFormProps {
   order: IOrder;
+  isSellOrder: boolean;
 }
 
-export const ChatForm = ({ order }: ChatFormProps) => {
+export const ChatForm = ({ order, isSellOrder }: ChatFormProps) => {
   const [message, setMessage] = useState("");
   const connection = useSignalR();
   const { data, refetch } = useGetChatByOrderIdQuery(order.id);
 
-  const myUserId = getCookie("access_token");
+  const myUserId = localStorage.getItem("userId");
 
   useEffect(() => {
     if (!connection) return;
@@ -37,7 +38,7 @@ export const ChatForm = ({ order }: ChatFormProps) => {
     if (!connection || connection.state !== "Connected") return;
 
     const dataToSend: ICreateMessage = {
-      chatId: data?.response.id ?? 1, // поправь если надо
+      chatId: data?.response.id ?? 1,
       orderId: order.id,
       Text: message,
     };
@@ -55,14 +56,17 @@ export const ChatForm = ({ order }: ChatFormProps) => {
     <div style={{ paddingBottom: 64 }}>
       <List
         size="small"
-        dataSource={data?.response.Messages}
+        dataSource={data?.response.messages}
         renderItem={(msg: IMessage, idx: number) => {
           const isMe = msg.userId === myUserId;
+          console.log(isMe);
+          console.log(myUserId);
+          console.log(msg.userId);
           return (
             <List.Item
               key={msg.Id || idx}
               style={{
-                justifyContent: isMe ? "flex-start" : "flex-end",
+                justifyContent: isMe ? "flex-end" : "flex-start",
                 display: "flex",
                 padding: "4px 0",
                 border: "none",
@@ -74,23 +78,27 @@ export const ChatForm = ({ order }: ChatFormProps) => {
                   maxWidth: "70%",
                   padding: "8px 16px",
                   borderRadius: 16,
-                  background: isMe ? "#f6ffed" : "#e6f7ff",
-                  alignSelf: isMe ? "flex-start" : "flex-end",
-                  textAlign: isMe ? "left" : "right",
+                  background: isMe ? "#e6f7ff" : "#f6ffed",
+                  alignSelf: isMe ? "flex-end" : "flex-start",
+                  textAlign: isMe ? "right" : "left",
                   boxShadow: "0 1px 4px #0001",
-                  marginLeft: isMe ? 0 : "auto",
-                  marginRight: isMe ? "auto" : 0,
+                  marginLeft: isMe ? "auto" : 0,
+                  marginRight: isMe ? 0 : "auto",
                 }}
               >
                 <div style={{ fontSize: 12, color: "#888" }}>
-                  {isMe ? "Вы" : order.sellerOrganizationName}
+                  {isMe
+                    ? "Вы"
+                    : isSellOrder
+                    ? order.buyerOrganizationName
+                    : order.sellerOrganizationName}
                 </div>
-                <div style={{ fontSize: 16 }}>{msg.Text}</div>
+                <div style={{ fontSize: 16 }}>{msg.text}</div>
               </div>
             </List.Item>
           );
         }}
-        style={{ marginBottom: 16, maxHeight: 300, overflowY: "auto" }}
+        style={{ marginBottom: 16, overflowY: "auto" }}
         locale={{
           emptyText: (
             <Empty

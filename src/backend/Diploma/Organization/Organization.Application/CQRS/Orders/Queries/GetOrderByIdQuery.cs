@@ -30,6 +30,8 @@ internal class GetOrderByIdQueryHandler : IQueryHandler<GetOrderByIdQuery, Order
         var order = await _context.Orders
                         .AsNoTracking()
                         .Include(x => x.Product)
+                        .Include(x => x.SellerOrganization)
+                        .Include(x => x.BuyerOrganization)
                         .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken)
                     ?? throw new ApplicationException("Заказ не найден");
 

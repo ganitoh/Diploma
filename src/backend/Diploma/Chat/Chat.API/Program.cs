@@ -11,8 +11,8 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSerilog();
 builder.Services.AddSignalR();
+builder.Services.AddLogging();
 builder.Services.AddMemoryCache();
 builder.Services.AddSwaggerDocumentation(Assembly.GetExecutingAssembly().GetName().Name!);
 builder.Services.AddControllers();

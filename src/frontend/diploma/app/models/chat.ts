@@ -4,11 +4,11 @@ export interface IChat {
   id: number;
   orderId: number;
   FirstUserId: string;
-  SecondUserId: string;
-  Messages: IMessage[];
+  secondUserId: string;
+  messages: IMessage[];
 }
 
 export interface ICreateChat {
-  SecondUserId: string;
-  OrderIsd: number;
+  secondUserId: string;
+  orderIsd: number;
 }
