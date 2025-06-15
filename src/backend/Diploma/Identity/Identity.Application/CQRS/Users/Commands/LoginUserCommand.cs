@@ -53,7 +53,7 @@ internal class LoginUserCommandHandler : IQueryHandler<LoginUserCommand, string>
         
         _httpContext.HttpContext.Response.Cookies.Append("access_token", token, new CookieOptions
         {
-            HttpOnly = true,
+            HttpOnly = false,
             Secure = true,
             SameSite = SameSiteMode.None,
             Expires = DateTimeOffset.UtcNow.AddDays(1)

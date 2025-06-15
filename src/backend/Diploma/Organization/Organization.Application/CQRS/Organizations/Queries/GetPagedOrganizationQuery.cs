@@ -31,6 +31,7 @@ internal class GetPagedOrganizationQueryHandler : IQueryHandler<GetPagedOrganiza
     {
         var pagedListOrganization = await _dbContext.Organizations
             .AsNoTracking()
+            .Include(x => x.OrganizationUsers)
             .PagedQueryable(request.RequestData.PageNumber, request.RequestData.PageSize)
             .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

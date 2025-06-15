@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Organizaiton.Application.CQRS.Organizations.Queries;
+using Organization.Application.CQRS.Orders.Queries;
 using Organization.Application.CQRS.Organizations.Commands;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;

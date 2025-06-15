@@ -9,6 +9,11 @@ public class CreateOrderRequest
     /// Идентификатор продающей организации
     /// </summary>
     public int SellerOrganizationId { get; set; }
+    
+    /// <summary>
+    /// Идентификатор покупающей организации
+    /// </summary>
+    public int BuyOrganizationId { get; set; }
 
     /// <summary>
     /// Мдентификатор товара

@@ -28,6 +28,7 @@ internal class GetNotVerifyOrganizationQueryHandler : IQueryHandler<GetNotVerify
     {
         var organizations = await _context.Organizations
             .AsNoTracking()
+            .Include(x => x.OrganizationUsers)
             .Where(x => !x.IsApproval)
             .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

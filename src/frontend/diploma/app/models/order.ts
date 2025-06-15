@@ -3,7 +3,7 @@ import { IProduct } from "./product";
 export interface IOrder {
   id: number;
   totalPrice: number;
-  deliveryDate: string;
+  deliveryDate?: string;
   createDate: string;
   status: OrderStatus;
   statusText: string;
@@ -17,6 +17,7 @@ export interface IOrder {
 
 export interface ICreateOrder {
   sellerOrganizationId: number;
+  buyOrganizationId: number;
   productId: number;
   quantity: number;
 }

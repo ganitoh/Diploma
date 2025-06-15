@@ -244,7 +244,7 @@ export default function ProfilePage() {
               </Card>
               <Drawer
                 title="Добавление товара"
-                width="60%"
+                width="40%"
                 onClose={closeDrawer}
                 open={isAddProductModalOpen}
                 extra={

@@ -21,6 +21,8 @@ import Link from "next/link";
 import { useOrderMutation } from "@/app/hooks/order/useOrderMutation";
 import { AddRatingForm } from "@/app/components/addRating/addRatingForm";
 import "../../globals.css";
+import { useChatMutation } from "@/app/hooks/chat/useChatMutation";
+import { getOrganizationById } from "@/app/http/organization";
 
 const { Title } = Typography;
 
@@ -41,6 +43,7 @@ export default function ProductPage() {
   const productId = params.id ? Number(params.id) : 0;
 
   const { createOrderMutation } = useOrderMutation();
+  const { createChatMutation } = useChatMutation();
 
   const { data: resultCheck } = useCheckRoleUserQuery("Admin");
   const { data, isLoading } = useGetProductByIdQuery(productId);
@@ -88,9 +91,20 @@ export default function ProductPage() {
   const onOrderFinish = async () => {
     var response = await createOrderMutation.mutateAsync({
       sellerOrganizationId: data.response.sellOrganizationId,
+      buyOrganizationId: Number(localStorage.getItem("organizationId")),
       quantity: form.getFieldValue("quantity"),
       productId: data.response.id,
     });
+
+    if (response.succeeded) {
+      var organization = await getOrganizationById(
+        data.response.sellOrganizationId
+      );
+      await createChatMutation.mutateAsync({
+        SecondUserId: organization.response.userId,
+        OrderIsd: response.response,
+      });
+    }
 
     alert("Заказ создан");
     router.push(`/order/${response.response}`);

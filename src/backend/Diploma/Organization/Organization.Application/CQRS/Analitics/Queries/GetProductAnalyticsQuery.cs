@@ -1,5 +1,6 @@
 ﻿using Common.Application;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Extensions;
 using Organization.ApplicationContract.AnaliticsDtos;
 using Organization.ApplicationContract.Requests.Analytics;
 using Organization.Domain.Models;
@@ -27,10 +28,8 @@ internal class GetProductAnalyticsQueryHandler : IQueryHandler<GetProductAnalyti
         var orders = _context.Orders
             .AsNoTracking()
             .OrderBy(x => x.CreateDate)
-            .Where(x => x.ProductId == request.Data.EntityId);
-
-        if (request.Data.EndDate is not null && request.Data.StartDate is not null)
-            orders =  FilterByDateAnalytics(orders, request);
+            .Where(x => x.ProductId == request.Data.EntityId)
+            .FilterByDateAnalytics(request.Data.StartDate, request.Data.EndDate);
         
         var groupedOrders = await orders
             .GroupBy(o => o.CreateDate.Date)
@@ -44,8 +43,4 @@ internal class GetProductAnalyticsQueryHandler : IQueryHandler<GetProductAnalyti
         
         return groupedOrders;
     }
-    
-    private IQueryable<Order> FilterByDateAnalytics(IQueryable<Order> orders, 
-        GetProductAnalyticsQuery request) =>
-        orders.Where(x => x.CreateDate >= request.Data.StartDate && x.CreateDate <= request.Data.EndDate);
 }

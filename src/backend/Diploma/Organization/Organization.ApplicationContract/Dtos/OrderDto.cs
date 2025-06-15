@@ -64,7 +64,7 @@ public class OrderDto
     public int ProductId { get; set; }
     
     /// <summary>
-    /// Товары
+    /// Товар
     /// </summary>
     public ProductDto Product { get; set; }
 }

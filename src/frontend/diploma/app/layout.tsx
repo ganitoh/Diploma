@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IProductShort } from "./models/product";
 import { serarchProducts } from "./http/products";
+import { ChatSignalRProvider } from "./context/ChatSignalRContext";
 
 const items = [
   { key: "home", label: <Link href="/">Home</Link> },
@@ -141,7 +142,9 @@ export default function RootLayout({
             </div>
           </Header>
           <ReactQueryProvider>
-            <Content style={{ padding: "0 48" }}>{children}</Content>
+            <ChatSignalRProvider>
+              <Content style={{ padding: "0 48" }}>{children}</Content>
+            </ChatSignalRProvider>
           </ReactQueryProvider>
           <Footer style={{ textAlign: "center" }}>
             Diploma AMTI Created by Vadim Gan 2025

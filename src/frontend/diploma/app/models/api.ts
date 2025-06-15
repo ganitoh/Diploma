@@ -1,3 +1,5 @@
+import { OrderStatus } from "./order";
+
 export interface IResponse<T> {
   response: T;
   succeeded: boolean;
@@ -18,4 +20,13 @@ export interface IAnalyticsRequest {
   startDate?: Date;
   endDate?: Date;
   entityId: number;
+}
+
+export interface IAnalyticsOrderByStatusRequest extends IAnalyticsRequest {
+  statuses: OrderStatus[];
+}
+
+export interface IDownloadDocument {
+  content: any;
+  fileName: string;
 }

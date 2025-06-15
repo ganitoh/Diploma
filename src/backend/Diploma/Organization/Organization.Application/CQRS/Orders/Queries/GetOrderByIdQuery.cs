@@ -27,7 +27,10 @@ internal class GetOrderByIdQueryHandler : IQueryHandler<GetOrderByIdQuery, Order
 
     public async Task<OrderDto> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
-        var order = await _context.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken)
+        var order = await _context.Orders
+                        .AsNoTracking()
+                        .Include(x => x.Product)
+                        .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken)
                     ?? throw new ApplicationException("Заказ не найден");
 
         return _mapper.Map<OrderDto>(order);

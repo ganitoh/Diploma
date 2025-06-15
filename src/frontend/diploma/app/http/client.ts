@@ -36,6 +36,11 @@ function createAuthenticatedClient(baseURL: string) {
 export const organizaitonClient = createAuthenticatedClient(
   process.env.NEXT_PUBLIC_ORGANIZATION_APP_API_URL!
 );
+
 export const identityClient = createAuthenticatedClient(
   process.env.NEXT_PUBLIC_IDENTITY_APP_API_URL!
+);
+
+export const chatClient = createAuthenticatedClient(
+  process.env.NEXT_PUBLIC_CHAT_APP_API_URL!
 );

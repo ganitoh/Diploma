@@ -1,4 +1,4 @@
-import { IResponse } from "../models/api";
+import { IDownloadDocument, IResponse } from "../models/api";
 import { ICreateOrder, IOrder } from "../models/order";
 import { organizaitonClient } from "./client";
 
@@ -8,6 +8,15 @@ export const getOrderById = async (
   (
     await organizaitonClient.get("/Order/GetOrderById", {
       params: { organizationId },
+    })
+  ).data;
+
+export const getInvoiceForOrder = async (
+  orderId: number
+): Promise<IResponse<IDownloadDocument>> =>
+  (
+    await organizaitonClient.get("/Order/getInvoiceForOrder", {
+      params: { orderId },
     })
   ).data;
 

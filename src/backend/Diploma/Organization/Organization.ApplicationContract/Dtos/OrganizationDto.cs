@@ -41,6 +41,11 @@ public class OrganizationDto
     public bool IsApproval { get; set; }
 
     /// <summary>
+    /// Идентификатор пользователя который управляет организацией
+    /// </summary>
+    public string UserId { get; set; } = string.Empty;
+
+    /// <summary>
     /// Продукты
     /// </summary>
     public ICollection<ProductDto> Products { get; set; }  

@@ -11,7 +11,8 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<CreateOrganizationRequest, Organization.Domain.Models.Organization>();
-        CreateMap<Organization.Domain.Models.Organization, OrganizationDto>();
+        CreateMap<Organization.Domain.Models.Organization, OrganizationDto>()
+            .ForMember(x=>x.UserId, y => y.MapFrom(x=>x.OrganizationUsers.First().UserId));
         CreateMap<Organization.Domain.Models.Organization, ShortOrganizationDto>()
             .ForMember(x => x.RatingValue,
                 y => y.MapFrom(x => x.Rating.Vale));;

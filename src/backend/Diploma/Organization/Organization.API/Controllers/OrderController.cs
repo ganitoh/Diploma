@@ -1,5 +1,6 @@
 ﻿using Common.API;
 using Common.API.Paged;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Organizaiton.Application.CQRS.Orders.Queries;
 using Organization.Application.CQRS.Orders.Commands;
@@ -43,7 +44,19 @@ public class OrderController : BaseApiController
         var result = await Mediator.Send(new GetSellOrdersByOrganizationQuery(pagedRequest, organizationId));
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
     }
-    
+
+    /// <summary>
+    /// Получить накладную по заказу
+    /// </summary>
+    [Authorize]
+    [HttpGet(nameof(GetInvoiceForOrder))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<FileDto>))]
+    public async Task<IActionResult> GetInvoiceForOrder([FromQuery] int orderId)
+    {
+        var result = await Mediator.Send(new GetInvoiceForOrderQuery(orderId));
+        return Ok(ApiResponse<FileDto>.Success(result));
+    }
+
     /// <summary>
     /// Создание заказа
     /// </summary>

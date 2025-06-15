@@ -1,5 +1,9 @@
 import { IAnalytics } from "../models/analytics";
-import { IAnalyticsRequest, IResponse } from "../models/api";
+import {
+  IAnalyticsOrderByStatusRequest,
+  IAnalyticsRequest,
+  IResponse,
+} from "../models/api";
 import { organizaitonClient } from "./client";
 
 export const getSellOrderAnalytics = async (
@@ -13,3 +17,13 @@ export const getProductAnalytics = async (
 ): Promise<IResponse<IAnalytics[]>> =>
   (await organizaitonClient.get("/Analytics/GetProductAnalytics", { params }))
     .data;
+
+export const GetSellOrderAnalyticsByStatus = async (
+  data: IAnalyticsOrderByStatusRequest
+): Promise<IResponse<IAnalytics[]>> =>
+  (
+    await organizaitonClient.post(
+      "/Analytics/GetSellOrderAnalyticsByStatus",
+      data
+    )
+  ).data;

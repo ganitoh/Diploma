@@ -13,7 +13,7 @@ builder.Services.AddSerilog();
 builder.Services.AddSwaggerDocumentation(Assembly.GetExecutingAssembly().GetName().Name!);
 builder.Services.AddControllers();
 builder.Services.AddOrganizaitonApplication();
-builder.Services.AddOrganizaitonInfrastructure(builder.Configuration);
+builder.Services.AddOrganizationInfrastructure(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
 
