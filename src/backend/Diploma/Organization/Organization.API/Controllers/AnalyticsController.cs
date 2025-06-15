@@ -44,7 +44,7 @@ public class AnalyticsController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<AnalyticsDto>>))]
     public async Task<IActionResult> GetProductAnalytics([FromQuery] GetAnalyticsRequest request)
     {
-        var result = await Mediator.Send(new GetSellOrderAnalyticsByOrganizationQuery(request));
+        var result = await Mediator.Send(new GetProductAnalyticsQuery(request));
         return Ok(ApiResponse<ICollection<AnalyticsDto>>.Success(result));
     }
 }

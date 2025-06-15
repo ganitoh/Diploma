@@ -2,6 +2,7 @@ import { IOrder } from "@/app/models/order";
 import { IProduct } from "@/app/models/product";
 import { ColumnsType } from "antd/es/table";
 import { Tag } from "antd";
+import { formatMoney } from "@/app/utils/format";
 
 const statusColorMap: Record<string, string> = {
   Pending: "blue",
@@ -29,7 +30,7 @@ export const productColumns: ColumnsType<IProduct> = [
     dataIndex: "price",
     key: "price",
     align: "center",
-    render: (price: number) => `${price} ₽`,
+    render: (price: number) => `${formatMoney(price)} ₽`,
   },
 ];
 
@@ -39,6 +40,7 @@ export const sellOrderColumns: ColumnsType<IOrder> = [
     dataIndex: "totalPrice",
     key: "totalPrice",
     align: "center",
+    render: (totalPrice: number) => `${formatMoney(totalPrice)} ₽`,
   },
   {
     title: "Дата создания",
@@ -50,12 +52,6 @@ export const sellOrderColumns: ColumnsType<IOrder> = [
     title: "Статус",
     dataIndex: "statusText",
     key: "statusText",
-    align: "center",
-  },
-  {
-    title: "Покупающая организация",
-    dataIndex: "buyerOrganizationName",
-    key: "buyerOrganizationName",
     align: "center",
   },
 ];

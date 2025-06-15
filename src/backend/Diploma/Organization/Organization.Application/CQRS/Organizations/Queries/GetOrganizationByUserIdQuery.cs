@@ -34,7 +34,7 @@ internal class GetOrganizationByUserIdQueryHandler : IQueryHandler<GetOrganizati
             .Include(x => x.Products)
             .Include(x => x.BuyOrders)
             .Include(x => x.SellOrders)
-            .FirstOrDefaultAsync(x=>x.OrganizationUsers.Select(user => user.UserId)
+            .FirstOrDefaultAsync(x => x.OrganizationUsers.Select(user => user.UserId)
                 .Contains(request.UserId), cancellationToken);
 
         if (organization is null)

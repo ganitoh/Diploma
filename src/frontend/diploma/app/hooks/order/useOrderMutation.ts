@@ -5,7 +5,7 @@ import { loginUser, registration } from "@/app/http/user";
 import { ORDER_QUERY_KEY } from "@/app/constans/query";
 import { useMessage } from "../useMessage";
 import { createOrganization } from "@/app/http/organization";
-import { createOrder } from "@/app/http/order";
+import { ChangeOrderStatus, createOrder } from "@/app/http/order";
 
 export const useOrderMutation = () => {
   const client = useQueryClient();
@@ -31,7 +31,15 @@ export const useOrderMutation = () => {
     onError: (e) => onError(e),
   });
 
+  const changeOrderStatusMutation = useMutation({
+    mutationFn: ChangeOrderStatus,
+    onSuccess: () => onSuccess(),
+    onMutate: () => onMutate(),
+    onError: (e) => onError(e),
+  });
+
   return {
     createOrderMutation,
+    changeOrderStatusMutation,
   };
 };

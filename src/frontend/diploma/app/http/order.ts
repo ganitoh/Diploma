@@ -1,5 +1,5 @@
 import { IDownloadDocument, IResponse } from "../models/api";
-import { ICreateOrder, IOrder } from "../models/order";
+import { IChangeOrderStatus, ICreateOrder, IOrder } from "../models/order";
 import { organizaitonClient } from "./client";
 
 export const getOrderById = async (
@@ -24,3 +24,8 @@ export const createOrder = async (
   data: ICreateOrder
 ): Promise<IResponse<number>> =>
   (await organizaitonClient.post("/Order/CreateOrder", data)).data;
+
+export const ChangeOrderStatus = async (
+  data: IChangeOrderStatus
+): Promise<IResponse<number>> =>
+  (await organizaitonClient.put("/Order/ChangeOrderStatus", data)).data;

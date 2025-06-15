@@ -22,6 +22,11 @@ export interface ICreateOrder {
   quantity: number;
 }
 
+export interface IChangeOrderStatus {
+  orderId: number;
+  status: OrderStatus;
+}
+
 export enum OrderStatus {
   Created = 1,
   Collected,

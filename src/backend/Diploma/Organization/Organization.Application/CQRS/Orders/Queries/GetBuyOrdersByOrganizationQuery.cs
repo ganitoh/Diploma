@@ -31,6 +31,8 @@ class GetBuyOrdersByOrganizationQueryHandler : IQueryHandler<GetBuyOrdersByOrgan
     {
         var orders = _context.Orders
             .AsNoTracking()
+            .Include(x => x.BuyerOrganization)
+            .Include(x => x.SellerOrganization)
             .Where(x=> x.BuyerOrganizationId ==  request.OrganizationId)
             .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
             .GetPagetListAsync(request.PagedRequest, cancellationToken);

@@ -26,7 +26,10 @@ internal class GetSellOrdersByOrganizationQueryHandler : IQueryHandler<GetSellOr
 
     public Task<PagedList<OrderDto>> Handle(GetSellOrdersByOrganizationQuery request, CancellationToken cancellationToken)
     {
-        var orders = _context.Orders.AsNoTracking()
+        var orders = _context.Orders
+            .AsNoTracking()
+            .Include(x => x.BuyerOrganization)
+            .Include(x => x.SellerOrganization)
             .Where(x=> x.SellerOrganizationId ==  request.OrganizationId)
             .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
             .GetPagetListAsync(request.PagedRequest, cancellationToken);

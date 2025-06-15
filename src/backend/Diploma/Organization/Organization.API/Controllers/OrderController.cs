@@ -22,24 +22,26 @@ public class OrderController : BaseApiController
         var result = await Mediator.Send(new GetOrderByIdQuery(organizationId));
         return Ok(ApiResponse<OrderDto>.Success(result));
     }
-    
+
     /// <summary>
     /// Получить заказы на покупку для организации
     /// </summary>
     [HttpGet(nameof(GetBuyOrderByOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
-    public async Task<IActionResult> GetBuyOrderByOrganization([FromQuery] PagedRequest pagedRequest, [FromQuery] int organizationId)
+    public async Task<IActionResult> GetBuyOrderByOrganization([FromQuery] PagedRequest pagedRequest,
+        [FromQuery] int organizationId)
     {
         var result = await Mediator.Send(new GetBuyOrdersByOrganizationQuery(pagedRequest, organizationId));
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
     }
-    
+
     /// <summary>
     /// Получить заказы на продужу для организации
     /// </summary>
     [HttpGet(nameof(GetSellOrderByOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
-    public async Task<IActionResult> GetSellOrderByOrganization([FromQuery] PagedRequest pagedRequest, [FromQuery] int organizationId)
+    public async Task<IActionResult> GetSellOrderByOrganization([FromQuery] PagedRequest pagedRequest,
+        [FromQuery] int organizationId)
     {
         var result = await Mediator.Send(new GetSellOrdersByOrganizationQuery(pagedRequest, organizationId));
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
@@ -67,7 +69,7 @@ public class OrderController : BaseApiController
         var result = await Mediator.Send(new CreateOrderCommand(requestData));
         return Ok(ApiResponse<int>.Success(result));
     }
-    
+
     /// <summary>
     /// Изменение статуса заказа
     /// </summary>

@@ -4,7 +4,10 @@ import { Card, DatePicker, Select, Space } from "antd";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { useGetSellOrderAnalyticsQuery } from "@/app/hooks/analytics/analytics";
+import {
+  useGetProductAnalyticsQuery,
+  useGetSellOrderAnalyticsQuery,
+} from "@/app/hooks/analytics/analytics";
 import {
   CartesianGrid,
   Legend,
@@ -28,7 +31,7 @@ export default function OrganizationPage() {
   const { data: products } = useGetShortProductByOrganizationQuery(
     Number(localStorage.getItem("organizationId"))
   );
-  const { data, isLoading, refetch } = useGetSellOrderAnalyticsQuery({
+  const { data, isLoading, refetch } = useGetProductAnalyticsQuery({
     startDate: startDate,
     endDate: endDate,
     entityId: selectedProductId ?? 0,
@@ -64,7 +67,9 @@ export default function OrganizationPage() {
                 placeholder="Выберите товар"
                 loading={isLoading}
                 value={selectedProductId ?? undefined}
-                onChange={(value) => setSelectedProductId(value)}
+                onChange={(value) => {
+                  setSelectedProductId(value);
+                }}
                 options={
                   products?.response.map((product) => ({
                     label: product.name,

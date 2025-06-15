@@ -10,13 +10,22 @@ import {
   Alert,
   Tag,
   Drawer,
+  Space,
+  Dropdown,
 } from "antd";
-import { SendOutlined } from "@ant-design/icons";
+import {
+  SyncOutlined,
+  CarOutlined,
+  CheckCircleOutlined,
+  DownOutlined,
+} from "@ant-design/icons";
+
 import { useGetOrderByIdQuery } from "@/app/hooks/order/useOrderQuery";
 import { OrderStatus } from "@/app/models/order";
 import { ChatForm } from "@/app/components/chat/chatFrom";
 import { useDownloadFile } from "@/app/hooks/useDownloadFile";
 import { getInvoiceForOrder } from "@/app/http/order";
+import { useOrderMutation } from "@/app/hooks/order/useOrderMutation";
 
 const { Title } = Typography;
 
@@ -28,16 +37,27 @@ const statusColorMap: Record<string, string> = {
 };
 
 export default function OrderPage() {
+  const [isMySellOrder, setIsMySellOrder] = useState<boolean>(false);
   const params = useParams();
   const router = useRouter();
   const orderId = params.id ? Number(params.id) : 0;
 
-  const { data, isLoading } = useGetOrderByIdQuery(orderId);
+  const { data, isLoading, refetch } = useGetOrderByIdQuery(orderId);
+  const { changeOrderStatusMutation } = useOrderMutation();
 
   const [chatOpen, setChatOpen] = useState(false);
 
   const { download: excelDownload, isLoading: isExcelLoading } =
     useDownloadFile(() => getInvoiceForOrder(orderId));
+
+  useEffect(() => {
+    if (data?.response) {
+      setIsMySellOrder(
+        data.response.sellerOrganizationId ==
+          Number(localStorage.getItem("organizationId"))
+      );
+    }
+  }, [data]);
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -67,6 +87,48 @@ export default function OrderPage() {
 
   const order = data.response;
 
+  const items = [
+    {
+      key: "collected",
+      icon: <SyncOutlined />,
+      label: "В обработку",
+      disabled: order.status === OrderStatus.Close,
+      onClick: async () => {
+        await changeOrderStatusMutation.mutateAsync({
+          orderId: order.id,
+          status: OrderStatus.Collected,
+        });
+        refetch();
+      },
+    },
+    {
+      key: "indelivery",
+      icon: <CarOutlined />,
+      label: "В доставке",
+      disabled: order.status === OrderStatus.Close,
+      onClick: async () => {
+        await changeOrderStatusMutation.mutateAsync({
+          orderId: order.id,
+          status: OrderStatus.InDelivery,
+        });
+        refetch();
+      },
+    },
+    {
+      key: "close",
+      icon: <CheckCircleOutlined />,
+      label: "Закрыт",
+      disabled: order.status === OrderStatus.Close,
+      onClick: async () => {
+        await changeOrderStatusMutation.mutateAsync({
+          orderId: order.id,
+          status: OrderStatus.Close,
+        });
+        refetch();
+      },
+    },
+  ];
+
   return (
     <div style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
       <Card
@@ -75,7 +137,7 @@ export default function OrderPage() {
         extra={
           <div>
             <Button type="primary" onClick={() => setChatOpen(true)}>
-              Чат с продавцом
+              {isMySellOrder ? "Чат с покупателем" : "Чат с продавцом"}
             </Button>
             <Button
               style={{ marginLeft: 20 }}
@@ -131,6 +193,23 @@ export default function OrderPage() {
             showIcon
             style={{ marginTop: 16 }}
           />
+        )}
+        {isMySellOrder && (
+          <div style={{ marginTop: 16, textAlign: "right" }}>
+            <Space>
+              <Dropdown.Button
+                menu={{
+                  items: items,
+                }}
+                icon={<DownOutlined />}
+                type="primary"
+                style={{ marginTop: 16 }}
+                disabled={order.status === OrderStatus.Close}
+              >
+                <SyncOutlined /> Статус
+              </Dropdown.Button>
+            </Space>
+          </div>
         )}
       </Card>
 
