@@ -1,4 +1,4 @@
-import { IRequestParams, IResponse } from "../models/api";
+import { IPagingResponse, IRequestParams, IResponse } from "../models/api";
 import {
   ICreateProduct,
   IProduct,
@@ -7,12 +7,22 @@ import {
 } from "../models/product";
 import { organizaitonClient } from "./client";
 
-export const getPagedProduct = (
-  requestParams: IRequestParams
-): Promise<IResponse<IProduct>> =>
-  organizaitonClient.get("/Product/GetPagedProduct", {
-    params: { requestParams },
-  });
+export interface IGetPagedProduct extends IRequestParams {
+  organizationId?: number;
+}
+
+export const getPagedProduct = async (
+  requestParams: IGetPagedProduct
+): Promise<IResponse<IPagingResponse<IProduct>>> =>
+  (
+    await organizaitonClient.get("/Product/GetPagedProduct", {
+      params: {
+        organizationId: requestParams.organizationId,
+        pageNumber: requestParams.pageNumber,
+        pageSize: requestParams.pageSize,
+      },
+    })
+  ).data;
 
 export const getProductById = async (
   productId: number

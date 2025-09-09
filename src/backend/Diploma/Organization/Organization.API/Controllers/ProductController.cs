@@ -17,7 +17,7 @@ public class ProductController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetPagedProduct))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<ProductDto>>))]
-    public async Task<IActionResult> GetPagedProduct([FromQuery] PagedRequest pagedRequest)
+    public async Task<IActionResult> GetPagedProduct([FromQuery] GetPagedProductsRequest pagedRequest)
     {
         var result = await Mediator.Send(new GetPagedProductsCommand(pagedRequest));
         return Ok(ApiResponse<PagedList<ProductDto>>.Success(result));

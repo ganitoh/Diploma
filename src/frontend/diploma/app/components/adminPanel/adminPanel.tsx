@@ -60,6 +60,7 @@ export const AdminPanel = (props: IAdminPanelProps) => {
     await verifyOrganizationMutation.mutateAsync(id).then((res) => {
       if (res.succeeded) {
         refetch();
+        paggedRefetch();
       }
     });
   };

@@ -1,5 +1,6 @@
 import { IOrder } from "./order";
 import { IProduct } from "./product";
+import { IRequestParams } from "./api";
 
 export interface IOrganiaiton {
   id: number;
@@ -27,4 +28,9 @@ export interface ICreateOrganiaiton {
   inn: string;
   email: string;
   legalAddress: string;
+  isExternal?: boolean;
+}
+
+export interface IGetPagedOrganization extends IRequestParams {
+  isExternal?: boolean;
 }

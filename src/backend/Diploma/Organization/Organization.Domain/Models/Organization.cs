@@ -37,6 +37,11 @@ public class Organization : Entity<int>
     /// Флаг верефикации
     /// </summary>
     public bool IsApproval { get; set; }
+
+    /// <summary>
+    /// Флаг внешней орагнизации
+    /// </summary>
+    public bool IsExternal { get; set; }
     
     /// <summary>
     /// Идентификатор рейтинга

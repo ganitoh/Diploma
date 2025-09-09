@@ -1,6 +1,6 @@
 import { Button, Empty, Input, List } from "antd";
 import { SendOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSignalR } from "@/app/context/ChatSignalRContext";
 import { ICreateMessage, IMessage } from "@/app/models/message";
 import { IOrder } from "@/app/models/order";
@@ -41,6 +41,7 @@ export const ChatForm = ({ order, isSellOrder }: ChatFormProps) => {
       chatId: data?.response.id ?? 1,
       orderId: order.id,
       Text: message,
+      userId: "1",
     };
 
     try {
@@ -59,9 +60,6 @@ export const ChatForm = ({ order, isSellOrder }: ChatFormProps) => {
         dataSource={data?.response.messages}
         renderItem={(msg: IMessage, idx: number) => {
           const isMe = msg.userId === myUserId;
-          console.log(isMe);
-          console.log(myUserId);
-          console.log(msg.userId);
           return (
             <List.Item
               key={msg.Id || idx}

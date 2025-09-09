@@ -4,6 +4,7 @@ using Common.API.Paged;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Dtos;
+using Organization.ApplicationContract.Requests;
 using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
@@ -11,7 +12,7 @@ namespace Organizaiton.Application.CQRS.Organizations.Queries;
 /// <summary>
 /// Запрос на получение пагинированного списка организаций
 /// </summary>
-public record GetPagedOrganizationQuery(PagedRequest RequestData) : IQuery<PagedList<OrganizationDto>>;
+public record GetPagedOrganizationQuery(GetPagedOrganizationsRequest Data) : IQuery<PagedList<OrganizationDto>>;
 
 /// <summary>
 /// Хендлер запроса на получение пагинированного списка организаций
@@ -32,7 +33,8 @@ internal class GetPagedOrganizationQueryHandler : IQueryHandler<GetPagedOrganiza
         var pagedListOrganization = await _dbContext.Organizations
             .AsNoTracking()
             .Include(x => x.OrganizationUsers)
-            .PagedQueryable(request.RequestData.PageNumber, request.RequestData.PageSize)
+            .Where(x=> x.IsExternal == request.Data.IsExternal)
+            .PagedQueryable(request.Data.PageNumber, request.Data.PageSize)
             .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         

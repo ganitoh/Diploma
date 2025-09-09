@@ -10,4 +10,5 @@ export interface ICreateMessage {
   chatId: number;
   orderId: number;
   Text: string;
+  userId: string;
 }

@@ -18,6 +18,7 @@ import {
   Tooltip,
   PieChart,
   Pie,
+  Cell,
 } from "recharts";
 import { OrderStatus } from "@/app/models/order";
 import { stat } from "fs";
@@ -28,6 +29,13 @@ const orderStatusOptions = [
   { value: OrderStatus.InDelivery, label: "В доставке" },
   { value: OrderStatus.Close, label: "Закрыт" },
 ];
+
+const ORDER_STATUS_COLORS: { [key: string]: string } = {
+  Создан: "#2196F3",
+  Собирается: "#FF9800",
+  "На доставке": "#4CAF50",
+  Закрыт: "#9E9E9E",
+};
 
 export default function OrganizationPage() {
   const router = useRouter();
@@ -138,7 +146,14 @@ export default function OrganizationPage() {
                   outerRadius={100}
                   fill="#8884d8"
                   label={({ name, value }) => `${name}: ${value}`}
-                />
+                >
+                  {analytics?.response?.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={ORDER_STATUS_COLORS[entry.name] || "#CCCCCC"}
+                    />
+                  ))}
+                </Pie>
               </PieChart>
             </div>
           </div>

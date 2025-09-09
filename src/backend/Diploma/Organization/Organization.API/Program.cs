@@ -1,8 +1,12 @@
 using System.Reflection;
 using Common.API;
 using Common.API.Extenisions;
+using Common.Infrastructure;
+using Common.Infrastructure.Kafka;
 using Common.Infrastructure.Migrator;
 using Organizaiton.Application;
+using Organization.ApplicationContract.Dtos;
+using Organization.ApplicationContract.MessageDtos;
 using Organization.Infrastructure;
 using Organization.Infrastructure.Persistance.Context;
 using Serilog;
@@ -15,6 +19,7 @@ builder.Services.AddOrganizaitonApplication();
 builder.Services.AddOrganizationInfrastructure(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
+builder.Services.AddProducer(builder.Configuration.GetSection(nameof(KafkaConfig)));
 
 var app = builder.Build();
 

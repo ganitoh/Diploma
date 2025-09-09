@@ -40,13 +40,16 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
             _httpContext.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
             throw new ApplicationException("Идентификатор пользователя не нйден");
 
-        var organizationByUserId = await _context.Organizations
-            .Include(x => x.OrganizationUsers)
-            .FirstOrDefaultAsync(x => x.OrganizationUsers.Select(user => user.UserId).Contains(Guid.Parse(userId)),
-                cancellationToken);
+        if (!request.OrganizaitonData.IsExternal)
+        {
+            var organizationByUserId = await _context.Organizations
+                .Include(x => x.OrganizationUsers)
+                .FirstOrDefaultAsync(x => x.OrganizationUsers.Select(user => user.UserId).Contains(Guid.Parse(userId)),
+                    cancellationToken);
 
-        if (organizationByUserId is not null)
-            throw new ApplicationException("Организаци уже существует");
+            if (organizationByUserId is not null)
+                throw new ApplicationException("Организаци уже существует");
+        }
         
         var organization = _mapper.Map<Domain.Models.Organization>(request.OrganizaitonData);
         organization.Rating = new Rating();

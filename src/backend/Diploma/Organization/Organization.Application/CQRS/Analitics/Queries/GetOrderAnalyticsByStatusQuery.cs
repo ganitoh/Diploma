@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Organizaiton.Application.Extensions;
 using Organization.ApplicationContract.AnaliticsDtos;
 using Organization.ApplicationContract.Requests.Analytics;
-using Organization.Domain.Enums;
-using Organization.Domain.Models;
 using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Analitics.Queries;

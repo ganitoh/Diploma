@@ -1,3 +1,4 @@
+import { IPagingResponse, IRequestParams } from "./api";
 import { IProduct } from "./product";
 
 export interface IOrder {
@@ -25,6 +26,12 @@ export interface ICreateOrder {
 export interface IChangeOrderStatus {
   orderId: number;
   status: OrderStatus;
+}
+
+export interface IGetPagedOrderByUserId extends IRequestParams {
+  userId: string;
+  isSellOrders: boolean;
+  status?: OrderStatus;
 }
 
 export enum OrderStatus {

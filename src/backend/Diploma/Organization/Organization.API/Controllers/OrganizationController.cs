@@ -18,7 +18,7 @@ public class OrganizationController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetPagedOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrganizationDto>>))]
-    public async Task<IActionResult> GetPagedOrganization([FromQuery] PagedRequest pagedRequest)
+    public async Task<IActionResult> GetPagedOrganization([FromQuery] GetPagedOrganizationsRequest pagedRequest)
     {
         var result = await Mediator.Send(new GetPagedOrganizationQuery(pagedRequest));
         return Ok(ApiResponse<PagedList<OrganizationDto>>.Success(result));

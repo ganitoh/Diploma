@@ -214,7 +214,7 @@ export default function OrderPage() {
       </Card>
 
       <Drawer
-        title="Чат с продавцом"
+        title={isMySellOrder ? "Чат с покупателем" : "Чат с продавцом"}
         placement="right"
         onClose={() => setChatOpen(false)}
         open={chatOpen}

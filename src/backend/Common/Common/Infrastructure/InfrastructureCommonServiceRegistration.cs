@@ -20,10 +20,10 @@ public static class InfrastructureCommonServiceRegistration
         return services;
     }
 
-    public static IServiceCollection AddProducer(this IServiceCollection services, IConfigurationSection configurationSection)
+    public static IServiceCollection AddProducer(this IServiceCollection services, IConfigurationSection configuration)
     {
-        services.Configure<KafkaConfig>(configurationSection);
+        services.Configure<KafkaConfig>(configuration);
         services.AddSingleton(typeof(KafkaProducer<>));
         return services;
-    }
+    }   
 }

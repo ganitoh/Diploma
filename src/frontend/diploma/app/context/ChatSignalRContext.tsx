@@ -9,8 +9,21 @@ export const ChatSignalRContext = createContext<HubConnection | null>(null);
 export const ChatSignalRProvider: FC<any> = ({ children }) => {
   const [connection, setConnection] = useState<HubConnection | null>(null);
 
+  function getCookieOld(name: string): string | null {
+    if (typeof document === "undefined") return null;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      const part = parts.pop();
+      if (part) {
+        return part.split(";").shift() || null;
+      }
+    }
+    return null;
+  }
+
   useEffect(() => {
-    const token = getCookie("access_token");
+    const token = getCookieOld("access_token");
     console.log("Токен:", token);
 
     if (!token) {

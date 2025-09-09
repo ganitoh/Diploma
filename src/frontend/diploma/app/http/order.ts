@@ -1,5 +1,10 @@
-import { IDownloadDocument, IResponse } from "../models/api";
-import { IChangeOrderStatus, ICreateOrder, IOrder } from "../models/order";
+import { IDownloadDocument, IPagingResponse, IResponse } from "../models/api";
+import {
+  IChangeOrderStatus,
+  ICreateOrder,
+  IGetPagedOrderByUserId,
+  IOrder,
+} from "../models/order";
 import { organizaitonClient } from "./client";
 
 export const getOrderById = async (
@@ -8,6 +13,21 @@ export const getOrderById = async (
   (
     await organizaitonClient.get("/Order/GetOrderById", {
       params: { organizationId },
+    })
+  ).data;
+
+export const getPagedOrderByUserId = async (
+  params: IGetPagedOrderByUserId
+): Promise<IResponse<IPagingResponse<IOrder>>> =>
+  (
+    await organizaitonClient.get("/Order/GetPagedOrderByUserId", {
+      params: {
+        userId: params.userId,
+        isSellOrders: params.isSellOrders,
+        pageNumber: params.pageNumber,
+        pageSize: params.pageSize,
+        status: params.status,
+      },
     })
   ).data;
 

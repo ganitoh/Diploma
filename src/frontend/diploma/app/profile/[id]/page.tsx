@@ -14,6 +14,7 @@ import {
   Col,
   Table,
   Popconfirm,
+  Select,
 } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Key, useEffect, useState } from "react";
@@ -23,8 +24,17 @@ import { AdminPanel } from "@/app/components/adminPanel/adminPanel";
 import { productColumns, sellOrderColumns } from "./columns";
 import { useProductMutation } from "@/app/hooks/product/useProductMutation";
 import { useUserMutation } from "@/app/hooks/user/useUserMutation";
+import { useGetPagedOrderByUserIdQuery } from "@/app/hooks/order/useOrderQuery";
+import { OrderStatus } from "@/app/models/order";
 
 const { Title } = Typography;
+
+const orderStatusOptions = [
+  { label: "Создан", value: OrderStatus.Created },
+  { label: "Собран", value: OrderStatus.Collected },
+  { label: "В доставке", value: OrderStatus.InDelivery },
+  { label: "Закрыт", value: OrderStatus.Close },
+];
 
 export default function ProfilePage() {
   const [isAddProductModalOpen, setIsAddProductModalOpen] =
@@ -32,6 +42,16 @@ export default function ProfilePage() {
 
   const [productId, setProductId] = useState<number | undefined>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [currentPageSellOrder, setCurrentPageSellOrder] = useState(1);
+  const [pageSizeSellOrder, setPageSizeSellOrder] = useState<number>(5);
+  const [currentPageBuyOrders, setCurrentPageBuyOrders] = useState(1);
+  const [pageSizeBuyOrder, setPageSizeBuyOrder] = useState<number>(5);
+  const [selectedSellOrderStatus, setSelectedSellOrderStatus] = useState<
+    OrderStatus | undefined
+  >(undefined);
+  const [selectedBuyOrderStatus, setSelectedBuyOrderStatus] = useState<
+    OrderStatus | undefined
+  >(undefined);
 
   const { deleteProductMutation } = useProductMutation();
   const { logoutMutation } = useUserMutation();
@@ -39,6 +59,24 @@ export default function ProfilePage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id;
+
+  const { data: buyOrders, refetch: refetchBuyOrders } =
+    useGetPagedOrderByUserIdQuery({
+      pageNumber: currentPageBuyOrders,
+      pageSize: pageSizeBuyOrder,
+      userId: id?.toString() ?? "",
+      isSellOrders: false,
+      status: selectedBuyOrderStatus,
+    });
+
+  const { data: sellOrders, refetch: refetchsellOrders } =
+    useGetPagedOrderByUserIdQuery({
+      pageNumber: currentPageSellOrder,
+      pageSize: pageSizeBuyOrder,
+      userId: id?.toString() ?? "",
+      isSellOrders: true,
+      status: selectedSellOrderStatus,
+    });
 
   const { data: resultCheck } = useCheckRoleUserQuery("Admin");
   const { data, isLoading, refetch } = useGetOrganizationByUserIdQuery(
@@ -203,19 +241,46 @@ export default function ProfilePage() {
                 )}
               </Card>
 
-              <Card title="Заказы на продажу" style={{ marginBottom: 24 }}>
+              <Card
+                title={
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>Заказы на продажу</span>
+                    <Select
+                      style={{ minWidth: 160 }}
+                      allowClear
+                      placeholder="Статус заказа"
+                      options={orderStatusOptions}
+                      value={selectedSellOrderStatus}
+                      onChange={(value) => setSelectedSellOrderStatus(value)}
+                    />
+                  </div>
+                }
+                style={{ marginBottom: 24 }}
+              >
                 {data.response.sellOrders.length > 0 ? (
                   <>
                     <Table
                       rowKey="id"
                       columns={sellOrderColumns}
-                      dataSource={data.response.sellOrders}
-                      pagination={false}
+                      dataSource={sellOrders?.response.entities}
                       onRow={(record) => ({
                         onClick: () => {
                           router.push(`/order/${record.id}`);
                         },
                       })}
+                      pagination={{
+                        current: currentPageSellOrder,
+                        pageSize: pageSizeSellOrder,
+                        total: sellOrders?.response.totalCount || 0,
+                        onChange: (page) => setCurrentPageSellOrder(page),
+                        showSizeChanger: false,
+                      }}
                     />
                   </>
                 ) : (
@@ -223,19 +288,45 @@ export default function ProfilePage() {
                 )}
               </Card>
 
-              <Card title="Заказы на покупку">
+              <Card
+                title={
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span>Заказы на покупку</span>
+                    <Select
+                      style={{ minWidth: 160 }}
+                      allowClear
+                      placeholder="Статус заказа"
+                      options={orderStatusOptions}
+                      value={selectedBuyOrderStatus}
+                      onChange={(value) => setSelectedBuyOrderStatus(value)}
+                    />
+                  </div>
+                }
+              >
                 {data.response.buyOrders.length > 0 ? (
                   <>
                     <Table
                       rowKey="id"
                       columns={sellOrderColumns}
-                      dataSource={data.response.buyOrders}
-                      pagination={false}
+                      dataSource={buyOrders?.response.entities}
                       onRow={(record) => ({
                         onClick: () => {
                           router.push(`/order/${record.id}`);
                         },
                       })}
+                      pagination={{
+                        current: currentPageBuyOrders,
+                        pageSize: pageSizeBuyOrder,
+                        total: buyOrders?.response.totalCount || 0,
+                        onChange: (page) => setCurrentPageBuyOrders(page),
+                        showSizeChanger: false,
+                      }}
                     />
                   </>
                 ) : (

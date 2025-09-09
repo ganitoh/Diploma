@@ -8,10 +8,10 @@ public class CreateMessageRequest
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
-    public Guid UserId { get; set; }
+    public string? UserId { get; set; }
     
     /// <summary>
-    /// Идентификатор заказак
+    /// Идентификатор заказа
     /// </summary>
     public int OrderId { get; set; }
     

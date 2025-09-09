@@ -17,6 +17,7 @@ public class GeneratorInvoceInPDF : IGenerateInvoiceForOrder
         var doc = new PdfDocument();
         doc.Info.Title = $"Накладная №{order.Id}";
         var page = doc.AddPage();
+        page.Orientation = PdfSharp.PageOrientation.Landscape;
         var gfx = XGraphics.FromPdfPage(page);
     
         var leftMargin = 40;

@@ -1,19 +1,22 @@
 import { IPagingResponse, IRequestParams, IResponse } from "../models/api";
+import { IGetPagedOrderByUserId } from "../models/order";
 import {
   ICreateOrganiaiton,
+  IGetPagedOrganization,
   IOrganiaiton,
   IShortOrganiaiton,
 } from "../models/organization";
 import { organizaitonClient } from "./client";
 
 export const GetPagedOrganization = async (
-  params: IRequestParams
+  params: IGetPagedOrganization
 ): Promise<IResponse<IPagingResponse<IOrganiaiton>>> =>
   (
     await organizaitonClient.get("/Organization/GetPagedOrganization", {
       params: {
         pageNumber: params.pageNumber,
         pageSize: params.pageSize,
+        isExternal: params.isExternal,
       },
     })
   ).data;

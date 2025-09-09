@@ -30,8 +30,6 @@ internal class GetChatQueryHandler :  IQueryHandler<GetChatQuery, ChatDto>
 
     public async Task<ChatDto> Handle(GetChatQuery request, CancellationToken cancellationToken)
     {
-        var firstUserId = _httpContextAccessor.HttpContext.User.Claims.First(x=>x.Type == ClaimTypes.NameIdentifier).Value;
-        
         var chat = await  _context.Chats
             .AsNoTracking()
             .Include(x => x.Messages)

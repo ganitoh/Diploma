@@ -86,6 +86,9 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.Property<bool>("IsApproval")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsExternal")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LegalAddress")
                         .IsRequired()
                         .HasColumnType("text");

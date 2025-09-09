@@ -14,8 +14,9 @@ import {
   getTopOrganizationByRating,
 } from "@/app/http/organization";
 import { IRequestParams } from "@/app/models/api";
+import { IGetPagedOrganization } from "@/app/models/organization";
 
-export const useGetPagedOrganizationQuery = (params: IRequestParams) => {
+export const useGetPagedOrganizationQuery = (params: IGetPagedOrganization) => {
   return useQuery({
     queryFn: () => GetPagedOrganization(params),
     queryKey: [GET_PAGED_ORGANIZATION, params],

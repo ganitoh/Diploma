@@ -2,6 +2,8 @@
 using Chat.Domain.Models;
 using Chat.Infrastructure.Persistance.Context;
 using Common.Application;
+using Common.Application.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Application.CQRS.Messages.Commands;
 
@@ -22,12 +24,13 @@ internal class CreateMessageCommandHandler : ICommandHandler<CreateMessageComman
 
     public async Task<int> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
     {
+        var chat = await _context.Chats.FirstOrDefaultAsync(x=>x.OrderId == request.Data.OrderId, cancellationToken) ?? throw new NotFoundException("Order not found");
         var message = new Message
         {
             Text = request.Data.Text,
             CreatedDatetime = DateTime.UtcNow,
-            UserId = request.Data.UserId,
-            ChatId = request.Data.ChatId
+            UserId = Guid.Parse(request.Data.UserId),
+            ChatId = chat.Id
         };
         
         _context.Messages.Add(message);

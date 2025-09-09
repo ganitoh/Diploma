@@ -29,4 +29,9 @@ public class CreateOrganizationRequest
     /// Электронная почта
     /// </summary>
     public string? Email { get; set; }
+
+    /// <summary>
+    /// Флаг внешней органзиации
+    /// </summary>
+    public bool IsExternal { get; set; } = false;
 }

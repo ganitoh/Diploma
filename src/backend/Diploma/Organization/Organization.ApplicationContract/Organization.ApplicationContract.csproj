@@ -12,4 +12,10 @@
       <ProjectReference Include="..\Organization.Domain\Organization.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Common">
+        <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

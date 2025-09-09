@@ -54,4 +54,11 @@ export const sellOrderColumns: ColumnsType<IOrder> = [
     key: "statusText",
     align: "center",
   },
+  {
+    title: "Товар",
+    dataIndex: "product",
+    key: "product",
+    align: "center",
+    render: (product: IProduct) => product.name ?? "-",
+  },
 ];

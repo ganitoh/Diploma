@@ -22,6 +22,17 @@ public class OrderController : BaseApiController
         var result = await Mediator.Send(new GetOrderByIdQuery(organizationId));
         return Ok(ApiResponse<OrderDto>.Success(result));
     }
+    
+    /// <summary>
+    /// Получить пагинированный список заказов
+    /// </summary>
+    [HttpGet(nameof(GetPagedOrderByUserId))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
+    public async Task<IActionResult> GetPagedOrderByUserId([FromQuery] GetOrderByUserRequest request)
+    {
+        var result = await Mediator.Send(new GetPagedOrdersByUserIdQuery(request));
+        return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
+    }
 
     /// <summary>
     /// Получить заказы на покупку для организации

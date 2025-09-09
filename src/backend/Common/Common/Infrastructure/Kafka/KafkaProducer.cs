@@ -21,7 +21,7 @@ public class KafkaProducer<TMessage> : IKafkaProducer<TMessage>
         _topic = typeof(TMessage).Name.Replace("[]", "_array");
     }
     
-    public async Task ProduceAsync(TMessage message, CancellationToken cancellationToken)
+    public async Task ProduceAsync(TMessage message, CancellationToken cancellationToken = default)
     {
         await _producer.ProduceAsync(_topic, new Message<string, TMessage>
         {

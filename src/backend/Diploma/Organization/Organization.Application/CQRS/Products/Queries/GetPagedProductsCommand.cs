@@ -4,6 +4,7 @@ using Common.API.Paged;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Dtos;
+using Organization.ApplicationContract.Requests;
 using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Products.Queries;
@@ -11,7 +12,7 @@ namespace Organizaiton.Application.CQRS.Products.Queries;
 /// <summary>
 /// Запрос на получение пагинированного списка продуктов
 /// </summary>
-public record GetPagedProductsCommand(PagedRequest PagedRequest) : IQuery<PagedList<ProductDto>>;
+public record GetPagedProductsCommand(GetPagedProductsRequest PagedRequest) : IQuery<PagedList<ProductDto>>;
 
 /// <summary>
 /// Хендлер запроса на получение пагинированного списка продуктов
@@ -29,10 +30,17 @@ internal class GetPagedProductsCommandHandler : IQueryHandler<GetPagedProductsCo
 
     public async Task<PagedList<ProductDto>> Handle(GetPagedProductsCommand request, CancellationToken cancellationToken)
     {
-        return await _context.Products
-            .Include(x=>x.SellOrganization)
-            .Include(x=>x.Rating)
-            .AsNoTracking()
+        var productsQuery = _context.Products
+            .Include(x => x.SellOrganization)
+            .Include(x => x.Rating)
+            .AsNoTracking();
+
+        if (request.PagedRequest.OrganizationId is not null)
+        {
+            productsQuery =  productsQuery.Where(x => x.SellOrganizationId == request.PagedRequest.OrganizationId);
+        }
+        
+        return await productsQuery
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .GetPagetListAsync(request.PagedRequest, cancellationToken);
     }

@@ -55,7 +55,7 @@ public class CahtHub : Hub<IChatClient>
     public async Task SendMessage(CreateMessageRequest request)
     {
         var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        request.UserId = Guid.Parse(userId);
+        request.UserId = userId;
 
         var response = await _mediator.Send(new CreateMessageCommand(request));
         var chat = await _mediator.Send(new GetChatQuery(request.OrderId));

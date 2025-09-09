@@ -6,13 +6,15 @@ import Link from "next/link";
 import ReactQueryProvider from "./providers/ReactQueryProvider";
 import { UserOutlined, SearchOutlined } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { IProductShort } from "./models/product";
 import { serarchProducts } from "./http/products";
 import { ChatSignalRProvider } from "./context/ChatSignalRContext";
+import { useCheckRoleUserQuery } from "./hooks/user/useUserQuery";
+import { checkRole } from "./http/user";
 
-const items = [
-  { key: "home", label: <Link href="/">Home</Link> },
+const defaultItems = [
+  { key: "home", label: <Link href="/">Главная</Link> },
   {
     key: "analytics",
     label: "Аналитика",
@@ -35,6 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [search, setSearch] = useState<string>("");
+  const [items, setItems] = useState(defaultItems);
   const [searchShortProducts, setSearchShortProducts] = useState<
     IProductShort[]
   >([]);
@@ -51,6 +54,20 @@ export default function RootLayout({
       router.push("/login");
     }
   };
+
+  useEffect(() => {
+    checkRole("Admin").then((res) => {
+      if (res.succeeded) {
+        setItems((prev) => [
+          ...prev,
+          {
+            key: "supplierModule",
+            label: <Link href="/supplier">Поставщики</Link>,
+          },
+        ]);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     setSearch("");

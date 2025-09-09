@@ -36,13 +36,16 @@ public class RoleController : BaseApiController
     /// <summary>
     /// Проверить роль
     /// </summary>
-    [Authorize]
     [HttpGet(nameof(CheckRole))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<bool>))]
     public async Task<IActionResult> CheckRole([FromQuery] string roleName)
     {
         var result = await Mediator.Send(new CheckRoleQuery(roleName));
-        return Ok(ApiResponse<bool>.Success(result));
+        if (result)
+            return Ok(ApiResponse<bool>.Success(result));
+        else
+            return Ok(ApiResponse<bool>.Fail("Нет доступа"));
+        
     }
     
     /// <summary>

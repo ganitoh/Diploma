@@ -60,7 +60,7 @@ internal class AccessTokenRefreshCommandHandler : ICommandHandler<AccessTokenRef
 
         _httpContextAccessor.HttpContext.Response.Cookies.Append("access_token", newAccessToken, new CookieOptions
         {
-            HttpOnly = true,
+            HttpOnly = false,
             Secure = true,
             SameSite = SameSiteMode.None,
             Expires = DateTimeOffset.UtcNow.AddDays(1)

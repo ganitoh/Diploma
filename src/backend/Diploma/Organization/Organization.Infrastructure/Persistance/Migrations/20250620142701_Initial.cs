@@ -16,6 +16,21 @@ namespace Organization.Infrastructure.Persistance.Migrations
                 name: "organization");
 
             migrationBuilder.CreateTable(
+                name: "rating",
+                schema: "organization",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Vale = table.Column<decimal>(type: "numeric", nullable: false),
+                    Total = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_rating", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "organization",
                 schema: "organization",
                 columns: table => new
@@ -27,42 +42,43 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     LegalAddress = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
-                    IsApproval = table.Column<bool>(type: "boolean", nullable: false)
+                    IsApproval = table.Column<bool>(type: "boolean", nullable: false),
+                    IsExternal = table.Column<bool>(type: "boolean", nullable: false),
+                    RatingId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_organization", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_organization_rating_RatingId",
+                        column: x => x.RatingId,
+                        principalSchema: "organization",
+                        principalTable: "rating",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "order",
+                name: "ratingcommentary",
                 schema: "organization",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    DeliveryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    RatingValue = table.Column<decimal>(type: "numeric", nullable: false),
+                    Commentary = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    SellerOrganizationId = table.Column<int>(type: "integer", nullable: false),
-                    BuyerOrganizationId = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: true),
+                    RatingId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_order", x => x.Id);
+                    table.PrimaryKey("PK_ratingcommentary", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_order_organization_BuyerOrganizationId",
-                        column: x => x.BuyerOrganizationId,
+                        name: "FK_ratingcommentary_rating_RatingId",
+                        column: x => x.RatingId,
                         principalSchema: "organization",
-                        principalTable: "organization",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_order_organization_SellerOrganizationId",
-                        column: x => x.SellerOrganizationId,
-                        principalSchema: "organization",
-                        principalTable: "organization",
+                        principalTable: "rating",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -103,7 +119,8 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     TotalSold = table.Column<int>(type: "integer", nullable: false),
                     MeasurementType = table.Column<int>(type: "integer", nullable: false),
                     IsStock = table.Column<bool>(type: "boolean", nullable: false),
-                    SellOrganizationId = table.Column<int>(type: "integer", nullable: false)
+                    SellOrganizationId = table.Column<int>(type: "integer", nullable: false),
+                    RatingId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -115,28 +132,49 @@ namespace Organization.Infrastructure.Persistance.Migrations
                         principalTable: "organization",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_product_rating_RatingId",
+                        column: x => x.RatingId,
+                        principalSchema: "organization",
+                        principalTable: "rating",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "orderproduct",
+                name: "order",
                 schema: "organization",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
+                    DeliveryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    SellerOrganizationId = table.Column<int>(type: "integer", nullable: false),
+                    BuyerOrganizationId = table.Column<int>(type: "integer", nullable: false),
                     ProductId = table.Column<int>(type: "integer", nullable: false),
-                    OrderId = table.Column<int>(type: "integer", nullable: false)
+                    Quantity = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orderproduct", x => new { x.OrderId, x.ProductId });
+                    table.PrimaryKey("PK_order", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orderproduct_order_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_order_organization_BuyerOrganizationId",
+                        column: x => x.BuyerOrganizationId,
                         principalSchema: "organization",
-                        principalTable: "order",
+                        principalTable: "organization",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_orderproduct_product_ProductId",
+                        name: "FK_order_organization_SellerOrganizationId",
+                        column: x => x.SellerOrganizationId,
+                        principalSchema: "organization",
+                        principalTable: "organization",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_order_product_ProductId",
                         column: x => x.ProductId,
                         principalSchema: "organization",
                         principalTable: "product",
@@ -151,16 +189,22 @@ namespace Organization.Infrastructure.Persistance.Migrations
                 column: "BuyerOrganizationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_order_ProductId",
+                schema: "organization",
+                table: "order",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_order_SellerOrganizationId",
                 schema: "organization",
                 table: "order",
                 column: "SellerOrganizationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orderproduct_ProductId",
+                name: "IX_organization_RatingId",
                 schema: "organization",
-                table: "orderproduct",
-                column: "ProductId");
+                table: "organization",
+                column: "RatingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_organizationuser_OrganizationId",
@@ -169,17 +213,29 @@ namespace Organization.Infrastructure.Persistance.Migrations
                 column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_product_RatingId",
+                schema: "organization",
+                table: "product",
+                column: "RatingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_product_SellOrganizationId",
                 schema: "organization",
                 table: "product",
                 column: "SellOrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ratingcommentary_RatingId",
+                schema: "organization",
+                table: "ratingcommentary",
+                column: "RatingId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "orderproduct",
+                name: "order",
                 schema: "organization");
 
             migrationBuilder.DropTable(
@@ -187,7 +243,7 @@ namespace Organization.Infrastructure.Persistance.Migrations
                 schema: "organization");
 
             migrationBuilder.DropTable(
-                name: "order",
+                name: "ratingcommentary",
                 schema: "organization");
 
             migrationBuilder.DropTable(
@@ -196,6 +252,10 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
             migrationBuilder.DropTable(
                 name: "organization",
+                schema: "organization");
+
+            migrationBuilder.DropTable(
+                name: "rating",
                 schema: "organization");
         }
     }
