@@ -1,13 +1,17 @@
-﻿using Common.Domain;
-using Notifications.Domain.Enums;
+﻿using Notifications.Domain.Enums;
 
-namespace Notifications.Domain.Models;
+namespace Notifications.ApplicationContract.Dtos;
 
 /// <summary>
 /// Уведомление
 /// </summary>
-public class Notification : Entity<int>
+public class NotificationDto
 {
+    /// <summary>
+    /// Идентификатор
+    /// </summary>
+    public int Id { get; set; }
+    
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
@@ -52,7 +56,7 @@ public class Notification : Entity<int>
     /// Дата прочтения.
     /// </summary>
     public DateTime? ReadDate { get; set; }
-
+    
     /// <summary>
     /// Флаг показывающий прочитно ли уведомление
     /// </summary>

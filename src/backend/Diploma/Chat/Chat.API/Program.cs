@@ -5,9 +5,7 @@ using Chat.Infrastructure;
 using Chat.Infrastructure.Persistance.Context;
 using Common.API;
 using Common.API.Extenisions;
-using Common.Infrastructure;
 using Common.Infrastructure.Migrator;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 

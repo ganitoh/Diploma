@@ -6,4 +6,18 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Notifications.Application\Notifications.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Common">
+        <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+    </ItemGroup>
+
 </Project>

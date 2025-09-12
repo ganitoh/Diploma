@@ -1,17 +1,16 @@
-﻿using Common.Domain;
-using Notifications.Domain.Enums;
+﻿using Notifications.Domain.Enums;
 
-namespace Notifications.Domain.Models;
+namespace Notifications.ApplicationContract.Requests;
 
 /// <summary>
-/// Уведомление
+/// Данные для создания уведомления
 /// </summary>
-public class Notification : Entity<int>
+public class CreateNotificationRequest
 {
     /// <summary>
-    /// Идентификатор пользователя
+    /// Идентификатор пользовтелей кому адресовано сообщение
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid[] UsersIds { get; set; }
 
     /// <summary>
     /// Тип уведомления
@@ -37,24 +36,9 @@ public class Notification : Entity<int>
     /// Адрес электронной почты пользователя.
     /// </summary>
     public string? Email { get; set; }
-    
-    /// <summary>
-    /// Дата создания.
-    /// </summary>
-    public DateTime CreatedDate { get; set; }
 
     /// <summary>
-    /// Дата отправки.
+    /// Отправить сразу
     /// </summary>
-    public DateTime? SentDate { get; set; }
-
-    /// <summary>
-    /// Дата прочтения.
-    /// </summary>
-    public DateTime? ReadDate { get; set; }
-
-    /// <summary>
-    /// Флаг показывающий прочитно ли уведомление
-    /// </summary>
-    public bool IsRead { get; set; }
+    public bool IsSendImmediately { get; set; } = true;
 }

@@ -71,6 +71,5 @@ public class CahtHub : Hub<IChatClient>
                 CreatedDatetime = DateTime.UtcNow
             });
         }
-
     }
 }

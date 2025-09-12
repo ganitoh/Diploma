@@ -5,8 +5,6 @@ using Common.Infrastructure;
 using Common.Infrastructure.Kafka;
 using Common.Infrastructure.Migrator;
 using Organizaiton.Application;
-using Organization.ApplicationContract.Dtos;
-using Organization.ApplicationContract.MessageDtos;
 using Organization.Infrastructure;
 using Organization.Infrastructure.Persistance.Context;
 using Serilog;

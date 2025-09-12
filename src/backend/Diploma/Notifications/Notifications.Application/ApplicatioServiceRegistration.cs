@@ -6,7 +6,7 @@ namespace Notifications.Application;
 
 public static class ApplicatioServiceRegistration
 {
-    public static IServiceCollection AddOrganizaitonApplication(this IServiceCollection services)
+    public static IServiceCollection AddNotificationApplicationService(this IServiceCollection services)
     {
         var assembly = Assembly.GetExecutingAssembly();
         
