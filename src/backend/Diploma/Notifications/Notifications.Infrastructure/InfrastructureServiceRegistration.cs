@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Common.Infrastructure.Migrator;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notifications.Infrastructure.Persistance;
 
@@ -10,6 +11,8 @@ public static class InfrastructureServiceRegistration
         IConfiguration configuration)
     {
         services.AddPersistence(configuration);
+        services.AddDbMigrator();
+        
         return services;
     }   
 }

@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="CQRS\Notifications\Queries\" />
-      <Folder Include="CQRS\Notifications\Validators\" />
     </ItemGroup>
 
     <ItemGroup>

@@ -40,13 +40,12 @@ internal class ChangeOrderStatusCommandHandler : ICommandHandler<ChangeOrderStat
         await _context.SaveChangesAsync(cancellationToken);
 
         await SendNotification(order, cancellationToken);
-        
         return order.Id;
     }
 
     private async Task SendNotification(Order order, CancellationToken cancellationToken)
     {
-        await _producer.ProduceAsync(new()
+        await _producer.ProduceAsync(new CreateNotificationMessage
         {
             Title = "Изменен статус заказа",
             UsersIds = order.BuyerOrganization!.OrganizationUsers.Select(x=>x.UserId).ToArray(),

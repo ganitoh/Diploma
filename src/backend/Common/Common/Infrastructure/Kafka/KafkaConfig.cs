@@ -5,6 +5,6 @@ namespace Common.Infrastructure.Kafka;
 public class KafkaConfig
 {
     public string BootstrapServers { get; set; }
-
-    public string topic { get; set; }
+    public string Topic { get; set; }
+    public string GroupId { get; set; }
 }

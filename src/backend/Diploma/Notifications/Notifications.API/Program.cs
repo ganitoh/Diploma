@@ -1,9 +1,13 @@
 using System.Reflection;
 using Common.API;
 using Common.API.Extenisions;
+using Common.Infrastructure.Kafka;
 using Common.Infrastructure.Migrator;
+using Microsoft.Extensions.Logging.Abstractions;
+using Notifications.API.Consumers;
 using Notifications.API.Hubs;
 using Notifications.Application;
+using Notifications.Application.SignalR;
 using Notifications.Infrastructure;
 using Notifications.Infrastructure.Persistance.Context;
 
@@ -18,6 +22,8 @@ builder.Services.AddNotificationInfrastructureServices(builder.Configuration);
 builder.Services.AddNotificationApplicationService();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
+builder.Services.AddKafkaConsumers(builder.Configuration.GetSection(nameof(KafkaConfig)));
+builder.Services.AddScoped<IHubFactory, HubFactory>();
 
 var app = builder.Build();
 
