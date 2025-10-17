@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using Common.Application;
 using Common.Application.Exceptions;
 using Microsoft.AspNetCore.Http;

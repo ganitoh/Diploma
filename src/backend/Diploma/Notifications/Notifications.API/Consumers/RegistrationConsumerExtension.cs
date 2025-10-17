@@ -10,7 +10,7 @@ public static class RegistrationConsumerExtension
         services.Configure<KafkaConfig>(configuration);
 
         services.AddHostedService<KafkaConsumer<CreateNotificationMessage>>();
-        services.AddSingleton<IMessageHandler<CreateNotificationMessage>, NotificationConsumer>();
+        services.AddScoped<IMessageHandler<CreateNotificationMessage>, NotificationConsumer>();
         
         return services;
     }

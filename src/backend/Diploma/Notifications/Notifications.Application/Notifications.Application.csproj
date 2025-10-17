@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="CQRS\Notifications\Queries\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\Organization\Organization.ApplicationContract\Organization.ApplicationContract.csproj" />
       <ProjectReference Include="..\Notifications.ApplicationContract\Notifications.ApplicationContract.csproj" />
       <ProjectReference Include="..\Notifications.Domain\Notifications.Domain.csproj" />

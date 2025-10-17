@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,13 +14,13 @@ public class KafkaConsumer<TMessage> : BackgroundService where TMessage : class
 {
     private readonly IConsumer<string, TMessage>  _consumer;
     private readonly ILogger<KafkaConsumer<TMessage>>  _logger;
-    private readonly IMessageHandler<TMessage> _handler;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly string _topic;
 
     public KafkaConsumer(
         IOptions<KafkaConfig> options,
         ILogger<KafkaConsumer<TMessage>> logger,
-        IMessageHandler<TMessage> handler)
+        IServiceScopeFactory scopeFactory)
     {
         var config = new ConsumerConfig
         {
@@ -33,7 +34,7 @@ public class KafkaConsumer<TMessage> : BackgroundService where TMessage : class
 
         _topic = typeof(TMessage).Name.Replace("[]", "_array");
         _logger = logger;
-        _handler = handler;
+        _scopeFactory = scopeFactory; 
     }
     
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -54,9 +55,12 @@ public class KafkaConsumer<TMessage> : BackgroundService where TMessage : class
                 var result = _consumer.Consume(cancellationToken);
                 if (result.Message.Value is null) 
                     continue;
+                
                 _logger.LogInformation($"Consumed message: {result.Message.Value}");
-                await _handler.HandleAsync(result.Message.Value, cancellationToken);
-
+                
+                using var scope = _scopeFactory.CreateScope();
+                var handler = scope.ServiceProvider.GetRequiredService<IMessageHandler<TMessage>>();
+                await handler.HandleAsync(result.Message.Value, cancellationToken);
             }
             
             _logger.LogInformation("Consumer stoped");
