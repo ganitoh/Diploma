@@ -7,12 +7,11 @@ namespace Notifications.Infrastructure;
 
 public static class InfrastructureServiceRegistration
 {
-    public static IServiceCollection AddNotificationInfrastructureServices(this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddNotificationInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPersistence(configuration);
         services.AddDbMigrator();
-        
+
         return services;
-    }   
+    }
 }

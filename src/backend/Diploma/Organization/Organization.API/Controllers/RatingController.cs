@@ -29,7 +29,7 @@ public class RatingController : BaseApiController
     [Authorize]
     public async Task<IActionResult> CreateRating([FromBody] CreateRatingRequest requestData)
     {
-        var result = await Mediator.Send(new CreateRatingCommand(requestData));
+        var result = await Mediator.Send(new CreateRatingCommand(requestData, User));
         return Ok(ApiResponse<int>.Success(result));
     }
 }

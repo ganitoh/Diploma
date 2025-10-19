@@ -8,20 +8,11 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 {
     public void Configure(EntityTypeBuilder<Notification> builder)
     {
-        builder.ToTable(nameof(Notification).ToLower(), "notification");
+        builder.ToTable(nameof(Notification).ToLower(),"notifications");
+
         builder.HasKey(x => x.Id);
-        
-        builder
-            .Property(notification => notification.Email)
-            .HasMaxLength(80);
 
-        builder
-            .Property(notification => notification.Title)
-            .HasMaxLength(80);
-
-        builder
-            .Property(notification => notification.CreatedDate)
-            .IsRequired()
-            .HasDefaultValueSql("now()");
+        builder.Property(x => x.Text).HasMaxLength(512);
+        builder.Property(x => x.UserId).IsRequired();
     }
 }

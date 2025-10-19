@@ -18,8 +18,6 @@ public static class PersistanceServiceRegistration
             .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning))
         );
         
-        services.AddInfrastructureCommonService<ChatDbContext>();
-        
         return services;
     }
 }

@@ -11,23 +11,23 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Notifications.Domain\Notifications.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Common">
-        <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+        <PackageReference Include="PDFsharp" Version="6.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Common">
+            <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Notifications.Domain\Notifications.Domain.csproj" />
     </ItemGroup>
 
 </Project>

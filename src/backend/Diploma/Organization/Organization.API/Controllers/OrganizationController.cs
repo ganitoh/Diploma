@@ -1,4 +1,5 @@
-﻿using Common.API;
+﻿using System.Security.Claims;
+using Common.API;
 using Common.API.Paged;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -78,7 +79,9 @@ public class OrganizationController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
     public async Task<IActionResult> CreateOrganization([FromBody] CreateOrganizationRequest requestData)
     {
-        var result = await Mediator.Send(new CreateOrganizationCommand(requestData));
+        var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
+                     throw new ApplicationException("Идентификатор пользователя не нйден");
+        var result = await Mediator.Send(new CreateOrganizationCommand(requestData, Guid.Parse(userId)));
         return Ok(ApiResponse<int>.Success(result));
     }
     

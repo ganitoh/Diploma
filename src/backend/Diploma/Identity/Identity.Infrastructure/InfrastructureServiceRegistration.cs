@@ -15,7 +15,6 @@ public static class InfrastructureServiceRegistration
         services.AddPersistence(configuration);
         services.AddAuth(configuration);
         services.AddDbMigrator();
-        services.AddInfrastructureCommonService<IdentityDbContext>();
 
         return services;
     }

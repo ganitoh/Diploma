@@ -16,8 +16,6 @@ public static class PersistanceServiceRegistration
             .UseNpgsql(configuration.GetConnectionString(nameof(OrganizationDbContext)))
         );
         
-        services.AddInfrastructureCommonService<OrganizationDbContext>();
-        
         return services;
     }
 }

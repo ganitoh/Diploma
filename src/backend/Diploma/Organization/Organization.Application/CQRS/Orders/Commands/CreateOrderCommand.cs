@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Common.Application;
+﻿using Common.Application;
 using Common.Application.Exceptions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
@@ -18,14 +16,10 @@ public record CreateOrderCommand(CreateOrderRequest OrderData) : ICommand<int>;
 internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, int>
 {
     private readonly OrganizationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CreateOrderCommandHandler(OrganizationDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public CreateOrderCommandHandler(OrganizationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)

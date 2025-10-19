@@ -1,5 +1,4 @@
-﻿using Common.Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notifications.Infrastructure.Persistance.Context;
@@ -15,8 +14,6 @@ public static class PersistanceServiceRegistration
         services.AddDbContext<NotificationDbContext>(options => options
             .UseNpgsql(configuration.GetConnectionString(nameof(NotificationDbContext)))
         );
-        
-        services.AddInfrastructureCommonService<NotificationDbContext>();
         
         return services;
     }

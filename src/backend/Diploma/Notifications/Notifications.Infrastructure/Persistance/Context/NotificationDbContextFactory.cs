@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Notifications.Infrastructure.Persistance.Context;
 
-public class NotificationContextFactory : IDesignTimeDbContextFactory<NotificationDbContext >
+public class NotificationDbContextFactory : IDesignTimeDbContextFactory<NotificationDbContext>
 {
     public NotificationDbContext CreateDbContext(string[] args)
     {

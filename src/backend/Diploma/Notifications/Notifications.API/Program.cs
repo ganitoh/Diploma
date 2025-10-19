@@ -18,7 +18,7 @@ builder.Services.AddLogging();
 builder.Services.AddMemoryCache();
 builder.Services.AddSwaggerDocumentation(Assembly.GetExecutingAssembly().GetName().Name!);
 builder.Services.AddControllers();
-builder.Services.AddNotificationInfrastructureServices(builder.Configuration);
+builder.Services.AddNotificationInfrastructure(builder.Configuration);
 builder.Services.AddNotificationApplicationService();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
