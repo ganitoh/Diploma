@@ -30,7 +30,7 @@ public class ChatController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
     public async Task<IActionResult> CreateChat([FromBody]CreateChatRequest request)
     {
-        var response = await Mediator.Send(new CreateChatCommand(request));
+        var response = await Mediator.Send(new CreateChatCommand(request, User));
         return Ok(ApiResponse<int>.Success(response));
     }
 }

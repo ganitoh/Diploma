@@ -23,7 +23,7 @@ builder.Services.AddNotificationApplicationService();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
 builder.Services.AddKafkaConsumers(builder.Configuration.GetSection(nameof(KafkaConfig)));
-builder.Services.AddScoped<IHubFactory, HubFactory>();
+builder.Services.AddHubs();
 
 var app = builder.Build();
 
