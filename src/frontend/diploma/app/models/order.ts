@@ -29,7 +29,6 @@ export interface IChangeOrderStatus {
 }
 
 export interface IGetPagedOrderByUserId extends IRequestParams {
-  userId: string;
   isSellOrders: boolean;
   status?: OrderStatus;
 }

@@ -1,4 +1,5 @@
-﻿using Common.API;
+﻿using System.Security.Claims;
+using Common.API;
 using Identity.ApplicatinContract.Dtos;
 using Identity.ApplicatinContract.Requests;
 using Identity.Application.CQRS.Roles.Commands;
@@ -40,12 +41,14 @@ public class RoleController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<bool>))]
     public async Task<IActionResult> CheckRole([FromQuery] string roleName)
     {
-        var result = await Mediator.Send(new CheckRoleQuery(roleName));
-        if (result)
-            return Ok(ApiResponse<bool>.Success(result));
-        else
-            return Ok(ApiResponse<bool>.Fail("Нет доступа"));
+        var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ??
+            throw new ApplicationException("Роль пользователя не найдена");
         
+        if (userRole == roleName)
+            return Ok(ApiResponse<bool>.Success(true));
+        
+        return Ok(ApiResponse<bool>.Fail("Нет доступа"));
+
     }
     
     /// <summary>

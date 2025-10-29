@@ -1,6 +1,4 @@
-﻿using Organization.Domain.Models;
-
-namespace Organization.ApplicationContract.Dtos;
+﻿namespace Organization.ApplicationContract.Dtos;
 
 public class RatingDto
 {

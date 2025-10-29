@@ -36,7 +36,7 @@ internal class SendNotificationCommandHandler : ICommandHandler<SendNotification
         await _hubFactory.GetNotificationHub()
             .SendNotification(_mapper.Map<NotificationDto>(notification), cancellationToken);
         
-        notification.SentDate =  DateTime.UtcNow;
+        notification.SentDate = DateTime.UtcNow;
         await _context.SaveChangesAsync(cancellationToken);
         
         return Unit.Value;

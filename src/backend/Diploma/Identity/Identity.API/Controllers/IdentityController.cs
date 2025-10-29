@@ -1,4 +1,5 @@
 ﻿using Common.API;
+using Identity.ApplicatinContract.Dtos;
 using Identity.ApplicatinContract.Requests;
 using Identity.Application.CQRS.Users.Commands;
 using MediatR;
@@ -18,19 +19,27 @@ public class IdentityController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<string>))]
     public async Task<IActionResult> Refresh()
     {
-        var response = await Mediator.Send(new AccessTokenRefreshCommand());
-        return  Ok(ApiResponse<string>.Success(response));
+        var refreshToken = HttpContext.Request.Cookies["refreshToken"];
+        if (string.IsNullOrEmpty(refreshToken))
+            throw new UnauthorizedAccessException("Токен не найден");
+        
+        var response = await Mediator.Send(new AccessTokenRefreshCommand(refreshToken));
+        SetNewTokens(response);
+        
+        return  Ok(ApiResponse<string>.Success(response.AccessToken));
     }
     
     /// <summary>
     /// Вход пользователя в систему
     /// </summary>
     [HttpPost(nameof(Login))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<string>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Unit>))]
     public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
     {
         var response = await Mediator.Send(new LoginUserCommand(request));
-        return Ok(ApiResponse<string>.Success(response));
+        SetNewTokens(response);
+        
+        return Ok(ApiResponse<Unit>.Success(Unit.Value));
     }
     
     /// <summary>
@@ -41,7 +50,8 @@ public class IdentityController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Unit>))]
     public async Task<IActionResult> Logout()
     {
-        var response = await Mediator.Send(new LogoutUserCommand());
+        var response = await Mediator.Send(new LogoutUserCommand(GetUserId()));
+        DeleteTokens();
         return Ok(ApiResponse<Unit>.Success(response));
     }
 
@@ -55,4 +65,48 @@ public class IdentityController : BaseApiController
         var response = await Mediator.Send(new CreateUserCommand(request));
         return Ok(ApiResponse<Guid>.Success(response));
     }
+    
+    #region Token halpers
+    
+    [NonAction]
+    private void SetNewTokens(TokenDto tokens)
+    {
+        HttpContext.Response.Cookies.Append("access_token", tokens.AccessToken, new CookieOptions
+        {
+            HttpOnly = false,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddDays(1)
+        });
+        
+        HttpContext.Response.Cookies.Append("refreshToken", tokens.RefreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(7)
+        });
+    }
+    
+    [NonAction]
+    private void DeleteTokens()
+    {
+        HttpContext.Response.Cookies.Delete("access_token", new CookieOptions
+        {
+            HttpOnly = false,
+            Secure = true,
+            SameSite = SameSiteMode.None,
+            Expires = DateTimeOffset.UtcNow.AddDays(1)
+        });
+        
+        HttpContext.Response.Cookies.Delete("refreshToken", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(7)
+        });
+    }
+    
+    #endregion
 }

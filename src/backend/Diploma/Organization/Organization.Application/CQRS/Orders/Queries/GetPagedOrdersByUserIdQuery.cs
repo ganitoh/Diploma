@@ -35,8 +35,8 @@ internal class GetPagedOrdersByUserIdQueryHandler : IQueryHandler<GetPagedOrders
             .Include(x => x.SellerOrganization).ThenInclude(x => x.OrganizationUsers)
             .Include(x => x.BuyerOrganization).ThenInclude(x => x.OrganizationUsers)
             .Where(x => request.Data.IsSellOrders
-                ? x.SellerOrganization.OrganizationUsers.First().UserId.ToString() == request.Data.UserId
-                : x.BuyerOrganization.OrganizationUsers.First().UserId.ToString() == request.Data.UserId);
+                ? x.SellerOrganization.OrganizationUsers.First().UserId == request.Data.UserId
+                : x.BuyerOrganization.OrganizationUsers.First().UserId == request.Data.UserId);
         
         if (request.Data.Status.HasValue)
             pagedListOrdersQuery = pagedListOrdersQuery.Where(x => x.Status == request.Data.Status);

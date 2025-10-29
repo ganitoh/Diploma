@@ -1,4 +1,5 @@
 ﻿using Common.Application;
+using Identity.ApplicatinContract.Dtos;
 using Identity.Domain.Models;
 using Identity.Infrastructure.Auth.Abstractions;
 using Identity.Infrastructure.Persistance.Context;
@@ -10,34 +11,27 @@ namespace Identity.Application.CQRS.Users.Commands;
 /// <summary>
 /// Команда на обновление access токена
 /// </summary>
-public record AccessTokenRefreshCommand : ICommand<string>;
+public record AccessTokenRefreshCommand(string RefreshToken) : ICommand<TokenDto>;
 
-internal class AccessTokenRefreshCommandHandler : ICommandHandler<AccessTokenRefreshCommand, string>
+internal class AccessTokenRefreshCommandHandler : ICommandHandler<AccessTokenRefreshCommand, TokenDto>
 {
     private readonly IJwtProvider _jwtProvider;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IdentityDbContext _context;
 
     public AccessTokenRefreshCommandHandler(
         IJwtProvider jwtProvider,
-        IHttpContextAccessor httpContextAccessor,
         IdentityDbContext context)
     {
         _jwtProvider = jwtProvider;
-        _httpContextAccessor = httpContextAccessor;
         _context = context;
     }
 
-    public async Task<string> Handle(AccessTokenRefreshCommand request, CancellationToken cancellationToken)
+    public async Task<TokenDto> Handle(AccessTokenRefreshCommand request, CancellationToken cancellationToken)
     {
-        var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies["refreshToken"];
-        if (string.IsNullOrEmpty(refreshToken))
-            throw new UnauthorizedAccessException("Токен не найден");
-
         var storedToken = await _context.RefreshTokens
             .Include(rt => rt.User)
             .ThenInclude(u => u.Role)
-            .FirstOrDefaultAsync(rt => rt.Token == refreshToken && !rt.IsRevoked, cancellationToken);
+            .FirstOrDefaultAsync(rt => rt.Token == request.RefreshToken && !rt.IsRevoked, cancellationToken);
 
         if (storedToken == null || storedToken.Expires < DateTime.UtcNow)
             throw new UnauthorizedAccessException("Токен не найден");
@@ -58,22 +52,6 @@ internal class AccessTokenRefreshCommandHandler : ICommandHandler<AccessTokenRef
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("access_token", newAccessToken, new CookieOptions
-        {
-            HttpOnly = false,
-            Secure = true,
-            SameSite = SameSiteMode.None,
-            Expires = DateTimeOffset.UtcNow.AddDays(1)
-        });
-        
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddDays(7)
-        });
-
-        return newAccessToken;
+        return new TokenDto(newAccessToken, newRefreshToken);
     }
 }

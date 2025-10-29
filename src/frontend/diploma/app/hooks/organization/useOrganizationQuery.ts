@@ -24,10 +24,10 @@ export const useGetPagedOrganizationQuery = (params: IGetPagedOrganization) => {
   });
 };
 
-export const useGetOrganizationByUserIdQuery = (userId: string) => {
+export const useGetOrganizationByUserIdQuery = () => {
   return useQuery({
-    queryFn: () => getOrganizationByUserId(userId),
-    queryKey: [GET_TOP_ORGANIZATION_BY_RATING, userId],
+    queryFn: () => getOrganizationByUserId(),
+    queryKey: [GET_TOP_ORGANIZATION_BY_RATING],
     retry: false,
   });
 };

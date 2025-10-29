@@ -1,4 +1,4 @@
-﻿namespace Organization.Domain.Models;
+﻿namespace Organization.ApplicationContract.Dtos;
 
 /// <summary>
 /// Dto - оценка с комментом

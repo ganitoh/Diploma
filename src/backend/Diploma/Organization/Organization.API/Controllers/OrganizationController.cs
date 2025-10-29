@@ -53,9 +53,9 @@ public class OrganizationController : BaseApiController
     [Authorize(Policy = PolicyConst.UserPolicy )]
     [HttpGet(nameof(GetOrganizationByUserId))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<OrganizationDto>))]
-    public async Task<IActionResult> GetOrganizationByUserId([FromQuery] string userId)
+    public async Task<IActionResult> GetOrganizationByUserId()
     {
-        var result = await Mediator.Send(new GetOrganizationByUserIdQuery(Guid.Parse(userId)));
+        var result = await Mediator.Send(new GetOrganizationByUserIdQuery(GetUserId()));
         return Ok(ApiResponse<OrganizationDto>.Success(result));
     }
     

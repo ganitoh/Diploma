@@ -21,14 +21,10 @@ export const GetPagedOrganization = async (
     })
   ).data;
 
-export const getOrganizationByUserId = async (
-  userId: string
-): Promise<IResponse<IOrganiaiton>> =>
-  (
-    await organizaitonClient.get("/Organization/getOrganizationByUserId", {
-      params: { userId },
-    })
-  ).data;
+export const getOrganizationByUserId = async (): Promise<
+  IResponse<IOrganiaiton>
+> =>
+  (await organizaitonClient.get("/Organization/getOrganizationByUserId")).data;
 
 export const getOrganizationById = async (
   organizationId: number

@@ -26,10 +26,12 @@ public class OrderController : BaseApiController
     /// <summary>
     /// Получить пагинированный список заказов
     /// </summary>
+    [Authorize]
     [HttpGet(nameof(GetPagedOrderByUserId))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
     public async Task<IActionResult> GetPagedOrderByUserId([FromQuery] GetOrderByUserRequest request)
     {
+        request.UserId = GetUserId();
         var result = await Mediator.Send(new GetPagedOrdersByUserIdQuery(request));
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
     }

@@ -49,7 +49,7 @@ export default function RootLayout({
     var userId = localStorage.getItem("userId");
 
     if (userId) {
-      router.push(`/profile/${userId}`);
+      router.push(`/profile`);
     } else {
       router.push("/login");
     }

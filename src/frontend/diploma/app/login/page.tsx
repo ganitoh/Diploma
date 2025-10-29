@@ -19,18 +19,18 @@ export default function LoginPage() {
   const { loginMutation } = useUserMutation();
   const router = useRouter();
 
-  const onFinish = () => {
+  const onFinish = (data: LoginFromValues) => {
     setLoading(true);
     loginMutation
       .mutateAsync({
-        email: form.getFieldValue("email"),
-        password: form.getFieldValue("password"),
+        email: data.email,
+        password: data.password,
       })
       .then((res) => {
         console.log(res);
         if (res.succeeded) {
           localStorage.setItem("userId", res.response);
-          router.push(`/profile/${res.response}`);
+          router.push("/profile");
         }
       });
 

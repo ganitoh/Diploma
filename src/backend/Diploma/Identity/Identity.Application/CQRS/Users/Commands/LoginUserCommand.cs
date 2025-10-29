@@ -1,10 +1,10 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
+using Identity.ApplicatinContract.Dtos;
 using Identity.ApplicatinContract.Requests;
 using Identity.Domain.Models;
 using Identity.Infrastructure.Auth.Abstractions;
 using Identity.Infrastructure.Persistance.Context;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Application.CQRS.Users.Commands;
@@ -12,30 +12,26 @@ namespace Identity.Application.CQRS.Users.Commands;
 /// <summary>
 /// Запрос на авторизацию пользователя
 /// </summary>
-/// <param name="Data"></param>
-public record class LoginUserCommand(LoginUserRequest Data) : IQuery<string>;
+public record class LoginUserCommand(LoginUserRequest Data) : IQuery<TokenDto>;
 
 /// <inheritdoc/>
-internal class LoginUserCommandHandler : IQueryHandler<LoginUserCommand, string>
+internal class LoginUserCommandHandler : IQueryHandler<LoginUserCommand, TokenDto>
 {
     private readonly IJwtProvider _jwtProvider;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IHttpContextAccessor _httpContext;
     private readonly IdentityDbContext _context;
 
     public LoginUserCommandHandler(
         IdentityDbContext identityDbContext,
         IPasswordHasher passwordHasher,
-        IJwtProvider jwtProvider,
-        IHttpContextAccessor httpContext)
+        IJwtProvider jwtProvider)
     {
         _context = identityDbContext;
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
-        _httpContext = httpContext;
     }
 
-    public async Task<string> Handle(LoginUserCommand command, CancellationToken cancellationToken)
+    public async Task<TokenDto> Handle(LoginUserCommand command, CancellationToken cancellationToken)
     {
         var user = await _context.Users
             .AsNoTracking()
@@ -50,24 +46,8 @@ internal class LoginUserCommandHandler : IQueryHandler<LoginUserCommand, string>
 
         var token = _jwtProvider.GenerateToken(user);
         var refreshToken = await GenerateRefreshTokenAsync(user, cancellationToken);
-        
-        _httpContext.HttpContext.Response.Cookies.Append("access_token", token, new CookieOptions
-        {
-            HttpOnly = false,
-            Secure = true,
-            SameSite = SameSiteMode.None,
-            Expires = DateTimeOffset.UtcNow.AddDays(1)
-        });
-        
-        _httpContext.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.None,
-            Expires = DateTime.UtcNow.AddDays(7)
-        });
-        
-        return user.Id.ToString();
+
+        return new TokenDto(token, refreshToken);
     }
 
     private async Task<string> GenerateRefreshTokenAsync(User user, CancellationToken cancellationToken)

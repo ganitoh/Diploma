@@ -18,6 +18,11 @@ builder.Services.AddOrganizationInfrastructure(builder.Configuration);
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
 builder.Services.AddProducer(builder.Configuration.GetSection(nameof(KafkaConfig)));
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "Organization_";
+});
 
 var app = builder.Build();
 
