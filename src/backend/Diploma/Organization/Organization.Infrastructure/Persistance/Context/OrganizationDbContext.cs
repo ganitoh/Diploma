@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Common.Infrastructure.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Organization.Domain.Models;
@@ -11,6 +12,7 @@ public class OrganizationDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<Rating> Ratings { get; set; }
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
     
     public OrganizationDbContext(DbContextOptions options) 
         : base(options) { }
