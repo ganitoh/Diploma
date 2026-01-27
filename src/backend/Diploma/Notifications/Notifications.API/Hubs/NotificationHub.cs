@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Notifications.Application.SignalR;
 using Notifications.ApplicationContract.Dtos;
@@ -9,11 +10,11 @@ namespace Notifications.API.Hubs;
 
 public class NotificationHub : Hub<INotificationClient>, INotificationHub
 {
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCache _cache;
     private readonly ILogger<NotificationHub> _logger;
     private readonly IMediator _mediator;
 
-    public NotificationHub(IMemoryCache cache, ILogger<NotificationHub> logger, IMediator mediator)
+    public NotificationHub(IDistributedCache cache, ILogger<NotificationHub> logger, IMediator mediator)
     {
         _cache = cache;
         _logger = logger;
@@ -28,7 +29,7 @@ public class NotificationHub : Hub<INotificationClient>, INotificationHub
         if (userId != null)
         { 
             _logger.LogInformation("Присоединился пользователь {userId}", userId);
-            _cache.Set(userId,  Context.ConnectionId);
+            await _cache.SetStringAsync(userId,  Context.ConnectionId);
         } 
         await base.OnConnectedAsync();
     }
@@ -37,16 +38,21 @@ public class NotificationHub : Hub<INotificationClient>, INotificationHub
     public override async Task OnDisconnectedAsync(Exception exception)
     {
         var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        
         if (userId != null)
-        { 
-            _cache.Remove(userId);
-        } 
+            await _cache.RemoveAsync(userId);
+         
         await base.OnDisconnectedAsync(exception);
     }
 
-    public Task SendNotification(NotificationDto request, CancellationToken cancellationToken = default)
+    /// <inheritdoc/>
+    public async Task SendNotification(NotificationDto request, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Уведомление отправлено {notificationId}", request.Id);
-        throw new NotImplementedException();
+        var userConnection = await _cache.GetStringAsync(request.UserId.ToString(), cancellationToken);
+        if (userConnection is not null)
+        {
+            await Clients.Client(userConnection).ReceiveNotifications(request);
+            _logger.LogInformation("Отправлено уведомление пользователю {userId} с коннектом {userConnection}", request.UserId, userConnection);
+        }
     }
 }

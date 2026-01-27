@@ -41,10 +41,12 @@ public class OrderController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetBuyOrderByOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
-    public async Task<IActionResult> GetBuyOrderByOrganization([FromQuery] PagedRequest pagedRequest,
-        [FromQuery] int organizationId)
+    public async Task<IActionResult> GetBuyOrderByOrganization(
+        [FromQuery] PagedRequest pagedRequest,
+        [FromQuery] int organizationId,
+        CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetBuyOrdersByOrganizationQuery(pagedRequest, organizationId));
+        var result = await Mediator.Send(new GetBuyOrdersByOrganizationQuery(pagedRequest, organizationId), cancellationToken);
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
     }
 

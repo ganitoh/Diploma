@@ -22,7 +22,6 @@ export const getPagedOrderByUserId = async (
   (
     await organizaitonClient.get("/Order/GetPagedOrderByUserId", {
       params: {
-        userId: params.userId,
         isSellOrders: params.isSellOrders,
         pageNumber: params.pageNumber,
         pageSize: params.pageSize,

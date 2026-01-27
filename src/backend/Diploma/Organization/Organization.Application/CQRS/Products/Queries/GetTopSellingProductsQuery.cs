@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Organization.ApplicationContract.Dtos;
 using Organization.Infrastructure.Persistance.Context;
 
@@ -21,9 +22,9 @@ internal class GetTopSellingProductsQueryHandler : IQueryHandler<GetTopSellingPr
 {
     private const string CacheKey = "TopSellingProducts";
     
-    private OrganizationDbContext  _context;
-    private IMapper _mapper;
-    private IDistributedCache _cache;
+    private readonly OrganizationDbContext  _context;
+    private readonly IMapper _mapper;
+    private readonly IDistributedCache _cache;
 
     public GetTopSellingProductsQueryHandler(OrganizationDbContext context, IMapper mapper, IDistributedCache cache)
     {

@@ -14,8 +14,6 @@ using Notifications.Infrastructure.Persistance.Context;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
-builder.Services.AddLogging();
-builder.Services.AddMemoryCache();
 builder.Services.AddSwaggerDocumentation(Assembly.GetExecutingAssembly().GetName().Name!);
 builder.Services.AddControllers();
 builder.Services.AddNotificationInfrastructure(builder.Configuration);
@@ -24,6 +22,11 @@ builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
 builder.Services.AddKafkaConsumers(builder.Configuration.GetSection(nameof(KafkaConfig)));
 builder.Services.AddHubs();
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "Organization_";
+});
 
 var app = builder.Build();
 

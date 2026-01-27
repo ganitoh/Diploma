@@ -9,8 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { IProductShort } from "./models/product";
 import { serarchProducts } from "./http/products";
-import { ChatSignalRProvider } from "./context/ChatSignalRContext";
-import { useCheckRoleUserQuery } from "./hooks/user/useUserQuery";
+import { ChatSignalRProvider, useSignalR } from "./context/ChatSignalRContext";
 import { checkRole } from "./http/user";
 
 const defaultItems = [
@@ -36,6 +35,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const connection = useSignalR();
   const [search, setSearch] = useState<string>("");
   const [items, setItems] = useState(defaultItems);
   const [searchShortProducts, setSearchShortProducts] = useState<

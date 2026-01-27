@@ -8,7 +8,7 @@ public class GetOrderByUserRequest : PagedRequest
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
     
     /// <summary>
     /// Флаг указывающий какие заказы возвращать (на покупку/продажу)

@@ -48,7 +48,7 @@ export const ChatSignalRProvider: FC<any> = ({ children }) => {
         console.error("Ошибка подключения SignalR:", error);
       });
 
-    // Чистим соединение при размонтировании
+    
     return () => {
       if (newConnection) {
         newConnection.stop();
@@ -56,7 +56,7 @@ export const ChatSignalRProvider: FC<any> = ({ children }) => {
     };
   }, []);
 
-  // Отписка при закрытии окна
+  
   useEffect(() => {
     const handleBeforeUnload = async () => {
       if (connection) await connection.stop();

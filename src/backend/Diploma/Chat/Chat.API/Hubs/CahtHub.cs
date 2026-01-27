@@ -7,17 +7,18 @@ using Chat.ApplicationContract.Dtos;
 using Chat.ApplicationContract.Requests;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Chat.API.Hubs;
 
 public class CahtHub : Hub<IChatClient>
 {
-    private readonly IMemoryCache _cache;
+    private readonly IDistributedCache _cache;
     private readonly IMediator _mediator;
     private readonly ILogger<CahtHub> _logger;
 
-    public CahtHub(IMemoryCache cache, IMediator mediator, ILogger<CahtHub> logger)
+    public CahtHub(IDistributedCache cache, IMediator mediator, ILogger<CahtHub> logger)
     {
         _cache = cache;
         _mediator = mediator;
@@ -32,7 +33,7 @@ public class CahtHub : Hub<IChatClient>
         if (userId != null)
         { 
             _logger.LogInformation("Присоединился пользователь {userId}", userId);
-            _cache.Set(userId,  Context.ConnectionId);
+            await _cache.SetStringAsync(userId,  Context.ConnectionId);
         } 
         await base.OnConnectedAsync();
     }
@@ -43,7 +44,7 @@ public class CahtHub : Hub<IChatClient>
         var userId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (userId != null)
         { 
-            _cache.Remove(userId);
+            await _cache.RemoveAsync(userId);
         } 
         await base.OnDisconnectedAsync(exception);
     }
@@ -59,17 +60,19 @@ public class CahtHub : Hub<IChatClient>
 
         var response = await _mediator.Send(new CreateMessageCommand(request));
         var chat = await _mediator.Send(new GetChatQuery(request.OrderId));
+        var userConnection = await _cache.GetStringAsync(Guid.Parse(userId) == chat.FirstUserId ? chat.SecondUserId.ToString() : chat.FirstUserId.ToString());
         
-        if (_cache.TryGetValue(Guid.Parse(userId) == chat.FirstUserId ? chat.SecondUserId.ToString() : chat.FirstUserId.ToString(), out var userConnection))
+        if (userConnection is not null)
         {
-            _logger.LogInformation("Сообщение отправлено пользователю {userId} с коннектом {userConnection}", userId, userConnection);
-            await Clients.Client(userConnection.ToString()).ReceiveMessagesAsync(new MessageDto
+            await Clients.Client(userConnection).ReceiveMessagesAsync(new MessageDto
             {
                 Id = response,
                 UserId = Guid.Parse(userId),
                 Text = request.Text,
                 CreatedDatetime = DateTime.UtcNow
             });
+            
+            _logger.LogInformation("Сообщение отправлено пользователю {userId} с коннектом {userConnection}", userId, userConnection);
         }
     }
 }

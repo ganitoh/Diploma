@@ -7,5 +7,8 @@ namespace Notifications.Application.SignalR;
 /// </summary>
 public interface INotificationHub
 {
+    /// <summary>
+    /// Отправить уведомление
+    /// </summary>
     Task SendNotification(NotificationDto request, CancellationToken cancellationToken = default);
 }

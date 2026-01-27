@@ -11,13 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
 builder.Services.AddLogging();
-builder.Services.AddMemoryCache();
 builder.Services.AddSwaggerDocumentation(Assembly.GetExecutingAssembly().GetName().Name!);
 builder.Services.AddControllers();
 builder.Services.AddInfrastructureChatService(builder.Configuration);
 builder.Services.AddChatApplication();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddApiAuthentication(builder.Configuration);
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "Chat_";
+});
 
 var app = builder.Build();
 
