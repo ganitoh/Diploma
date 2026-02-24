@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="CQRS\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="Common">
         <HintPath>..\..\..\Common\Common\obj\Debug\net9.0\Common.dll</HintPath>
       </Reference>
@@ -18,6 +14,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Media.Domain\Media.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+      <PackageReference Include="MediatR" Version="12.5.0" />
     </ItemGroup>
 
 </Project>
