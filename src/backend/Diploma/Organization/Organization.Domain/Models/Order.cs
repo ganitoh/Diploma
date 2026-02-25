@@ -3,65 +3,19 @@ using Organization.Domain.Enums;
 
 namespace Organization.Domain.Models;
 
-/// <summary>
-/// Заказ
-/// </summary>
 public class Order : Entity<int>
 {
-    /// <summary>
-    /// Полная стоимость
-    /// </summary>
-    public decimal TotalPrice { get; set; }
-
-    /// <summary>
-    /// Дата и время доставки
-    /// </summary>
+    public int Quantity { get; private set; }
+    public decimal TotalPrice { get; private set; }
     public DateTime? DeliveryDate { get; set; }
-
-    /// <summary>
-    /// Дата создания
-    /// </summary>
     public DateTime CreateDate { get; set; }
-
-    /// <summary>
-    /// Статус заказа
-    /// </summary>
-    public OrderStatus Status { get; set; }
-
-    /// <summary>
-    /// Идентификатор продающей организации
-    /// </summary>
+    public OrderStatus Status { get; private set; }
     public int SellerOrganizationId { get; set; }
-    
-    /// <summary>
-    /// Продающая организации
-    /// </summary>
     public Organization? SellerOrganization { get; set; }
-
-    /// <summary>
-    /// Идентификатор покупающей организации
-    /// </summary>
     public int BuyerOrganizationId { get; set; }
-    
-    /// <summary>
-    /// Покупающая организация
-    /// </summary>
     public Organization? BuyerOrganization { get; set; }
-    
-    /// <summary>
-    /// Идентификатор продукта
-    /// </summary>
-    public int ProductId { get; set; }
-    
-    /// <summary>
-    /// Товары
-    /// </summary>
-    public virtual Product Product { get; set; }
-
-    /// <summary>
-    /// Количество
-    /// </summary>
-    public int Quantity { get; set; }
+    public int ProductId { get; private set; }
+    public virtual Product Product { get; private set; }
     
     protected Order() { }
     
@@ -76,10 +30,28 @@ public class Order : Entity<int>
         CalculateTotalPrice();
     }
 
+    public void ChangeQuantity(int quantity)
+    {
+        Quantity = quantity;
+        CalculateTotalPrice();
+    }
+
+    public void ChangeProduct(Product product)
+    {
+        Product = product;
+        CalculateTotalPrice();
+    }
+
+    #region change status
     
-    /// <summary>
-    /// Расчитать полнусю стоимость заказа
-    /// </summary>
+    public void ChangeStatus(OrderStatus status) => Status = status;
+    public void Created() => Status = OrderStatus.Created;
+    public void Collected() => Status = OrderStatus.Collected;
+    public void Delivery() => Status = OrderStatus.InDelivery;
+    public void Closed() => Status = OrderStatus.Close;
+    
+    #endregion
+    
     private void CalculateTotalPrice()
     {
         TotalPrice = Product.Price * Quantity;

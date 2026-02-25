@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Persistance.Repositories;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Orders.Queries;
 
@@ -16,18 +16,18 @@ public record GetOrderByIdQuery(int OrderId)  : IQuery<OrderDto>;
 /// </summary>
 internal class GetOrderByIdQueryHandler : IQueryHandler<GetOrderByIdQuery, OrderDto>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
 
-    public GetOrderByIdQueryHandler(OrganizationDbContext context, IMapper mapper)
+    public GetOrderByIdQueryHandler(IOrderRepository orderRepository, IMapper mapper)
     {
-        _context = context;
+        _orderRepository = orderRepository;
         _mapper = mapper;
     }
 
     public async Task<OrderDto> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
-        var order = await _context.Orders
+        var order = await _orderRepository.GetQuery()
                         .AsNoTracking()
                         .Include(x => x.Product)
                         .Include(x => x.SellerOrganization)

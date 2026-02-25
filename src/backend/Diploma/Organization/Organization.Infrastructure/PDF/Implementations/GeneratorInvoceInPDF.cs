@@ -1,5 +1,5 @@
-﻿using Organization.Domain.Models;
-using Organization.Infrastructure.PDF.Abstractions;
+﻿using Organizaiton.Application.Common.PDF;
+using Organization.Domain.Models;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;
 using PdfSharp.Pdf;

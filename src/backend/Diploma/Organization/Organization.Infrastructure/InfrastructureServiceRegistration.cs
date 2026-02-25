@@ -1,6 +1,7 @@
 ﻿using Common.Infrastructure.Migrator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Organizaiton.Application.Common.PDF;
 using Organization.Infrastructure.PDF.Abstractions;
 using Organization.Infrastructure.PDF.Implementations;
 using Organization.Infrastructure.Persistance;

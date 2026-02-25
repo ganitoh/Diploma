@@ -2,8 +2,8 @@
 using Common.Application;
 using Common.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Organization.Infrastructure.PDF.Abstractions;
-using Organization.Infrastructure.Persistance.Context;
+using Organizaiton.Application.Common.PDF;
+using Organizaiton.Application.Persistance.Repositories;
 
 namespace Organization.Application.CQRS.Orders.Queries;
 
@@ -15,18 +15,18 @@ public record GetInvoiceForOrderQuery(int OrderId)  : IQuery<FileDto>;
 /// <inheritdoc />
 internal class GetInvoiceForOrderQueryHandler : IQueryHandler<GetInvoiceForOrderQuery, FileDto>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IOrderRepository _orderRepository;
     private readonly IGenerateInvoiceForOrder _generator;
 
-    public GetInvoiceForOrderQueryHandler(OrganizationDbContext context, IGenerateInvoiceForOrder generator)
+    public GetInvoiceForOrderQueryHandler(IOrderRepository orderRepository, IGenerateInvoiceForOrder generator)
     {
-        _context = context;
+        _orderRepository = orderRepository;
         _generator = generator;
     }
 
     public async Task<FileDto> Handle(GetInvoiceForOrderQuery request, CancellationToken cancellationToken)
     {
-        var order = await _context.Orders
+        var order = await _orderRepository.GetQuery()
                         .AsNoTracking()
                         .Include(x => x.Product)
                         .Include(x => x.SellerOrganization)

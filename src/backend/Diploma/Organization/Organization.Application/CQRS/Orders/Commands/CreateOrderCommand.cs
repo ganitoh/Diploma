@@ -1,18 +1,15 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
 using Common.Application.Persistance;
-using Microsoft.EntityFrameworkCore;
 using Organizaiton.Application.Persistance.Repositories;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Orders.Commands;
 
 /// <summary>
 /// Команда для создания заказа
 /// </summary>
-/// <param name="OrderData"></param>
 public record CreateOrderCommand(CreateOrderRequest OrderData) : ICommand<int>;
 
 internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, int>

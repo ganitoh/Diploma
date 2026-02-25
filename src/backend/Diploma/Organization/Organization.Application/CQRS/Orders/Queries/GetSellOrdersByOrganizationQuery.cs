@@ -3,8 +3,8 @@ using AutoMapper.QueryableExtensions;
 using Common.API.Paged;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Persistance.Repositories;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Orders.Queries;
 
@@ -15,18 +15,18 @@ public record GetSellOrdersByOrganizationQuery(PagedRequest PagedRequest ,int Or
 
 internal class GetSellOrdersByOrganizationQueryHandler : IQueryHandler<GetSellOrdersByOrganizationQuery, PagedList<OrderDto>>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
 
-    public GetSellOrdersByOrganizationQueryHandler(OrganizationDbContext context, IMapper mapper)
+    public GetSellOrdersByOrganizationQueryHandler(IOrderRepository orderRepository, IMapper mapper)
     {
-        _context = context;
+        _orderRepository = orderRepository;
         _mapper = mapper;
     }
 
     public Task<PagedList<OrderDto>> Handle(GetSellOrdersByOrganizationQuery request, CancellationToken cancellationToken)
     {
-        var orders = _context.Orders
+        var orders = _orderRepository.GetQuery()
             .AsNoTracking()
             .Include(x => x.BuyerOrganization)
             .Include(x => x.SellerOrganization)

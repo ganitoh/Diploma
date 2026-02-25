@@ -39,7 +39,7 @@ internal class ChangeOrderStatusCommandHandler : ICommandHandler<ChangeOrderStat
                         .FirstOrDefaultAsync(x => x.Id == request.Data.OrderId, cancellationToken) ??
                     throw new NotFoundException("Заказ не найден");
         
-        order.Status = request.Data.Status;
+        order.ChangeStatus(request.Data.Status);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         await SendNotification(order, cancellationToken);
