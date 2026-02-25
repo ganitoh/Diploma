@@ -11,6 +11,11 @@ public interface IObjectStorage
     Task StoreAsync(string storageKey, Stream content, CancellationToken cancellationToken = default);
     
     /// <summary>
+    /// Поулчить ссылу на загрузку файла
+    /// </summary>
+    Task<string> GetPresignedUploadUrlAsync(string storageKey, Stream content, int expirySeconds = 600, CancellationToken cancellationToken = default);
+    
+    /// <summary>
     /// Получить фйал
     /// </summary>
     Task<Stream> GetStreamAsync(string storageKey, CancellationToken cancellationToken = default);

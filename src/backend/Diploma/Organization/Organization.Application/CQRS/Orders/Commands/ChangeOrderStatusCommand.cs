@@ -1,13 +1,14 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
+using Common.Application.Persistance;
 using Common.Domain.Extensions;
 using Common.Infrastructure.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Notifications.ApplicationContract.MessagesDto;
 using Notifications.Domain.Enums;
+using Organizaiton.Application.Persistance.Repositories;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Orders.Commands;
 
@@ -19,25 +20,27 @@ public record ChangeOrderStatusCommand(ChangeOrderStatusRequest Data) : ICommand
 /// <inheritdoc/>
 internal class ChangeOrderStatusCommandHandler : ICommandHandler<ChangeOrderStatusCommand, int>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly KafkaProducer<CreateNotificationMessage> _producer;
 
-    public ChangeOrderStatusCommandHandler(OrganizationDbContext context, KafkaProducer<CreateNotificationMessage> producer)
+    public ChangeOrderStatusCommandHandler(IOrderRepository orderRepository, KafkaProducer<CreateNotificationMessage> producer, IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _orderRepository = orderRepository;
         _producer = producer;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(ChangeOrderStatusCommand request, CancellationToken cancellationToken)
     {
-        var order = await _context.Orders
+        var order = await _orderRepository.GetQuery()
                         .Include(x=> x.BuyerOrganization) 
                         .ThenInclude(x => x.OrganizationUsers)
                         .FirstOrDefaultAsync(x => x.Id == request.Data.OrderId, cancellationToken) ??
                     throw new NotFoundException("Заказ не найден");
         
         order.Status = request.Data.Status;
-        await _context.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
 
         await SendNotification(order, cancellationToken);
         return order.Id;

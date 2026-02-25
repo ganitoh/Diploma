@@ -17,9 +17,9 @@ public class OrderController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetOrderById))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<OrderDto>))]
-    public async Task<IActionResult> GetOrderById([FromQuery] int organizationId)
+    public async Task<IActionResult> GetOrderById([FromQuery] int organizationId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetOrderByIdQuery(organizationId));
+        var result = await Mediator.Send(new GetOrderByIdQuery(organizationId), cancellationToken);
         return Ok(ApiResponse<OrderDto>.Success(result));
     }
     
@@ -29,10 +29,10 @@ public class OrderController : BaseApiController
     [Authorize]
     [HttpGet(nameof(GetPagedOrderByUserId))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
-    public async Task<IActionResult> GetPagedOrderByUserId([FromQuery] GetOrderByUserRequest request)
+    public async Task<IActionResult> GetPagedOrderByUserId([FromQuery] GetOrderByUserRequest request, CancellationToken cancellationToken)
     {
         request.UserId = GetUserId();
-        var result = await Mediator.Send(new GetPagedOrdersByUserIdQuery(request));
+        var result = await Mediator.Send(new GetPagedOrdersByUserIdQuery(request), cancellationToken);
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
     }
 
@@ -56,9 +56,9 @@ public class OrderController : BaseApiController
     [HttpGet(nameof(GetSellOrderByOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrderDto>>))]
     public async Task<IActionResult> GetSellOrderByOrganization([FromQuery] PagedRequest pagedRequest,
-        [FromQuery] int organizationId)
+        [FromQuery] int organizationId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetSellOrdersByOrganizationQuery(pagedRequest, organizationId));
+        var result = await Mediator.Send(new GetSellOrdersByOrganizationQuery(pagedRequest, organizationId), cancellationToken);
         return Ok(ApiResponse<PagedList<OrderDto>>.Success(result));
     }
 
@@ -68,9 +68,9 @@ public class OrderController : BaseApiController
     [Authorize]
     [HttpGet(nameof(GetInvoiceForOrder))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<FileDto>))]
-    public async Task<IActionResult> GetInvoiceForOrder([FromQuery] int orderId)
+    public async Task<IActionResult> GetInvoiceForOrder([FromQuery] int orderId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetInvoiceForOrderQuery(orderId));
+        var result = await Mediator.Send(new GetInvoiceForOrderQuery(orderId), cancellationToken);
         return Ok(ApiResponse<FileDto>.Success(result));
     }
 
@@ -79,9 +79,9 @@ public class OrderController : BaseApiController
     /// </summary>
     [HttpPost(nameof(CreateOrder))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
-    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest requestData)
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest requestData, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new CreateOrderCommand(requestData));
+        var result = await Mediator.Send(new CreateOrderCommand(requestData), cancellationToken);
         return Ok(ApiResponse<int>.Success(result));
     }
 
@@ -90,9 +90,9 @@ public class OrderController : BaseApiController
     /// </summary>
     [HttpPut(nameof(ChangeOrderStatus))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
-    public async Task<IActionResult> ChangeOrderStatus([FromBody] ChangeOrderStatusRequest requestData)
+    public async Task<IActionResult> ChangeOrderStatus([FromBody] ChangeOrderStatusRequest requestData, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new ChangeOrderStatusCommand(requestData));
+        var result = await Mediator.Send(new ChangeOrderStatusCommand(requestData), cancellationToken);
         return Ok(ApiResponse<int>.Success(result));
     }
 }

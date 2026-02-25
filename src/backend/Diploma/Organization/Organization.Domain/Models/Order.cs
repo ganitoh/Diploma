@@ -63,6 +63,8 @@ public class Order : Entity<int>
     /// </summary>
     public int Quantity { get; set; }
     
+    protected Order() { }
+    
     public Order(Organization? sellerOrganization, Organization? buyerOrganization, Product product, int quantity)
     {
         SellerOrganization = sellerOrganization;
@@ -74,7 +76,6 @@ public class Order : Entity<int>
         CalculateTotalPrice();
     }
 
-    protected Order() { }
     
     /// <summary>
     /// Расчитать полнусю стоимость заказа

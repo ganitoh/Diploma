@@ -38,16 +38,35 @@ public class MinioObjectStorage : IObjectStorage
     }
 
     /// <inheritdoc />
-    public async Task<Stream> GetStreamAsync(string storageKey, CancellationToken cancellationToken = default)
+    public async Task<string> GetPresignedUploadUrlAsync(string storageKey, Stream content, int expirySeconds = 600, CancellationToken cancellationToken = default)
     {
-        var args = new PresignedGetObjectArgs()
+        var presignedArgs = new PresignedPutObjectArgs()
             .WithBucket(_config.BucketName)
             .WithObject(storageKey)
-            .WithExpiry(30);
+            .WithExpiry(expirySeconds); // ссылка действительна 10 минут по умолчанию
 
-        var downloadLink = await _client.PresignedGetObjectAsync(args);
+        var url = await _client.PresignedPutObjectAsync(presignedArgs);
 
-        return await new HttpClient().GetStreamAsync(downloadLink, cancellationToken);
+        return url;
+    }
+
+    /// <inheritdoc />
+    public async Task<Stream> GetStreamAsync(string storageKey, CancellationToken cancellationToken = default)
+    {
+        var memoryStream = new MemoryStream();
+        
+        var args = new GetObjectArgs()
+            .WithBucket(_config.BucketName)
+            .WithObject(storageKey)
+            .WithCallbackStream(stream =>
+            {
+                stream.CopyTo(memoryStream);
+            });
+
+        await _client.GetObjectAsync(args, cancellationToken);
+
+        memoryStream.Position = 0;
+        return memoryStream;
     }
 
     /// <inheritdoc />

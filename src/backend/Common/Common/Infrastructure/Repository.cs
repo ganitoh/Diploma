@@ -1,6 +1,5 @@
 ﻿using Common.Application.Persistance;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Common.Infrastructure;
 
@@ -14,13 +13,13 @@ public class Repository<TEntity, TDbContext>
         _dbContext = dbContext;
     }
 
-    public IQueryable<TEntity> GetQuery(bool asTrackingEnabled = false) => 
+    public IQueryable<TEntity> GetQuery() => 
         _dbContext.Set<TEntity>();
 
-    public async Task<TEntity> GetById<TEntityId>(TEntityId id, CancellationToken cancellationToken) =>
-        await _dbContext.Set<TEntity>().FindAsync(id, cancellationToken);
+    public async Task<TEntity?> GetByIdAsync<TEntityId>(TEntityId id) =>
+        await _dbContext.Set<TEntity>().FindAsync(id);
 
-    public async Task<TEntity[]> GetAll(CancellationToken cancellationToken) =>
+    public async Task<TEntity[]> GetAllAsync(CancellationToken cancellationToken) =>
         await _dbContext.Set<TEntity>().ToArrayAsync(cancellationToken); 
 
     public void Create(TEntity entity)

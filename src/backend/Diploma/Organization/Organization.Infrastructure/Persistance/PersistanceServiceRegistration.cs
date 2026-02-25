@@ -1,4 +1,5 @@
-﻿using Common.Infrastructure;
+﻿using Common.Application.Persistance;
+using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,8 @@ public static class PersistanceServiceRegistration
         services.AddDbContext<OrganizationDbContext>(options => options
             .UseNpgsql(configuration.GetConnectionString(nameof(OrganizationDbContext)))
         );
-        
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }
 }
