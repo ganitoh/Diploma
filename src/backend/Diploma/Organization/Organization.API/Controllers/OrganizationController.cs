@@ -19,9 +19,9 @@ public class OrganizationController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetPagedOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<OrganizationDto>>))]
-    public async Task<IActionResult> GetPagedOrganization([FromQuery] GetPagedOrganizationsRequest pagedRequest)
+    public async Task<IActionResult> GetPagedOrganization([FromQuery] GetPagedOrganizationsRequest pagedRequest, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetPagedOrganizationQuery(pagedRequest));
+        var result = await Mediator.Send(new GetPagedOrganizationQuery(pagedRequest), cancellationToken);
         return Ok(ApiResponse<PagedList<OrganizationDto>>.Success(result));
     }
     
@@ -30,9 +30,9 @@ public class OrganizationController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetTopOrganizationByRating))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<ShortOrganizationDto>>))]
-    public async Task<IActionResult> GetTopOrganizationByRating([FromQuery] int top)
+    public async Task<IActionResult> GetTopOrganizationByRating([FromQuery] int top, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetTopOrganizationByRatingQuery(top));
+        var result = await Mediator.Send(new GetTopOrganizationByRatingQuery(top), cancellationToken);
         return Ok(ApiResponse<ICollection<ShortOrganizationDto>>.Success(result));
     }
     
@@ -41,9 +41,9 @@ public class OrganizationController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetOrganizationById))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<OrganizationDto>))]
-    public async Task<IActionResult> GetOrganizationById([FromQuery] int organizationId)
+    public async Task<IActionResult> GetOrganizationById([FromQuery] int organizationId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetOrganizationByIdQuery(organizationId));
+        var result = await Mediator.Send(new GetOrganizationByIdQuery(organizationId), cancellationToken);
         return Ok(ApiResponse<OrganizationDto>.Success(result));
     }
     
@@ -53,9 +53,9 @@ public class OrganizationController : BaseApiController
     [Authorize(Policy = PolicyConst.UserPolicy )]
     [HttpGet(nameof(GetOrganizationByUserId))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<OrganizationDto>))]
-    public async Task<IActionResult> GetOrganizationByUserId()
+    public async Task<IActionResult> GetOrganizationByUserId(CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetOrganizationByUserIdQuery(GetUserId()));
+        var result = await Mediator.Send(new GetOrganizationByUserIdQuery(GetUserId()), cancellationToken);
         return Ok(ApiResponse<OrganizationDto>.Success(result));
     }
     
@@ -65,9 +65,9 @@ public class OrganizationController : BaseApiController
     [Authorize(Policy = PolicyConst.AdminPolicy )]
     [HttpGet(nameof(GetNotVerifyOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<OrganizationDto>>))]
-    public async Task<IActionResult> GetNotVerifyOrganization()
+    public async Task<IActionResult> GetNotVerifyOrganization(CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetNotVerifyOrganizationQuery());
+        var result = await Mediator.Send(new GetNotVerifyOrganizationQuery(), cancellationToken);
         return Ok(ApiResponse<ICollection<OrganizationDto>>.Success(result));
     }
     
@@ -77,11 +77,11 @@ public class OrganizationController : BaseApiController
     [Authorize]
     [HttpPost(nameof(CreateOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
-    public async Task<IActionResult> CreateOrganization([FromBody] CreateOrganizationRequest requestData)
+    public async Task<IActionResult> CreateOrganization([FromBody] CreateOrganizationRequest requestData, CancellationToken cancellationToken)
     {
         var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
                      throw new ApplicationException("Идентификатор пользователя не нйден");
-        var result = await Mediator.Send(new CreateOrganizationCommand(requestData, Guid.Parse(userId)));
+        var result = await Mediator.Send(new CreateOrganizationCommand(requestData, Guid.Parse(userId)), cancellationToken);
         return Ok(ApiResponse<int>.Success(result));
     }
     
@@ -91,9 +91,9 @@ public class OrganizationController : BaseApiController
     [Authorize]
     [HttpPut(nameof(UpdateOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
-    public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationDataRequest requestData)
+    public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationDataRequest requestData, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new UpdateOrganizationDataCommand(requestData));
+        var result = await Mediator.Send(new UpdateOrganizationDataCommand(requestData), cancellationToken);
         return Ok(ApiResponse<int>.Success(result));
     }
     
@@ -103,9 +103,9 @@ public class OrganizationController : BaseApiController
     [Authorize(Policy = PolicyConst.AdminPolicy )]
     [HttpPut(nameof(VerificationOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Unit>))]
-    public async Task<IActionResult> VerificationOrganization([FromBody] int organizationId)
+    public async Task<IActionResult> VerificationOrganization([FromBody] int organizationId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new VerifyOrganizationCommand(organizationId));
+        var result = await Mediator.Send(new VerifyOrganizationCommand(organizationId), cancellationToken);
         return Ok(ApiResponse<Unit>.Success(result));
     }
 }

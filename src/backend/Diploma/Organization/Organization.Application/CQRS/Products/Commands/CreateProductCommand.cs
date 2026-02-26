@@ -2,7 +2,6 @@
 using Common.Application;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Products.Commands;
 

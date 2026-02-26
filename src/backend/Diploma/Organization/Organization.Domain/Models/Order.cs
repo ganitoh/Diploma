@@ -7,8 +7,8 @@ public class Order : Entity<int>
 {
     public int Quantity { get; private set; }
     public decimal TotalPrice { get; private set; }
-    public DateTime? DeliveryDate { get; set; }
-    public DateTime CreateDate { get; set; }
+    public DateTime? DeliveryDate { get; private set; }
+    public DateTime CreateDate { get; private set; }
     public OrderStatus Status { get; private set; }
     public int SellerOrganizationId { get; set; }
     public Organization? SellerOrganization { get; set; }

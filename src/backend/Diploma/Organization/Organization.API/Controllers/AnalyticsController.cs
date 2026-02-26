@@ -18,9 +18,9 @@ public class AnalyticsController : BaseApiController
     [Authorize]
     [HttpGet(nameof(GetSellOrderAnalytics))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<AnalyticsDto>>))]
-    public async Task<IActionResult> GetSellOrderAnalytics([FromQuery] GetAnalyticsRequest request)
+    public async Task<IActionResult> GetSellOrderAnalytics([FromQuery] GetAnalyticsRequest request, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetSellOrderAnalyticsByOrganizationQuery(request));
+        var result = await Mediator.Send(new GetSellOrderAnalyticsByOrganizationQuery(request), cancellationToken);
         return Ok(ApiResponse<ICollection<AnalyticsDto>>.Success(result));
     }
     
@@ -30,9 +30,9 @@ public class AnalyticsController : BaseApiController
     [Authorize]
     [HttpPost(nameof(GetSellOrderAnalyticsByStatus))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<AnalyticsDto>>))]
-    public async Task<IActionResult> GetSellOrderAnalyticsByStatus([FromBody] GetOrderAnalyticsByStatusRequest request)
+    public async Task<IActionResult> GetSellOrderAnalyticsByStatus([FromBody] GetOrderAnalyticsByStatusRequest request, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetOrderAnalyticsByStatusQuery(request));
+        var result = await Mediator.Send(new GetOrderAnalyticsByStatusQuery(request), cancellationToken);
         return Ok(ApiResponse<ICollection<AnalyticsDto>>.Success(result));
     }
     
@@ -42,9 +42,9 @@ public class AnalyticsController : BaseApiController
     [Authorize]
     [HttpGet(nameof(GetProductAnalytics))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<AnalyticsDto>>))]
-    public async Task<IActionResult> GetProductAnalytics([FromQuery] GetAnalyticsRequest request)
+    public async Task<IActionResult> GetProductAnalytics([FromQuery] GetAnalyticsRequest request, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetProductAnalyticsQuery(request));
+        var result = await Mediator.Send(new GetProductAnalyticsQuery(request), cancellationToken);
         return Ok(ApiResponse<ICollection<AnalyticsDto>>.Success(result));
     }
 }
