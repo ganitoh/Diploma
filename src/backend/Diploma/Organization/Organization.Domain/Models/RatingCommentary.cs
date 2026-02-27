@@ -1,44 +1,43 @@
 ﻿using Common.Domain;
+using Organization.Domain.ValueObjects;
 
 namespace Organization.Domain.Models;
 
-/// <summary>
-/// Коментарий к рейнтигу
-/// </summary>
 public class RatingCommentary : Entity<int>
 {
-    /// <summary>
-    /// Оцена пользователя
-    /// </summary>
-    public decimal RatingValue { get; set; }
+    private const int MaxCommentaryLength = 250;
     
-    /// <summary>
-    /// Текст комментария
-    /// </summary>
-    public string? Commentary { get; set; }
-    
-    /// <summary>
-    /// Дата создания
-    /// </summary>
-    public DateTime CreateDate { get; set; }
-    
-    /// <summary>
-    /// Идентификатор пользователя
-    /// </summary>
-    public Guid UserId { get; set; }
+    public RatingValue RatingValue { get; protected set; }
+    public string Commentary { get; private set; }
+    public string? UserName { get; protected set; }
+    public DateTime CreateAtDate { get; private set; }
+    public Guid UserId { get; protected set; }
+    public int RatingId { get; protected set; }
+    public virtual Rating Rating { get; protected set; }
 
-    /// <summary>
-    /// Имя пользователя
-    /// </summary>
-    public string? UserName { get; set; }
+    protected RatingCommentary() { }
 
-    /// <summary>
-    /// Идентификатор рейтинга
-    /// </summary>
-    public int RatingId { get; set; }
+    public RatingCommentary(RatingValue ratingValue, string commentary, Guid userId)
+    {
+        if(string.IsNullOrEmpty(commentary))
+            throw new DomainException("Commentary cannot be null or empty");
+        
+        if(commentary.Length > MaxCommentaryLength)
+            throw new DomainException("Commentary cannot be longer than " + MaxCommentaryLength);
+        
+        RatingValue = ratingValue;
+        Commentary = commentary;
+        UserId = userId;
+    }
     
-    /// <summary>
-    /// Рейтинг
-    /// </summary>
-    public virtual Rating Rating { get; set; }
+    public void ChangeCommentary(string commentary)
+    {
+        if(string.IsNullOrEmpty(commentary))
+            throw new DomainException("Commentary cannot be null or empty");
+        
+        if(commentary.Length > MaxCommentaryLength)
+            throw new DomainException("Commentary cannot be longer than " + MaxCommentaryLength);
+        
+        Commentary = commentary;
+    }
 }

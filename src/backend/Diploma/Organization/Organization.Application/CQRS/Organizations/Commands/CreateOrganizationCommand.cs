@@ -5,6 +5,7 @@ using Common.Application;
 using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
+using Organization.Domain.ValueObjects;
 using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Organizations.Commands;
@@ -44,8 +45,7 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
                 throw new ApplicationException("Организаци уже существует");
         }
         
-        var organization = _mapper.Map<Domain.Models.Organization>(request.OrganizationData);
-        organization.Rating = new Rating();
+        var organization = new Organization.Domain.Models.Organization(request.OrganizationData.Name, request.OrganizationData.Inn, new Address())
         
         _context.Organizations.Add(organization);
         await _context.SaveChangesAsync(cancellationToken);

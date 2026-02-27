@@ -1,4 +1,5 @@
 ﻿using Common.Domain;
+using Organization.Domain.ValueObjects;
 
 namespace Organization.Domain.Models;
 
@@ -7,24 +8,29 @@ namespace Organization.Domain.Models;
 /// </summary>
 public class Rating : Entity<int>
 {
-    /// <summary>
-    /// Среднее значение
-    /// </summary>
-    public decimal Vale { get; set; }
-    
-    /// <summary>
-    /// Всего оценок
-    /// </summary>
-    public int Total { get; set; }
-    
-    /// <summary>
-    /// Коментарии и оценки каждого пользователя
-    /// </summary>
-    public ICollection<RatingCommentary> Commentaries { get; set; }
+    public RatingValue Value { get; private set; }
+    public int Total { get; private set; }
+
+    private List<RatingCommentary> _commentaries = [];
+    public IReadOnlyCollection<RatingCommentary> Commentaries => _commentaries;
+
+    public Rating() { }
+
+    public Rating(RatingValue value, int total)
+    {
+        Value = value;
+        Total = total;
+    }
 
     public void CalculateRatingValue()
     {
         Total = Commentaries.Count;
-        Vale = Commentaries.Select(x => x.RatingValue).Sum() / Total;
+        Value = new RatingValue(Commentaries.Select(x => x.RatingValue).Sum() / Total);
+    }
+
+    public void AddCommentary(RatingCommentary commentary)
+    {
+        
+        _commentaries.Add(commentary);
     }
 }
