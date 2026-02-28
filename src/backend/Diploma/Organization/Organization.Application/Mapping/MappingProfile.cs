@@ -3,6 +3,7 @@ using Common.Domain.Extensions;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
+using Organization.Domain.ValueObjects;
 
 namespace Organizaiton.Application.Mapping;
 
@@ -34,6 +35,8 @@ public class MappingProfile : Profile
             .ForMember(x => x.Rating,
                 y => y.MapFrom(x => x.Rating.Vale));
 
+        CreateMap<AddressDto, Address>();
+        
         CreateMap<Rating, RatingDto>();
         CreateMap<RatingCommentary, RatingCommentaryDto>()
             .ForMember(x => x.CreateDate, y => y.MapFrom(x => x.CreateDate.ToShortDateString()));

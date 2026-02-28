@@ -54,6 +54,6 @@ public class Order : Entity<int>
     
     private void CalculateTotalPrice()
     {
-        TotalPrice = Product.Price * Quantity;
+        TotalPrice = Product.Price.Value * Quantity;
     }
 }

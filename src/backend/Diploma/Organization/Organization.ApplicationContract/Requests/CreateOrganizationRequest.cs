@@ -1,4 +1,6 @@
-﻿namespace Organization.ApplicationContract.Requests;
+﻿using Organization.ApplicationContract.Dtos;
+
+namespace Organization.ApplicationContract.Requests;
 
 /// <summary>
 /// Запрос на создание организации
@@ -18,7 +20,7 @@ public class CreateOrganizationRequest
     /// <summary>
     /// Юридический адрес
     /// </summary>
-    public string LegalAddress { get; set; }
+    public AddressDto LegalAddress { get; set; }
     
     /// <summary>
     /// Описание

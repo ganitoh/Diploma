@@ -1,12 +1,7 @@
-﻿using System.Security.Claims;
-using System.Security.Principal;
-using AutoMapper;
+﻿using AutoMapper;
 using Common.Application;
-using Microsoft.EntityFrameworkCore;
 using Organization.ApplicationContract.Requests;
-using Organization.Domain.Models;
 using Organization.Domain.ValueObjects;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Organizations.Commands;
 
@@ -38,22 +33,22 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
         {
             var organizationByUserId = await _context.Organizations
                 .Include(x => x.OrganizationUsers)
-                .FirstOrDefaultAsync(x => x.OrganizationUsers.Select(user => user.UserId).Contains(request.UserId),
+                .FirstOrDefaultAsync(x => x.OrganizationUsers.Select(user => user.UserId)
+                        .Contains(request.UserId),
                     cancellationToken);
 
             if (organizationByUserId is not null)
-                throw new ApplicationException("Организаци уже существует");
+                throw new ApplicationException("Организаця уже существует");
         }
+
+        var address = _mapper.Map<Address>(request.OrganizationData.LegalAddress);
         
-        var organization = new Organization.Domain.Models.Organization(request.OrganizationData.Name, request.OrganizationData.Inn, new Address())
+        var organization = new Organization.Domain.Models.Organization(request.OrganizationData.Name, request.OrganizationData.Inn, address);
+        organization.AddUser(request.UserId);
         
         _context.Organizations.Add(organization);
         await _context.SaveChangesAsync(cancellationToken);
-        
-        organization.OrganizationUsers = new  List<OrganizationUser>
-        {
-            new() {UserId = request.UserId, OrganizationId = organization.Id}
-        };
+
         
         await _context.SaveChangesAsync(cancellationToken);
         

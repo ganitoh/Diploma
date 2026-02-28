@@ -17,14 +17,11 @@ public class RatingCommentary : Entity<int>
 
     protected RatingCommentary() { }
 
-    public RatingCommentary(RatingValue ratingValue, string commentary, Guid userId)
+    public RatingCommentary(RatingValue ratingValue, string commentary, Guid userId,  DateTime createAtDate)
     {
-        if(string.IsNullOrEmpty(commentary))
-            throw new DomainException("Commentary cannot be null or empty");
+        ValidateCommentary(commentary);
         
-        if(commentary.Length > MaxCommentaryLength)
-            throw new DomainException("Commentary cannot be longer than " + MaxCommentaryLength);
-        
+        CreateAtDate = createAtDate;
         RatingValue = ratingValue;
         Commentary = commentary;
         UserId = userId;
@@ -32,12 +29,23 @@ public class RatingCommentary : Entity<int>
     
     public void ChangeCommentary(string commentary)
     {
-        if(string.IsNullOrEmpty(commentary))
-            throw new DomainException("Commentary cannot be null or empty");
-        
-        if(commentary.Length > MaxCommentaryLength)
-            throw new DomainException("Commentary cannot be longer than " + MaxCommentaryLength);
-        
+        ValidateCommentary(commentary);
         Commentary = commentary;
     }
+    
+    public void ChangeRating(RatingValue ratingValue) =>  RatingValue = ratingValue;
+
+    #region Validate
+
+    private static void ValidateCommentary(string commentary)
+    {
+        if (string.IsNullOrWhiteSpace(commentary))
+            throw new DomainException("Commentary cannot be null or empty");
+
+        if (commentary.Length > MaxCommentaryLength)
+            throw new DomainException(
+                $"Commentary cannot be longer than {MaxCommentaryLength}");
+    }
+
+    #endregion
 }
