@@ -17,7 +17,6 @@ public class Organization : Entity<int>
     
     private readonly List<Product> _products = [];
     public virtual IReadOnlyCollection<Product> Products => _products;
-    
     private readonly List<OrganizationUser>  _organizationUsers = [];
     public virtual IReadOnlyCollection<OrganizationUser> OrganizationUsers => _organizationUsers;
 

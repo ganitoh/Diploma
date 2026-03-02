@@ -32,6 +32,9 @@ public class Order : Entity<int>
 
     public void ChangeQuantity(int quantity)
     {
+        if (Quantity < 0)
+            throw new DomainException("Quantity cannot be negative");
+        
         Quantity = quantity;
         CalculateTotalPrice();
     }

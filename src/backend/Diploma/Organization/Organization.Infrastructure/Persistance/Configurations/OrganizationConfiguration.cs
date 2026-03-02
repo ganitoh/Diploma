@@ -14,24 +14,18 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Domain.Models.
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Inn).IsRequired();
 
-        builder
-            .HasMany(x=>x.Products)
-            .WithOne(x=>x.SellOrganization)
-            .HasForeignKey(x=>x.SellOrganizationId);
+        builder.OwnsOne(x => x.LegalAddress);
+        builder.OwnsOne(x => x.Email);
+        
+        builder.HasMany(x => x.Products)
+            .WithOne(x => x.Organization)
+            .HasForeignKey(x => x.OrganizationId)
+            .IsRequired();
         
         builder
-            .HasMany(x=>x.SellOrders)
-            .WithOne(x=>x.SellerOrganization)
-            .HasForeignKey(x=>x.SellerOrganizationId);
-        
-        builder
-            .HasMany(x=>x.BuyOrders)
-            .WithOne(x=>x.BuyerOrganization)
-            .HasForeignKey(x=>x.BuyerOrganizationId);
-        
-        builder
-            .HasMany(x=>x.OrganizationUsers)
+            .HasMany(x => x.OrganizationUsers)
             .WithOne(x=>x.Organization)
-            .HasForeignKey(x=>x.OrganizationId);
+            .HasForeignKey(x=>x.OrganizationId)
+            .IsRequired();
     }
 }

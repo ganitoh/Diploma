@@ -14,8 +14,8 @@ public class Product : Entity<int>
     public bool IsStock { get; private set; }
     public Price Price { get; private set; }
     public MeasurementType MeasurementType { get; private set; }
-    public int SellOrganizationId { get; private set; }
-    public virtual Organization? SellOrganization { get; private set; }
+    public int OrganizationId { get; private set; }
+    public virtual Organization? Organization { get; private set; }
     public int? RatingId { get; private set; }
     public virtual Rating? Rating { get; private set; }
 

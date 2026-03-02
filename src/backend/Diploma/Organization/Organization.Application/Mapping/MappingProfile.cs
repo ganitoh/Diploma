@@ -31,7 +31,7 @@ public class MappingProfile : Profile
             y => y.MapFrom(x => x.Rating.Vale));;
         CreateMap<Product, ProductDto>()
             .ForMember(x => x.SellOrganizationName,
-                y => y.MapFrom(x => x.SellOrganization.Name))
+                y => y.MapFrom(x => x.Organization.Name))
             .ForMember(x => x.Rating,
                 y => y.MapFrom(x => x.Rating.Vale));
 

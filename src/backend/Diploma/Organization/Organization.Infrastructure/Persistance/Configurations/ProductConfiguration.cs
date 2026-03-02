@@ -13,10 +13,16 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name).IsRequired();
+        builder.Property(x => x.Description).IsRequired(false).HasMaxLength(250);
+
+
+        builder.OwnsOne(x => x.Price);
         
         builder
-            .HasOne(x => x.SellOrganization)
+            .HasOne(x => x.Organization)
             .WithMany(x => x.Products)
-            .HasForeignKey(x => x.SellOrganizationId);
+            .HasForeignKey(x => x.OrganizationId);
+
+        builder.HasOne(x => x.Rating);
     }
 }
