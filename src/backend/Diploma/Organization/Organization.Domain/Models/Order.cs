@@ -5,7 +5,6 @@ namespace Organization.Domain.Models;
 
 public class Order : Entity<int>
 {
-    public int Quantity { get; private set; }
     public decimal TotalPrice { get; private set; }
     public DateTime? DeliveryDate { get; private set; }
     public DateTime CreateDate { get; private set; }
@@ -15,33 +14,35 @@ public class Order : Entity<int>
     public int BuyerOrganizationId { get; set; }
     public Organization? BuyerOrganization { get; set; }
     public int ProductId { get; private set; }
-    public virtual Product Product { get; private set; }
+
+    private readonly List<OrderItem> _items = [];
+    public IReadOnlyCollection<OrderItem>  Items => _items;
     
     protected Order() { }
     
-    public Order(Organization? sellerOrganization, Organization? buyerOrganization, Product product, int quantity)
+    public Order(Organization? sellerOrganization, Organization? buyerOrganization, List<OrderItem> orderItems, int quantity)
     {
         SellerOrganization = sellerOrganization;
         BuyerOrganization = buyerOrganization;
-        Product = product;
-        Quantity = quantity;
+        _items =  orderItems;
         CreateDate = DateTime.UtcNow;
         Status = OrderStatus.Created;
         CalculateTotalPrice();
     }
 
-    public void ChangeQuantity(int quantity)
+    public void AddItem(OrderItem orderItem)
     {
-        if (Quantity < 0)
-            throw new DomainException("Quantity cannot be negative");
-        
-        Quantity = quantity;
+        _items.Add(orderItem);
         CalculateTotalPrice();
     }
-
-    public void ChangeProduct(Product product)
+    public void RemoveItem(int orderItemId)
     {
-        Product = product;
+        _items.RemoveAll(x=>x.Id == orderItemId);
+        CalculateTotalPrice();
+    }
+    public void RemoveItem(OrderItem orderItem)
+    {
+        _items.Remove(orderItem);
         CalculateTotalPrice();
     }
 
@@ -57,6 +58,6 @@ public class Order : Entity<int>
     
     private void CalculateTotalPrice()
     {
-        TotalPrice = Product.Price.Value * Quantity;
+        TotalPrice = _items.Sum(x => x.TotalPrice.Value);
     }
 }
