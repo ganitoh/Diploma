@@ -6,7 +6,7 @@ using Common.Infrastructure.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Notifications.ApplicationContract.MessagesDto;
 using Notifications.Domain.Enums;
-using Organizaiton.Application.Persistance.Repositories;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
 

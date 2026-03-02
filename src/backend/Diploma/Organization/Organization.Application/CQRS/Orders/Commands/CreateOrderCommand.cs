@@ -1,7 +1,7 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
 using Common.Application.Persistance;
-using Organizaiton.Application.Persistance.Repositories;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
 

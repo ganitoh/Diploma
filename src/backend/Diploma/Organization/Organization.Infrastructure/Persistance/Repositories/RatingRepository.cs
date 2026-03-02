@@ -5,8 +5,8 @@ using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Infrastructure.Persistance.Repositories;
 
-public class OrderRepository : Repository<Order, OrganizationDbContext>, IOrderRepository
+public class RatingRepository : Repository<Rating, OrganizationDbContext>, IRatingRepository
 {
-    public OrderRepository(OrganizationDbContext dbContext) 
+    public RatingRepository(OrganizationDbContext dbContext) 
         : base(dbContext) { }
 }

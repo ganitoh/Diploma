@@ -1,4 +1,6 @@
-﻿namespace Organization.ApplicationContract.Requests;
+﻿using Organization.ApplicationContract.Dtos;
+
+namespace Organization.ApplicationContract.Requests;
 
 /// <summary>
 /// Запрос на создание заказа
@@ -16,12 +18,7 @@ public class CreateOrderRequest
     public int BuyOrganizationId { get; set; }
 
     /// <summary>
-    /// Мдентификатор товара
+    /// Товары
     /// </summary>
-    public virtual int ProductId { get; set; }
-
-    /// <summary>
-    /// Колличетво товара
-    /// </summary>
-    public int Quantity { get; set; }
+    public ICollection<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
 }

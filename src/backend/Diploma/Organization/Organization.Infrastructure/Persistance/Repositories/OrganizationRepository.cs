@@ -1,12 +1,11 @@
 ﻿using Common.Infrastructure;
 using Organizaiton.Application.Common.Persistance;
-using Organization.Domain.Models;
 using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Infrastructure.Persistance.Repositories;
 
-public class OrderRepository : Repository<Order, OrganizationDbContext>, IOrderRepository
+public class OrganizationRepository : Repository<Domain.Models.Organization, OrganizationDbContext>, IOrganizationRepository
 {
-    public OrderRepository(OrganizationDbContext dbContext) 
+    public OrganizationRepository(OrganizationDbContext dbContext) 
         : base(dbContext) { }
 }

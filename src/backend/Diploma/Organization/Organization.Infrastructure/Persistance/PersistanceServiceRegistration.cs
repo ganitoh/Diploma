@@ -1,9 +1,8 @@
 ﻿using Common.Application.Persistance;
-using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Organizaiton.Application.Persistance.Repositories;
+using Organizaiton.Application.Common.Persistance;
 using Organization.Infrastructure.Persistance.Context;
 using Organization.Infrastructure.Persistance.Repositories;
 
@@ -20,6 +19,9 @@ public static class PersistanceServiceRegistration
         );
 
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+        services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

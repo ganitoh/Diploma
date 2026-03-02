@@ -5,8 +5,8 @@ using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Infrastructure.Persistance.Repositories;
 
-public class OrderRepository : Repository<Order, OrganizationDbContext>, IOrderRepository
+public class ProductRepository : Repository<Product, OrganizationDbContext>, IProductRepository
 {
-    public OrderRepository(OrganizationDbContext dbContext) 
+    public ProductRepository(OrganizationDbContext dbContext) 
         : base(dbContext) { }
 }
