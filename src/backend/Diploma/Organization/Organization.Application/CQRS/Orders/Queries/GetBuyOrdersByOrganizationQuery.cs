@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Common.API.Paged;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
-using Organizaiton.Application.Persistance.Repositories;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
 
 namespace Organization.Application.CQRS.Orders.Queries;
@@ -13,24 +13,20 @@ namespace Organization.Application.CQRS.Orders.Queries;
 /// </summary>
 public record GetBuyOrdersByOrganizationQuery(PagedRequest PagedRequest ,int OrganizationId)  : IQuery<PagedList<OrderDto>>;
 
-/// <summary>
-/// Хендлер запроса для получения заказов на покупку для организации
-/// </summary>
 class GetBuyOrdersByOrganizationQueryHandler : IQueryHandler<GetBuyOrdersByOrganizationQuery, PagedList<OrderDto>>
 {
-    private readonly  IOrderRepository _orderRepository;
+    private readonly  IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetBuyOrdersByOrganizationQueryHandler(IOrderRepository orderRepository, IMapper mapper)
+    public GetBuyOrdersByOrganizationQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
-        _orderRepository = orderRepository;
+        _context = context;
         _mapper = mapper;
     }
 
     public Task<PagedList<OrderDto>> Handle(GetBuyOrdersByOrganizationQuery request, CancellationToken cancellationToken)
     {
-        var orders = _orderRepository.GetQuery()
-            .AsNoTracking()
+        var orders = _context.Orders
             .Include(x => x.BuyerOrganization)
             .Include(x => x.SellerOrganization)
             .Where(x=> x.BuyerOrganizationId ==  request.OrganizationId)

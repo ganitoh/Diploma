@@ -2,8 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Common.API.Paged;
 using Common.Application;
-using Microsoft.EntityFrameworkCore;
-using Organizaiton.Application.Persistance.Repositories;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
 
 namespace Organization.Application.CQRS.Orders.Queries;
@@ -15,21 +14,18 @@ public record GetSellOrdersByOrganizationQuery(PagedRequest PagedRequest ,int Or
 
 internal class GetSellOrdersByOrganizationQueryHandler : IQueryHandler<GetSellOrdersByOrganizationQuery, PagedList<OrderDto>>
 {
-    private readonly IOrderRepository _orderRepository;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetSellOrdersByOrganizationQueryHandler(IOrderRepository orderRepository, IMapper mapper)
+    public GetSellOrdersByOrganizationQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
-        _orderRepository = orderRepository;
+        _context = context;
         _mapper = mapper;
     }
 
     public Task<PagedList<OrderDto>> Handle(GetSellOrdersByOrganizationQuery request, CancellationToken cancellationToken)
     {
-        var orders = _orderRepository.GetQuery()
-            .AsNoTracking()
-            .Include(x => x.BuyerOrganization)
-            .Include(x => x.SellerOrganization)
+        var orders = _context.Orders
             .Where(x=> x.SellerOrganizationId ==  request.OrganizationId)
             .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
             .GetPagetListAsync(request.PagedRequest, cancellationToken);

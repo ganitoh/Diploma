@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
-using Organizaiton.Application.Persistance.Repositories;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
 
 namespace Organizaiton.Application.CQRS.Orders.Queries;
@@ -16,25 +17,22 @@ public record GetOrderByIdQuery(int OrderId)  : IQuery<OrderDto>;
 /// </summary>
 internal class GetOrderByIdQueryHandler : IQueryHandler<GetOrderByIdQuery, OrderDto>
 {
-    private readonly IOrderRepository _orderRepository;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetOrderByIdQueryHandler(IOrderRepository orderRepository, IMapper mapper)
+    public GetOrderByIdQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
-        _orderRepository = orderRepository;
+        _context = context;
         _mapper = mapper;
     }
 
     public async Task<OrderDto> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.GetQuery()
-                        .AsNoTracking()
-                        .Include(x => x.Product)
-                        .Include(x => x.SellerOrganization)
-                        .Include(x => x.BuyerOrganization)
+        var order = await  _context.Orders
+                        .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
                         .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken)
                     ?? throw new ApplicationException("Заказ не найден");
 
-        return _mapper.Map<OrderDto>(order);
+        return order;
     }
 }

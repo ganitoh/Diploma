@@ -14,7 +14,6 @@ public class OrderRepository : Repository<Order, OrganizationDbContext>, IOrderR
     public async Task<Order?> GetWithOrganizationsByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await _dbContext.Orders
-            .AsNoTracking()
             .Include(x => x.BuyerOrganization)
             .Include(x => x.SellerOrganization)
             .FirstOrDefaultAsync(x=>x.Id == id, cancellationToken);

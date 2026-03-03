@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Common.API.Paged;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
-using Organizaiton.Application.Persistance.Repositories;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
 
@@ -18,20 +18,19 @@ public record GetPagedOrdersByUserIdQuery(GetOrderByUserRequest Data) : IQuery<P
 /// <inheritdoc />
 internal class GetPagedOrdersByUserIdQueryHandler : IQueryHandler<GetPagedOrdersByUserIdQuery,  PagedList<OrderDto>>
 {
-    private readonly IOrderRepository _orderRepository;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetPagedOrdersByUserIdQueryHandler(IOrderRepository orderRepository, IMapper mapper)
+    public GetPagedOrdersByUserIdQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
-        _orderRepository = orderRepository;
+        _context = context;
         _mapper = mapper;
     }
 
     public async Task<PagedList<OrderDto>> Handle(GetPagedOrdersByUserIdQuery request, CancellationToken cancellationToken)
     {
-        var pagedListOrdersQuery = _orderRepository.GetQuery()
-            .AsNoTracking()
-            .Include(x => x.Product)
+        var pagedListOrdersQuery = _context.Orders
+            .Include(x => x.Items)
             .Include(x => x.SellerOrganization).ThenInclude(x => x.OrganizationUsers)
             .Include(x => x.BuyerOrganization).ThenInclude(x => x.OrganizationUsers)
             .Where(x => request.Data.IsSellOrders

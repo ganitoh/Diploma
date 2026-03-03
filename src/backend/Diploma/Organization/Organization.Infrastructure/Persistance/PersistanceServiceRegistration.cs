@@ -24,6 +24,7 @@ public static class PersistanceServiceRegistration
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        
         return services;
     }
 }
