@@ -21,12 +21,12 @@ public class OrderDto
     /// <summary>
     /// Дата и время доставки
     /// </summary>
-    public string DeliveryDate { get; set; }
+    public DateTime DeliveryDate { get; set; }
 
     /// <summary>
     /// Дата создания
     /// </summary>
-    public string CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
 
     /// <summary>
     /// Статус заказа
@@ -59,12 +59,7 @@ public class OrderDto
     public string? BuyerOrganizationName { get; set; }
 
     /// <summary>
-    /// Идентификатор товара
+    /// Позиции заказа
     /// </summary>
-    public int ProductId { get; set; }
-    
-    /// <summary>
-    /// Товар
-    /// </summary>
-    public ProductDto Product { get; set; }
+    public ICollection<OrderItemDto> Items { get; set; }
 }
