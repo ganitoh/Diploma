@@ -33,20 +33,22 @@ internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, i
 
     public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var sellerOrganization = await _organizationRepository.GetByIdAsync(request.OrderData.SellerOrganizationId);
-
-        if (sellerOrganization is null)
-            throw new NotFoundException("Продающая организация не найдена");
+        var sellerOrganization = await _organizationRepository.GetByIdAsync(request.OrderData.SellerOrganizationId) 
+                                 ?? throw new NotFoundException("Продающая организация не найдена");;
         
-        var buyerOrganization = await _organizationRepository.GetByIdAsync(request.OrderData.BuyOrganizationId);
-                                
-        if (buyerOrganization is null)
-            throw new NotFoundException("Покупающая организация не найдена");
-
-        var product = await _productRepository.GetByIdAsync(request.OrderData.ProductId)
-                      ?? throw new NotFoundException("Товар не найден");
+        var buyerOrganization = await _organizationRepository.GetByIdAsync(request.OrderData.BuyOrganizationId) 
+                                ?? throw new NotFoundException("Покупающая организация не найдена");;
         
-        var order = new Order(sellerOrganization, buyerOrganization, product, request.OrderData.Quantity);
+        var orderItems = new List<OrderItem>();
+        foreach (var item in request.OrderData.Items)
+        {
+            var product = await _productRepository.GetByIdAsync(item.ProductId) 
+                          ?? throw new NotFoundException("Товар не найден");
+            
+            orderItems.Add(new OrderItem(product.Name, item.Quantity, product.Price, product.Id));
+        }
+        
+        var order = new Order(sellerOrganization, buyerOrganization, orderItems);
 
         _orderRepository.Create(order);
         await _unitOfWork.CommitAsync(cancellationToken);

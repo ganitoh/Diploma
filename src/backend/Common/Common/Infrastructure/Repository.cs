@@ -13,9 +13,6 @@ public class Repository<TEntity, TDbContext>
         _dbContext = dbContext;
     }
 
-    public IQueryable<TEntity> GetQuery() => 
-        _dbContext.Set<TEntity>();
-
     public async Task<TEntity?> GetByIdAsync<TEntityId>(TEntityId id) =>
         await _dbContext.Set<TEntity>().FindAsync(id);
 

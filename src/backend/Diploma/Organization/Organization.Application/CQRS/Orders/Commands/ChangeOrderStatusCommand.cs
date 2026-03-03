@@ -8,6 +8,7 @@ using Notifications.ApplicationContract.MessagesDto;
 using Notifications.Domain.Enums;
 using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
+using Organization.Domain.Enums;
 using Organization.Domain.Models;
 
 namespace Organization.Application.CQRS.Orders.Commands;
@@ -33,13 +34,25 @@ internal class ChangeOrderStatusCommandHandler : ICommandHandler<ChangeOrderStat
 
     public async Task<int> Handle(ChangeOrderStatusCommand request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.GetQuery()
-                        .Include(x=> x.BuyerOrganization) 
-                        .ThenInclude(x => x.OrganizationUsers)
-                        .FirstOrDefaultAsync(x => x.Id == request.Data.OrderId, cancellationToken) ??
-                    throw new NotFoundException("Заказ не найден");
+        var order = await _orderRepository.GetWithOrganizationsByIdAsync(request.Data.OrderId, cancellationToken) 
+                    ?? throw new NotFoundException("Заказ не найден");
+
+        switch (request.Data.Status)
+                 {
+                     case OrderStatus.Close:
+                         order.Closed();
+                         break;
+                     case OrderStatus.Created:
+                         order.Created();
+                         break;
+                     case OrderStatus.InDelivery:
+                         order.Delivery();
+                         break;
+                     case OrderStatus.Collected:
+                         order.Collected();
+                         break;
+                 }
         
-        order.ChangeStatus(request.Data.Status);
         await _unitOfWork.CommitAsync(cancellationToken);
 
         await SendNotification(order, cancellationToken);

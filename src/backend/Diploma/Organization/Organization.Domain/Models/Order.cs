@@ -20,14 +20,13 @@ public class Order : Entity<int>
     
     protected Order() { }
     
-    public Order(Organization? sellerOrganization, Organization? buyerOrganization, List<OrderItem> orderItems, int quantity)
+    public Order(Organization? sellerOrganization, Organization? buyerOrganization, List<OrderItem> orderItems)
     {
         SellerOrganization = sellerOrganization;
         BuyerOrganization = buyerOrganization;
         _items =  orderItems;
-        CreateDate = DateTime.UtcNow;
-        Status = OrderStatus.Created;
-        CalculateTotalPrice();
+        
+        Created();
     }
 
     public void AddItem(OrderItem orderItem)
@@ -48,8 +47,12 @@ public class Order : Entity<int>
 
     #region change status
     
-    public void ChangeStatus(OrderStatus status) => Status = status;
-    public void Created() => Status = OrderStatus.Created;
+    public void Created()
+    {
+        Status = OrderStatus.Created;
+        CreateDate = DateTime.UtcNow;
+        CalculateTotalPrice();
+    }
     public void Collected() => Status = OrderStatus.Collected;
     public void Delivery() => Status = OrderStatus.InDelivery;
     public void Closed() => Status = OrderStatus.Close;

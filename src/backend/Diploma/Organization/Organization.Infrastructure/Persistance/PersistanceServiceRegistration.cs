@@ -18,6 +18,7 @@ public static class PersistanceServiceRegistration
             .UseNpgsql(configuration.GetConnectionString(nameof(OrganizationDbContext)))
         );
 
+        services.AddScoped<IReadOnlyOrganizationDbContext, ReadOnlyOrganizationDbContext>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
