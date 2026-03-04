@@ -1,8 +1,6 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organization.Application.CQRS.Organizations.Commands;
 

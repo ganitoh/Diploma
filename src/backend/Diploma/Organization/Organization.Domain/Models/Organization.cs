@@ -12,7 +12,7 @@ public class Organization : Entity<int>
     public bool IsExternal { get; private set; }
     public int? RatingId { get; }
     public virtual Rating? Rating { get; }
-    public Email? Email { get; private set; }
+    public Email Email { get; private set; }
     public Address LegalAddress { get; private set; }
     
     private readonly List<Product> _products = [];
@@ -22,7 +22,7 @@ public class Organization : Entity<int>
 
     protected Organization() { }
 
-    public Organization(string name, string inn, Address legalAddress)
+    public Organization(string name, string inn, Address legalAddress, Email email)
     {
         ValidateInn(inn);
         ValidateName(name);
@@ -30,6 +30,7 @@ public class Organization : Entity<int>
         Name = name;
         Inn = inn;
         LegalAddress = legalAddress;
+        Email = email;
         IsExternal = false;
         Rating = new Rating();
     }
@@ -41,8 +42,9 @@ public class Organization : Entity<int>
         IsExternal = isExternal;
     }
     
-    public void ChangeDescription(string description) => Description = description;
+    public void ChangeDescription(string? description) => Description = description;
     public void Approve() => IsApproval = true;
+    public void UnApprove() => IsApproval = false;
     public void ChangeName(string name)
     {
         ValidateName(name);
@@ -53,6 +55,8 @@ public class Organization : Entity<int>
         ValidateInn(inn);
         Inn = inn;
     }
+    public void ChangeEmail(Email email) => Email = email;
+    public void ChangeLegalAddress(Address legalAddress) =>  LegalAddress = legalAddress;
     public void AddProduct(Product product)
     {
         if(!IsApproval)

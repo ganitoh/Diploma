@@ -1,8 +1,10 @@
-﻿using Common.Application;
+﻿using AutoMapper;
+using Common.Application;
 using Common.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
+using Common.Application.Persistance;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
-using Organization.Infrastructure.Persistance.Context;
+using Organization.Domain.ValueObjects;
 
 namespace Organization.Application.CQRS.Organizations.Commands;
 
@@ -16,31 +18,34 @@ public record class UpdateOrganizationDataCommand(UpdateOrganizationDataRequest 
 /// </summary>
 internal class UpdateOrganizationDataCommandHandler : ICommandHandler<UpdateOrganizationDataCommand, int>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IOrganizationRepository _organizationRepository;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateOrganizationDataCommandHandler(OrganizationDbContext context)
+    public UpdateOrganizationDataCommandHandler(IOrganizationRepository organizationRepository, IMapper mapper, IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _organizationRepository = organizationRepository;
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(UpdateOrganizationDataCommand request, CancellationToken cancellationToken)
     {
-        var organization =
-            await _context.Organizations.FirstOrDefaultAsync(x => x.Id == request.RequestData.OrganizationId,
-                cancellationToken);
+        var organization = await _organizationRepository.GetByIdAsync(request.RequestData.OrganizationId); 
         
         if (organization is null)
             throw new NotFoundException("Организация не найдена");
-                           
         
-        organization.Name = request.RequestData.Name;
-        organization.Email = request.RequestData.Email;
-        organization.Description = request.RequestData.Description;
-        organization.Inn = request.RequestData.Inn;
-        organization.LegalAddress = request.RequestData.LegalAddress;
-        organization.IsApproval = false;
+        var address = _mapper.Map<Address>(request.RequestData.LegalAddress);
         
-        await _context.SaveChangesAsync(cancellationToken);
+        organization.ChangeLegalAddress(address);
+        organization.ChangeName(request.RequestData.Name);
+        organization.ChangeEmail(new Email(request.RequestData.Email));
+        organization.ChangeDescription(request.RequestData.Description);
+        organization.ChangeInn(request.RequestData.Inn);
+        organization.UnApprove();
+        
+        await _unitOfWork.CommitAsync(cancellationToken);
         return organization.Id;
     }
 }

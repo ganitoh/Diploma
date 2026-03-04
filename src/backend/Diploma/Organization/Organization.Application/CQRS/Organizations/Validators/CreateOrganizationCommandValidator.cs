@@ -9,7 +9,7 @@ public class CreateOrganizationCommandValidator : AbstractValidator<CreateOrgani
     {
         RuleFor(x => x.OrganizationData.Name).NotEmpty();
         RuleFor(x => x.OrganizationData.Inn).NotEmpty();
-        RuleFor(x => x.OrganizationData.Email).EmailAddress();
+        RuleFor(x => x.OrganizationData.Email).NotEmpty().EmailAddress();
         RuleFor(x => x.OrganizationData.Description).MaximumLength(255);
     }
 }
