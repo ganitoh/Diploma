@@ -27,7 +27,7 @@ public class Repository<TEntity, TDbContext>
         _dbContext.Set<TEntity>().Add(entity);
     }
 
-    public void Remove<TEntityId>(TEntity entity)
+    public void Remove(TEntity entity)
     {
         if (entity is null)
             throw new NullReferenceException();

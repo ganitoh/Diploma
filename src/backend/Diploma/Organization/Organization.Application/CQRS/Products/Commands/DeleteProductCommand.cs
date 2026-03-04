@@ -1,9 +1,11 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
+using Common.Application.Persistance;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using Organization.Infrastructure.Persistance.Context;
+using Organizaiton.Application.Common.Persistance;
+using Organization.Domain.Enums;
+using Organization.Domain.Models;
 
 namespace Organization.Application.CQRS.Products.Commands;
 
@@ -14,33 +16,37 @@ public record DeleteProductCommand(int[] Ids) : ICommand<Unit>;
 
 internal class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand, Unit>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IProductRepository _productRepository;
+    private readonly IReadOnlyOrganizationDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteProductCommandHandler(OrganizationDbContext context)
+    public DeleteProductCommandHandler(IProductRepository productRepository, IReadOnlyOrganizationDbContext context, IUnitOfWork unitOfWork)
     {
+        _productRepository = productRepository;
         _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var products = await _context.Products
-            .Include(x=>x.Orders)
-            .Where(x => request.Ids.Contains(x.Id))
-            .ToListAsync(cancellationToken);
+        var products = await _productRepository.GetByIdsAsync(request.Ids, cancellationToken);
 
         if (products.Count == 0)
             throw new NotFoundException("Товары не найдены");
-        
 
-        products.ForEach(product =>
+        foreach (var product in products)
         {
-            if (product.Orders.Count != 0)
+            var orderItem = await _context.OrderItems
+                .Include(x => x.Order)
+                .FirstOrDefaultAsync(x => x.ProductId == product.Id && x.Order.Status != OrderStatus.Close, cancellationToken);
+
+            if (orderItem is not null)
                 throw new ApplicationException("Вы не можете удлать товар которые учавствует в заказе");
             
-            _context.Products.Remove(product);
-        });
+            _productRepository.Remove(product);
+        }
          
-        await _context.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
         return Unit.Value;
     }
 }

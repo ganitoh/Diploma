@@ -5,8 +5,6 @@ namespace Organization.Domain.Models;
 
 public class Product : Entity<int>
 {
-    private const int DescriptionLengthMax = 250;
-    
     public string Name { get; private set; }
     public string? Description { get; private set; }
     public int AvailableCount { get; private set; }
@@ -31,7 +29,7 @@ public class Product : Entity<int>
         Rating = new Rating();
     }
 
-    public Product(string name, Price price, int availableCount, MeasurementType measurementType)
+    public Product(string name, Price price, MeasurementType measurementType, int availableCount)
         : this(name, price, measurementType)
     {
         AvailableCountValidation(availableCount);
@@ -40,6 +38,17 @@ public class Product : Entity<int>
         IsStock = availableCount > 0;
     }
 
+    public Product(string name, Price price, MeasurementType measurementType, int availableCount, string? description) 
+        : this(name, price, measurementType, availableCount)
+    {
+        ChangeDescription(description);
+    }
+
+    public void ChangeName(string name)
+    {
+        NameValidation(name);
+        Name = name;
+    }
     public void ChangeAvailableCount(int availableCount)
     {
         AvailableCountValidation(availableCount);
@@ -47,15 +56,20 @@ public class Product : Entity<int>
         AvailableCount = availableCount;
         IsStock = availableCount > 0;
     }
-    public void ChangeDescription(string description)
-    { 
-        if(description.Length > DescriptionLengthMax)
-            throw new DomainException("Description is too long");
+    public void ChangeDescription(string? description) => Description = description;
+    public void UpdatePrice(Price price) => Price = price;
+    public void RegisterSale(int quantity)
+    {
+        if (quantity <= 0)
+            throw new DomainException("Invalid sale quantity");
+
+        if (AvailableCount < quantity)
+            throw new DomainException("Not enough stock");
         
-        Description = description;
+        AvailableCount -= quantity;
+        TotalSold += quantity;
+        IsStock = AvailableCount > 0;
     }
-    public void ChangePrice(Price price) => Price = price;
-    public void IncrementTotalSold() => TotalSold++;
 
     #region Validations
 

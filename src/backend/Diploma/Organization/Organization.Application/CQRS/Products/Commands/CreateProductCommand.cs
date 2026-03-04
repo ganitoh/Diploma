@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using Common.Application;
+using Common.Application.Exceptions;
+using Common.Application.Persistance;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
 
@@ -15,23 +18,30 @@ public record  CreateProductCommand(CreateProductRequest ProductData) : ICommand
 /// </summary>
 internal class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, int>
 {
-    private readonly OrganizationDbContext _context;
-    private readonly IMapper  _mapper;
+    private readonly IOrganizationRepository _organizationRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateProductCommandHandler(OrganizationDbContext context, IMapper mapper)
+    public CreateProductCommandHandler(IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork)
     {
-        _context = context;
-        _mapper = mapper;
+        _organizationRepository = organizationRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = _mapper.Map<Product>(request.ProductData);
-        product.IsStock = product.AvailableCount > 0;
-        product.Rating = new Rating();
+        var organization = await _organizationRepository.GetByIdAsync(request.ProductData.SellOrganizationId);
+        if (organization is null)
+            throw new NotFoundException("Организация не найдена");
         
-        _context.Add(product);
-        await _context.SaveChangesAsync(cancellationToken);
+        var product = new Product(
+            request.ProductData.Name,
+            new Price(request.ProductData.Price),
+            request.ProductData.MeasurementType,
+            request.ProductData.AvailableCount,
+            request.ProductData.Description);
+        
+        organization.AddProduct(product);
+        await _unitOfWork.CommitAsync(cancellationToken);
         
         return product.Id;
     }

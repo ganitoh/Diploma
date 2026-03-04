@@ -10,7 +10,7 @@ public class CreateProductRequest
     /// <summary>
     /// Наиминование
     /// </summary>
-    public string? Name { get; set; }
+    public required string Name { get; set; }
     
     /// <summary>
     /// Описание
@@ -28,14 +28,9 @@ public class CreateProductRequest
     public int AvailableCount { get; set; }
 
     /// <summary>
-    /// Всего продано
-    /// </summary>
-    public int TotalSold { get; set; }
-
-    /// <summary>
     /// Единица измерения
     /// </summary>
-    public int MeasurementType { get; set; }
+    public MeasurementType MeasurementType { get; set; }
 
     /// <summary>
     /// Идентификатор продающей организации

@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using Common.Application;
+﻿using Common.Application;
 using Common.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
+using Common.Application.Persistance;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
-using Organization.Infrastructure.Persistance.Context;
+using Organization.Domain.Models;
 
 namespace Organization.Application.CQRS.Products.Commands;
 
@@ -15,23 +15,28 @@ public record UpdateProductCommand(UpdateProductRequest Data) : ICommand<int>;
 /// <inheritdoc/>
 internal class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, int>
 {
-    private readonly IMapper _mapper;
-    private readonly OrganizationDbContext _context;
+    private readonly IProductRepository _productRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateProductCommandHandler(IMapper mapper, OrganizationDbContext context)
+    public UpdateProductCommandHandler(IProductRepository productRepository, IUnitOfWork unitOfWork)
     {
-        _mapper = mapper;
-        _context = context;
+        _productRepository = productRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var oldDataProduct =
-            await _context.Products.FirstOrDefaultAsync(x => x.Id == request.Data.Id, cancellationToken) ??
+        var product = await _productRepository.GetByIdAsync(request.Data.Id);
+            
+        if (product is null)
             throw new NotFoundException("Товар не найден");
         
-        _mapper.Map(request.Data, oldDataProduct);
-        await _context.SaveChangesAsync(cancellationToken);
-        return  oldDataProduct.Id;
+        product.UpdatePrice(new Price(request.Data.Price));
+        product.ChangeAvailableCount(request.Data.AvailableCount);
+        product.ChangeDescription(request.Data.Description);
+        product.ChangeName(request.Data.Name);
+        
+        await _unitOfWork.CommitAsync(cancellationToken);
+        return  product.Id;
     }
 }

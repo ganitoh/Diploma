@@ -35,10 +35,10 @@ public class Organization : Entity<int>
         Rating = new Rating();
     }
 
-    public Organization(string name, string inn, Address legalAddress, string? description, Email? email, bool isExternal) : this(name, inn, legalAddress)
+    public Organization(string name, string inn, Address legalAddress, Email email, string? description, bool isExternal) 
+        : this(name, inn, legalAddress, email)
     {
         Description = description;
-        Email = email;
         IsExternal = isExternal;
     }
     

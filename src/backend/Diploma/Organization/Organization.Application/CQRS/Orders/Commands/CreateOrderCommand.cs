@@ -34,10 +34,10 @@ internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, i
     public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var sellerOrganization = await _organizationRepository.GetByIdAsync(request.OrderData.SellerOrganizationId) 
-                                 ?? throw new NotFoundException("Продающая организация не найдена");;
+                                 ?? throw new NotFoundException("Продающая организация не найдена");
         
         var buyerOrganization = await _organizationRepository.GetByIdAsync(request.OrderData.BuyOrganizationId) 
-                                ?? throw new NotFoundException("Покупающая организация не найдена");;
+                                ?? throw new NotFoundException("Покупающая организация не найдена");
         
         var orderItems = new List<OrderItem>();
         foreach (var item in request.OrderData.Items)
@@ -45,6 +45,7 @@ internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, i
             var product = await _productRepository.GetByIdAsync(item.ProductId) 
                           ?? throw new NotFoundException("Товар не найден");
             
+            product.RegisterSale(item.Quantity);
             orderItems.Add(new OrderItem(product.Name, item.Quantity, product.Price, product.Id));
         }
         
