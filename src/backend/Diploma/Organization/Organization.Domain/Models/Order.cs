@@ -13,7 +13,6 @@ public class Order : Entity<int>
     public Organization? SellerOrganization { get; set; }
     public int BuyerOrganizationId { get; set; }
     public Organization? BuyerOrganization { get; set; }
-    public int ProductId { get; private set; }
 
     private readonly List<OrderItem> _items = [];
     public IReadOnlyCollection<OrderItem>  Items => _items;
