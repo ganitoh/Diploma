@@ -1,6 +1,8 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
+using Common.Application.Persistance;
 using MediatR;
+using Organizaiton.Application.Common.Persistance;
 
 namespace Organization.Application.CQRS.Organizations.Commands;
 
@@ -12,22 +14,25 @@ public record VerifyOrganizationCommand(int OrganizationId) : ICommand<Unit>;
 /// <inheritdoc />
 internal class VerifyOrganizationCommandHandler : ICommandHandler<VerifyOrganizationCommand, Unit>
 {
-    private readonly OrganizationDbContext  _context;
+    private readonly IOrganizationRepository _organizationRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public VerifyOrganizationCommandHandler(OrganizationDbContext context)
+    public VerifyOrganizationCommandHandler(IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _organizationRepository = organizationRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Unit> Handle(VerifyOrganizationCommand request, CancellationToken cancellationToken)
     {
-        var organization =
-            await _context.Organizations.FirstOrDefaultAsync(x => x.Id == request.OrganizationId, cancellationToken) ??
+        var organization = await _organizationRepository.GetByIdAsync(request.OrganizationId);
+        
+        if(organization is null)
             throw new NotFoundException("Организация не найдена");
 
-        organization.IsApproval = true;
+        organization.Approve();
         
-        await _context.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
         return Unit.Value;
     }
 }
