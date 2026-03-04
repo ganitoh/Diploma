@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
@@ -14,10 +14,10 @@ public record class GetTopOrganizationByRatingQuery(int Top) : IQuery<ICollectio
 
 internal class GetTopOrganizationByRatingQueryHandler : IQueryHandler<GetTopOrganizationByRatingQuery, ICollection<ShortOrganizationDto>>
 {
-    private readonly OrganizationDbContext  _context;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetTopOrganizationByRatingQueryHandler(OrganizationDbContext context, IMapper mapper)
+    public GetTopOrganizationByRatingQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -26,10 +26,9 @@ internal class GetTopOrganizationByRatingQueryHandler : IQueryHandler<GetTopOrga
     public async Task<ICollection<ShortOrganizationDto>> Handle(GetTopOrganizationByRatingQuery request, CancellationToken cancellationToken)
     {
         return await _context.Organizations
-            .AsNoTracking()
-            .Include(x=>x.Rating)
-            .OrderByDescending(x=>x.Rating.Vale)
-            .Take(request.Top).ProjectTo<ShortOrganizationDto>(_mapper.ConfigurationProvider)
+            .OrderByDescending(x=>x.Rating.Value)
+            .Take(request.Top)
+            .ProjectTo<ShortOrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
     }
 }

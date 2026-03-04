@@ -3,9 +3,9 @@ using AutoMapper.QueryableExtensions;
 using Common.API.Paged;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
@@ -19,26 +19,23 @@ public record GetPagedOrganizationQuery(GetPagedOrganizationsRequest Data) : IQu
 /// </summary>
 internal class GetPagedOrganizationQueryHandler : IQueryHandler<GetPagedOrganizationQuery, PagedList<OrganizationDto>>
 {
-    private readonly OrganizationDbContext _dbContext;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetPagedOrganizationQueryHandler(IMapper mapper, OrganizationDbContext dbContext)
+    public GetPagedOrganizationQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
+        _context = context;
         _mapper = mapper;
-        _dbContext = dbContext;
     }
 
     public async Task<PagedList<OrganizationDto>> Handle(GetPagedOrganizationQuery request, CancellationToken cancellationToken)
     {
-        var pagedListOrganization = await _dbContext.Organizations
-            .AsNoTracking()
-            .Include(x => x.OrganizationUsers)
-            .Where(x=> x.IsExternal == request.Data.IsExternal)
+        var pagedListOrganization = await _context.Organizations
             .PagedQueryable(request.Data.PageNumber, request.Data.PageSize)
             .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         
-        var totalCount = await _dbContext.Organizations.CountAsync(cancellationToken);
+        var totalCount = await _context.Organizations.CountAsync(cancellationToken);
         
         return new PagedList<OrganizationDto>(pagedListOrganization, totalCount);
     }

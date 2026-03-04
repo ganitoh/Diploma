@@ -2,13 +2,13 @@
 using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
 /// <summary>
-/// Запрос на получение непровеенных организаций
+/// Запрос на получение непроверенных организаций
 /// </summary>
 public class GetNotVerifyOrganizationQuery : IQuery<ICollection<OrganizationDto>>;
 
@@ -16,9 +16,9 @@ public class GetNotVerifyOrganizationQuery : IQuery<ICollection<OrganizationDto>
 internal class GetNotVerifyOrganizationQueryHandler : IQueryHandler<GetNotVerifyOrganizationQuery,  ICollection<OrganizationDto>>
 {
     private readonly IMapper _mapper;
-    private readonly OrganizationDbContext _context;
+    private readonly IReadOnlyOrganizationDbContext _context;
 
-    public GetNotVerifyOrganizationQueryHandler(IMapper mapper, OrganizationDbContext context)
+    public GetNotVerifyOrganizationQueryHandler(IMapper mapper, IReadOnlyOrganizationDbContext context)
     {
         _mapper = mapper;
         _context = context;
@@ -27,8 +27,6 @@ internal class GetNotVerifyOrganizationQueryHandler : IQueryHandler<GetNotVerify
     public async Task<ICollection<OrganizationDto>> Handle(GetNotVerifyOrganizationQuery request, CancellationToken cancellationToken)
     {
         var organizations = await _context.Organizations
-            .AsNoTracking()
-            .Include(x => x.OrganizationUsers)
             .Where(x => !x.IsApproval)
             .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

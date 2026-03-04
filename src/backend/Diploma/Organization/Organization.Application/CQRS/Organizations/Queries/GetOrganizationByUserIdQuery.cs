@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Common.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
@@ -17,10 +18,10 @@ public record GetOrganizationByUserIdQuery(Guid UserId) : IQuery<OrganizationDto
 /// </summary>
 internal class GetOrganizationByUserIdQueryHandler : IQueryHandler<GetOrganizationByUserIdQuery, OrganizationDto>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetOrganizationByUserIdQueryHandler(OrganizationDbContext context, IMapper mapper)
+    public GetOrganizationByUserIdQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -29,13 +30,8 @@ internal class GetOrganizationByUserIdQueryHandler : IQueryHandler<GetOrganizati
     public async Task<OrganizationDto> Handle(GetOrganizationByUserIdQuery request, CancellationToken cancellationToken)
     {
         var organization = await _context.Organizations
-            .AsNoTracking()
-            .Include(x => x.OrganizationUsers)
-            .Include(x => x.Products)
-            .Include(x => x.BuyOrders)
-            .Include(x => x.SellOrders)
-            .FirstOrDefaultAsync(x => x.OrganizationUsers.Select(user => user.UserId)
-                .Contains(request.UserId), cancellationToken);
+            .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(x => x.UserId == request.UserId.ToString(), cancellationToken);
 
         if (organization is null)
             throw new NotFoundException("Организация не найдена");

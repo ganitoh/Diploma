@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Common.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Organizations.Queries;
 
@@ -17,26 +18,24 @@ public record GetOrganizationByIdQuery(int OrganizationId) : IQuery<Organization
 /// </summary>
 internal class GetOrganizationByIdQueryHandler : IQueryHandler<GetOrganizationByIdQuery, OrganizationDto>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetOrganizationByIdQueryHandler(OrganizationDbContext context, IMapper mapperl)
+    public GetOrganizationByIdQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
         _context = context;
-        _mapper = mapperl;
+        _mapper = mapper;
     }
 
     public async Task<OrganizationDto> Handle(GetOrganizationByIdQuery request, CancellationToken cancellationToken)
     {
-        var organization = await _context
-            .Organizations
-            .AsNoTracking()
-            .Include(x => x.OrganizationUsers)
-            .Include(x=>x.Products).ThenInclude(x=>x.Rating)
-            .Include(x=>x.SellOrders)
-            .Include(x=>x.BuyOrders)
-            .FirstOrDefaultAsync(x=>x.Id == request.OrganizationId, cancellationToken) ?? throw new NotFoundException("Организация не найдена");
+        var organization = await _context.Organizations
+            .ProjectTo<OrganizationDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(x => x.Id == request.OrganizationId, cancellationToken);
+
+        if (organization is null)
+            throw new NotFoundException("Организация не найдена");
         
-        return _mapper.Map<OrganizationDto>(organization);
+        return organization;
     }
 }

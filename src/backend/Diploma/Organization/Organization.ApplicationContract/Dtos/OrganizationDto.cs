@@ -49,14 +49,4 @@ public class OrganizationDto
     /// Продукты
     /// </summary>
     public ICollection<ProductDto> Products { get; set; }  
-    
-    /// <summary>
-    /// Заказы на продажу
-    /// </summary>
-    public ICollection<OrderDto> SellOrders { get; set; }
-    
-    /// <summary>
-    /// Заказы на покупку
-    /// </summary>
-    public  ICollection<OrderDto> BuyOrders { get; set; }
 }
