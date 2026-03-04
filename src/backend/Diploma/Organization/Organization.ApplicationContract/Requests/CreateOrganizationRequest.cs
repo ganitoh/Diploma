@@ -10,12 +10,17 @@ public class CreateOrganizationRequest
     /// <summary>
     /// Наиминование
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// ИНН
     /// </summary>
-    public string Inn { get; set; }
+    public required string Inn { get; set; }
+    
+    /// <summary>
+    /// Электронная почта
+    /// </summary>
+    public required string Email { get; set; }
 
     /// <summary>
     /// Юридический адрес
@@ -26,11 +31,6 @@ public class CreateOrganizationRequest
     /// Описание
     /// </summary>
     public string? Description { get; set; }
-    
-    /// <summary>
-    /// Электронная почта
-    /// </summary>
-    public string? Email { get; set; }
 
     /// <summary>
     /// Флаг внешней органзиации

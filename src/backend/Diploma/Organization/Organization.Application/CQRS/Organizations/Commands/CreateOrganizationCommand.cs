@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Common.Application;
+using Common.Application.Persistance;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.ValueObjects;
 
@@ -16,14 +18,17 @@ public record CreateOrganizationCommand(CreateOrganizationRequest OrganizationDa
 /// </summary>
 internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganizationCommand, int>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IOrganizationRepository _organizationRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper  _mapper;
 
     public CreateOrganizationCommandHandler(
-        OrganizationDbContext context,
+        IOrganizationRepository organizationRepository,
+        IUnitOfWork unitOfWork,
         IMapper mapper)
     {
-        _context = context;
+        _organizationRepository = organizationRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
@@ -31,11 +36,7 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
     {
         if (!request.OrganizationData.IsExternal)
         {
-            var organizationByUserId = await _context.Organizations
-                .Include(x => x.OrganizationUsers)
-                .FirstOrDefaultAsync(x => x.OrganizationUsers.Select(user => user.UserId)
-                        .Contains(request.UserId),
-                    cancellationToken);
+            var organizationByUserId = await _organizationRepository.GetOrganizationByUserIdAsync(request.UserId, cancellationToken);
 
             if (organizationByUserId is not null)
                 throw new ApplicationException("Организаця уже существует");
@@ -43,14 +44,16 @@ internal class CreateOrganizationCommandHandler : ICommandHandler<CreateOrganiza
 
         var address = _mapper.Map<Address>(request.OrganizationData.LegalAddress);
         
-        var organization = new Organization.Domain.Models.Organization(request.OrganizationData.Name, request.OrganizationData.Inn, address);
+        var organization = new Organization.Domain.Models.Organization(
+            request.OrganizationData.Name,
+            request.OrganizationData.Inn,
+            address,
+            new Email(request.OrganizationData.Email));
+        
         organization.AddUser(request.UserId);
         
-        _context.Organizations.Add(organization);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        
-        await _context.SaveChangesAsync(cancellationToken);
+        _organizationRepository.Create(organization);
+        await _unitOfWork.CommitAsync(cancellationToken);
         
         return organization.Id;
     }
