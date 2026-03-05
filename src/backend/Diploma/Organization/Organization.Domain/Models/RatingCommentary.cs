@@ -17,16 +17,22 @@ public class RatingCommentary : Entity<int>
 
     protected RatingCommentary() { }
 
-    public RatingCommentary(RatingValue ratingValue, string commentary, Guid userId,  DateTime createAtDate)
+    public RatingCommentary(RatingValue ratingValue, string commentary, Guid userId)
     {
         ValidateCommentary(commentary);
         
-        CreateAtDate = createAtDate;
+        CreateAtDate = DateTime.UtcNow;
         RatingValue = ratingValue;
         Commentary = commentary;
         UserId = userId;
     }
-    
+
+    public RatingCommentary(RatingValue ratingValue, string commentary, Guid userId, string? userName)  
+        : this(ratingValue, commentary, userId)
+    {
+        UserName = userName;
+    }
+
     public void ChangeCommentary(string commentary)
     {
         ValidateCommentary(commentary);

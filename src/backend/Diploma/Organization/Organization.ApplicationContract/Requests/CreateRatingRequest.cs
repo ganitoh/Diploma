@@ -10,12 +10,12 @@ public class CreateRatingRequest
     /// <summary>
     /// Оцена пользователя
     /// </summary>
-    public decimal RatingValue { get; set; }
+    public required decimal RatingValue { get; set; }
     
     /// <summary>
     /// Текст комментария
     /// </summary>
-    public string? Commentary { get; set; }
+    public required string Commentary { get; set; }
 
     /// <summary>
     /// Идентификато сущности
@@ -25,5 +25,5 @@ public class CreateRatingRequest
     /// <summary>
     /// Флаг - для чего пришла оценка (продукт/организация)
     /// </summary>
-    public bool IsProduct { get; set; }
+    public int ParentRatingId { get; set; }
 }

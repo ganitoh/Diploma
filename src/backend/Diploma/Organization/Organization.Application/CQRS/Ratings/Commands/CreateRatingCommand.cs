@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
 using Common.Application;
 using Common.Application.Exceptions;
-using Microsoft.EntityFrameworkCore;
+using Common.Application.Persistance;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
-using Organization.Infrastructure.Persistance.Context;
+using Organization.Domain.ValueObjects;
 
 namespace Organizaiton.Application.CQRS.Ratings.Commands;
 
@@ -16,55 +17,33 @@ public record CreateRatingCommand(CreateRatingRequest RequestData, ClaimsPrincip
 /// <inheritdoc />
 internal class CreateRatingCommandHandler : ICommandHandler<CreateRatingCommand, int>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IRatingRepository _ratingRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateRatingCommandHandler(OrganizationDbContext context)
+    public CreateRatingCommandHandler(IRatingRepository ratingRepository, IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _ratingRepository = ratingRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<int> Handle(CreateRatingCommand request, CancellationToken cancellationToken)
     {
-        var userId =
-            request.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
+        var userId = request.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
             throw new ApplicationException("Идентификатор пользователя не нйден");
 
-        var userName =
-            request.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        
-        var ratingCommentary = new RatingCommentary
-        {
-            Commentary = request.RequestData.Commentary,
-            UserId = Guid.Parse(userId),
-            UserName = userName,
-            RatingValue = request.RequestData.RatingValue,
-            CreateDate = DateTime.UtcNow
-        };
+        var userName = request.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-        if (request.RequestData.IsProduct)
-        {
-            var product = await _context.Products
-                .Include(x => x.Rating)
-                .ThenInclude(x => x.Commentaries)
-                .FirstOrDefaultAsync(x => x.Id == request.RequestData.EntityId, cancellationToken) 
-                          ?? throw new NotFoundException("Товар не найден");
-            
-            product.Rating!.Commentaries.Add(ratingCommentary);
-            product.Rating!.CalculateRatingValue();
-        }
-        else
-        {
-            var organization = await _context.Organizations
-                .Include(x => x.Rating)
-                .ThenInclude(x => x.Commentaries)
-                .FirstOrDefaultAsync(x => x.Id == request.RequestData.EntityId, cancellationToken)
-                               ?? throw new NotFoundException("Организация не найден");
-            
-            organization.Rating!.Commentaries.Add(ratingCommentary);
-            organization.Rating!.CalculateRatingValue();
-        }
+        var rating = await _ratingRepository.GetByIdAsync(request.RequestData.ParentRatingId);
         
-        await _context.SaveChangesAsync(cancellationToken);
+        if (rating is null)
+            throw new NotFoundException("Рейтинг не найден");
+
+        var ratingCommentary = new RatingCommentary(new RatingValue(request.RequestData.RatingValue),
+            request.RequestData.Commentary, new Guid(userId), userName);
+        
+        rating.AddCommentary(ratingCommentary);
+        
+        await _unitOfWork.CommitAsync(cancellationToken);
         return ratingCommentary.Id;
     }
 }

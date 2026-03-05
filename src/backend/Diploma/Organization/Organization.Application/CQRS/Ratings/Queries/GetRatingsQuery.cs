@@ -1,58 +1,40 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Common.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Ratings.Queries;
 
 /// <summary>
 /// Запрос на получение отзвов
 /// </summary>
-/// <param name="EntityId">Идентификатор сущности</param>
-/// <param name="IsProduct">Флаг - для чего надо получить отзывы (продукт/организация)</param>
-public record GetRatingsQuery(int EntityId, bool IsProduct) : IQuery<RatingDto>;
+public record GetRatingsQuery(int RatingId) : IQuery<RatingDto>;
 
 /// <inheritdoc />
 internal class GetRatingsQueryHandler : IQueryHandler<GetRatingsQuery, RatingDto>
 {
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly OrganizationDbContext _context;
 
-    public GetRatingsQueryHandler(IMapper mapper, OrganizationDbContext context)
+    public GetRatingsQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
-        _mapper = mapper;
         _context = context;
+        _mapper = mapper;
     }
+
 
     public async Task<RatingDto> Handle(GetRatingsQuery request, CancellationToken cancellationToken)
     {
-        RatingDto ratingResult = null;
+         var result =  await _context.Ratings
+             .ProjectTo<RatingDto>(_mapper.ConfigurationProvider)
+             .FirstOrDefaultAsync(x=>x.Id == request.RatingId, cancellationToken);
 
-        if (request.IsProduct)
-        {
-            var product = await _context.Products
-                .AsNoTracking()
-                .Include(x => x.Rating)
-                .ThenInclude(x => x.Commentaries)
-                .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken) 
-                          ?? throw new NotFoundException("Товар не найден");
-            
-            ratingResult = _mapper.Map<RatingDto>(product.Rating);
-        }
-        else
-        {
-            var organization = await _context.Organizations
-                              .AsNoTracking()
-                              .Include(x => x.Rating)
-                              .ThenInclude(x => x.Commentaries)
-                              .FirstOrDefaultAsync(x => x.Id == request.EntityId, cancellationToken) 
-                          ?? throw new NotFoundException("Организация не найдена");
-            
-            ratingResult = _mapper.Map<RatingDto>(organization.Rating);
-        }
-        
-        return ratingResult;
+         if (result is null)
+             throw new NotFoundException("Рейтинг не найден");
+         
+         return result;
     }
 }
