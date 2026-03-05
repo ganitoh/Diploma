@@ -18,7 +18,7 @@ public class AnalyticsConfigurations :
         builder.Property(x => x.SellerOrganizationId).IsRequired();
         builder.Property(x => x.Status).IsRequired();
         builder.Property(x => x.TotalPrice).IsRequired();
-        builder.Property(x => x.CreateDate).IsRequired();
+        builder.Property(x => x.CreateAtDate).IsRequired();
     }
 
     public void Configure(EntityTypeBuilder<OrderItemAnalytics> builder)

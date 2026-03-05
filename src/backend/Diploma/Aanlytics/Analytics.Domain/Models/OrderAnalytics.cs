@@ -10,17 +10,17 @@ public class OrderAnalytics : Entity<int>
     public decimal TotalPrice { get;  set; }
     public int SellerOrganizationId { get; set; }
     public int BuyerOrganizationId { get; set; }
-    public DateTime CreateDate { get; set; }
+    public DateTime CreateAtDate { get; set; }
 
     protected OrderAnalytics() { }
 
-    public OrderAnalytics(int status, int orderId, decimal totalPrice, int sellerOrganizationId, int buyerOrganizationId, DateTime createDate)
+    public OrderAnalytics(int status, int orderId, decimal totalPrice, int sellerOrganizationId, int buyerOrganizationId, DateTime createAtDate)
     {
         Status = status;
         OrderId = orderId;
         TotalPrice = totalPrice;
         SellerOrganizationId = sellerOrganizationId;
         BuyerOrganizationId = buyerOrganizationId;
-        CreateDate = createDate;
+        CreateAtDate = createAtDate;
     }
 }

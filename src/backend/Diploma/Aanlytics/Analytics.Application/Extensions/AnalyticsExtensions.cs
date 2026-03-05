@@ -1,10 +1,10 @@
-﻿using Organization.Domain.Models;
+﻿using Analytics.Domain.Models;
 
-namespace Organizaiton.Application.Extensions;
+namespace Analytics.Application.Extensions;
 
 public static class AnalyticsExtensions
 {
-    public static IQueryable<Order> FilterByDateAnalytics(this IQueryable<Order> orders, DateTime? startDate,
+    public static IQueryable<OrderAnalytics> FilterByDateOrderAnalytics(this IQueryable<OrderAnalytics> orders, DateTime? startDate,
         DateTime? endDate)
     {
         if (startDate is not null && endDate is not null)
