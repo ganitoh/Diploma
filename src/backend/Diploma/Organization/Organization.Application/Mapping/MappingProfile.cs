@@ -11,12 +11,11 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CreateOrganizationRequest, Organization.Domain.Models.Organization>();
         CreateMap<Organization.Domain.Models.Organization, OrganizationDto>()
             .ForMember(x=>x.UserId, y => y.MapFrom(x=>x.OrganizationUsers.First().UserId));
         CreateMap<Organization.Domain.Models.Organization, ShortOrganizationDto>()
             .ForMember(x => x.RatingValue,
-                y => y.MapFrom(x => x.Rating.Vale));;
+                y => y.MapFrom(x => x.Rating.AvgValue));;
 
         CreateMap<Order, OrderDto>()
             .ForMember(x => x.CreateDate, y => y.MapFrom(x => x.CreateDate.ToShortDateString()))
@@ -24,21 +23,20 @@ public class MappingProfile : Profile
             .ForMember(x => x.StatusText, o => o.MapFrom(x => x.Status.GetDescription()))
             .ForMember(x => x.BuyerOrganizationName, o => o.MapFrom(x => x.BuyerOrganization.Name))
             .ForMember(x => x.SellerOrganizationName, o => o.MapFrom(x => x.SellerOrganization.Name));
-
-        CreateMap<CreateProductRequest, Product>();
+        
         CreateMap<Product, ShortProductDto>()
             .ForMember(x => x.Rating,
-            y => y.MapFrom(x => x.Rating.Vale));;
+            y => y.MapFrom(x => x.Rating.AvgValue));;
         CreateMap<Product, ProductDto>()
             .ForMember(x => x.SellOrganizationName,
                 y => y.MapFrom(x => x.Organization.Name))
-            .ForMember(x => x.Rating,
-                y => y.MapFrom(x => x.Rating.Vale));
+            .ForMember(x => x.RatingId,
+                y => y.MapFrom(x => x.Rating.Id));
 
         CreateMap<AddressDto, Address>();
         
         CreateMap<Rating, RatingDto>();
         CreateMap<RatingCommentary, RatingCommentaryDto>()
-            .ForMember(x => x.CreateDate, y => y.MapFrom(x => x.CreateDate.ToShortDateString()));
+            .ForMember(x => x.CreateDate, y => y.MapFrom(x => x.CreateAtDate.ToShortDateString()));
     }
 }
