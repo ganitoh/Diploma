@@ -26,7 +26,7 @@ internal class GetTopOrganizationByRatingQueryHandler : IQueryHandler<GetTopOrga
     public async Task<ICollection<ShortOrganizationDto>> Handle(GetTopOrganizationByRatingQuery request, CancellationToken cancellationToken)
     {
         return await _context.Organizations
-            .OrderByDescending(x=>x.Rating.Value)
+            .OrderByDescending(x => x.Rating.AvgValue)
             .Take(request.Top)
             .ProjectTo<ShortOrganizationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

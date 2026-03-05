@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Common.Application;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Products.Queries;
 
@@ -17,10 +16,10 @@ public record GetProductsByOrganizationQuery(int OrganizationId) : IQuery<IColle
 internal class GetProductsByOrganizationQueryHandler : IQueryHandler<GetProductsByOrganizationQuery,
     ICollection<ShortProductDto>>
 {
-    private readonly OrganizationDbContext  _context;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetProductsByOrganizationQueryHandler(OrganizationDbContext context, IMapper mapper)
+    public GetProductsByOrganizationQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -29,8 +28,7 @@ internal class GetProductsByOrganizationQueryHandler : IQueryHandler<GetProducts
     public async Task<ICollection<ShortProductDto>> Handle(GetProductsByOrganizationQuery request, CancellationToken cancellationToken)
     {
         return await _context.Products
-            .AsNoTracking()
-            .Where(x=>x.SellOrganizationId == request.OrganizationId)
+            .Where(x => x.OrganizationId == request.OrganizationId)
             .ProjectTo<ShortProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
     }

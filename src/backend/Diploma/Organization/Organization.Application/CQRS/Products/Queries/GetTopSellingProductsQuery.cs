@@ -4,9 +4,8 @@ using AutoMapper.QueryableExtensions;
 using Common.Application;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Products.Queries;
 
@@ -22,11 +21,11 @@ internal class GetTopSellingProductsQueryHandler : IQueryHandler<GetTopSellingPr
 {
     private const string CacheKey = "TopSellingProducts";
     
-    private readonly OrganizationDbContext  _context;
+    private readonly IReadOnlyOrganizationDbContext  _context;
     private readonly IMapper _mapper;
     private readonly IDistributedCache _cache;
 
-    public GetTopSellingProductsQueryHandler(OrganizationDbContext context, IMapper mapper, IDistributedCache cache)
+    public GetTopSellingProductsQueryHandler(IReadOnlyOrganizationDbContext context, IMapper mapper, IDistributedCache cache)
     {
         _context = context;
         _mapper = mapper;
@@ -40,9 +39,7 @@ internal class GetTopSellingProductsQueryHandler : IQueryHandler<GetTopSellingPr
         if (string.IsNullOrEmpty(cachedTopSellingProducts))
         {
             var response = await _context.Products
-                .AsNoTracking()
-                .Include(x=>x.Rating)
-                .OrderByDescending(x=>x.TotalSold)
+                .OrderByDescending(x => x.TotalSold)
                 .Take(request.Top)
                 .ProjectTo<ShortProductDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);

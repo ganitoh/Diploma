@@ -2,10 +2,9 @@
 using AutoMapper.QueryableExtensions;
 using Common.API.Paged;
 using Common.Application;
-using Microsoft.EntityFrameworkCore;
+using Organizaiton.Application.Common.Persistance;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
-using Organization.Infrastructure.Persistance.Context;
 
 namespace Organizaiton.Application.CQRS.Products.Queries;
 
@@ -19,25 +18,22 @@ public record GetPagedProductsCommand(GetPagedProductsRequest PagedRequest) : IQ
 /// </summary>
 internal class GetPagedProductsCommandHandler : IQueryHandler<GetPagedProductsCommand, PagedList<ProductDto>>
 {
-    private readonly OrganizationDbContext _context;
+    private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IMapper  _mapper;
 
-    public GetPagedProductsCommandHandler(OrganizationDbContext dbContext, IMapper mapper)
+    public GetPagedProductsCommandHandler(IReadOnlyOrganizationDbContext context, IMapper mapper)
     {
-        _context = dbContext;
+        _context = context;
         _mapper = mapper;
     }
 
     public async Task<PagedList<ProductDto>> Handle(GetPagedProductsCommand request, CancellationToken cancellationToken)
     {
-        var productsQuery = _context.Products
-            .Include(x => x.SellOrganization)
-            .Include(x => x.Rating)
-            .AsNoTracking();
+        var productsQuery = _context.Products;
 
         if (request.PagedRequest.OrganizationId is not null)
         {
-            productsQuery =  productsQuery.Where(x => x.SellOrganizationId == request.PagedRequest.OrganizationId);
+            productsQuery =  productsQuery.Where(x => x.OrganizationId == request.PagedRequest.OrganizationId);
         }
         
         return await productsQuery
