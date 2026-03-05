@@ -1,4 +1,5 @@
 ﻿using Common.Application.Persistance;
+using Common.Infrastructure.Migrator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +18,14 @@ public static class PersistanceServiceRegistration
         services.AddDbContext<OrganizationDbContext>(options => options
             .UseNpgsql(configuration.GetConnectionString(nameof(OrganizationDbContext)))
         );
+        services.AddDbMigrator();
 
         services.AddScoped<IReadOnlyOrganizationDbContext, ReadOnlyOrganizationDbContext>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
         
         return services;
     }

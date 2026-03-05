@@ -39,7 +39,7 @@ public class GeneratorInvoceInPDF : IGenerateInvoiceForOrder
     y += 45;
 
     // Информация
-    gfx.DrawString($"Дата создания: {order.CreateDate:dd.MM.yyyy}", normalFont, XBrushes.Black, leftMargin, y); y += 20;
+    gfx.DrawString($"Дата создания: {order.CreateAtDate:dd.MM.yyyy}", normalFont, XBrushes.Black, leftMargin, y); y += 20;
     gfx.DrawString($"Продавец: {order.SellerOrganization?.Name}", normalFont, XBrushes.Black, leftMargin, y); y += 20;
     gfx.DrawString($"Покупатель: {order.BuyerOrganization?.Name}", normalFont, XBrushes.Black, leftMargin, y); y += 25;
 

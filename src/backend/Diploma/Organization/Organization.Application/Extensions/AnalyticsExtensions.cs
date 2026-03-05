@@ -9,7 +9,7 @@ public static class AnalyticsExtensions
     {
         if (startDate is not null && endDate is not null)
         { 
-            return orders.Where(x => x.CreateDate >= startDate && x.CreateDate <= endDate);
+            return orders.Where(x => x.CreateAtDate >= startDate && x.CreateAtDate <= endDate);
         }
         return orders;
     }

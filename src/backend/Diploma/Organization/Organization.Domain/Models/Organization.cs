@@ -14,6 +14,7 @@ public class Organization : Entity<int>
     public virtual Rating? Rating { get; }
     public Email Email { get; private set; }
     public Address LegalAddress { get; private set; }
+    public DateTime CreateAtDate { get; private set; }
     
     private readonly List<Product> _products = [];
     public virtual IReadOnlyCollection<Product> Products => _products;
@@ -32,6 +33,7 @@ public class Organization : Entity<int>
         LegalAddress = legalAddress;
         Email = email;
         IsExternal = false;
+        CreateAtDate = DateTime.Now;
         Rating = new Rating();
     }
 
