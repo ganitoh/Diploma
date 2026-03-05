@@ -24,8 +24,7 @@ internal class GetRatingsQueryHandler : IQueryHandler<GetRatingsQuery, RatingDto
         _context = context;
         _mapper = mapper;
     }
-
-
+    
     public async Task<RatingDto> Handle(GetRatingsQuery request, CancellationToken cancellationToken)
     {
          var result =  await _context.Ratings

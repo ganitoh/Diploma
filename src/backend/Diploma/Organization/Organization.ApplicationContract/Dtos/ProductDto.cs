@@ -60,5 +60,5 @@ public class ProductDto
     /// <summary>
     /// Средняя оценка
     /// </summary>
-    public decimal Rating { get; set; }
+    public int  RatingId { get; set; }
 }
