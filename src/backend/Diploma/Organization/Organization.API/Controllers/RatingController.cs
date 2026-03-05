@@ -15,9 +15,9 @@ public class RatingController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetRatingForEntity))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<RatingDto>))]
-    public async Task<IActionResult> GetRatingForEntity([FromQuery] int entityId, [FromQuery] bool isProduct)
+    public async Task<IActionResult> GetRatingForEntity([FromQuery] int ratingId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetRatingsQuery(entityId, isProduct));
+        var result = await Mediator.Send(new GetRatingsQuery(ratingId), cancellationToken);
         return Ok(ApiResponse<RatingDto>.Success(result));
     }
     
@@ -27,9 +27,9 @@ public class RatingController : BaseApiController
     [HttpPost(nameof(CreateRating))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
     [Authorize]
-    public async Task<IActionResult> CreateRating([FromBody] CreateRatingRequest requestData)
+    public async Task<IActionResult> CreateRating([FromBody] CreateRatingRequest requestData, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new CreateRatingCommand(requestData, User));
+        var result = await Mediator.Send(new CreateRatingCommand(requestData, User), cancellationToken);
         return Ok(ApiResponse<int>.Success(result));
     }
 }

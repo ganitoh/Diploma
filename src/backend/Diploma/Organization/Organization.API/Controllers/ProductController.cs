@@ -17,9 +17,9 @@ public class ProductController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetPagedProduct))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<PagedList<ProductDto>>))]
-    public async Task<IActionResult> GetPagedProduct([FromQuery] GetPagedProductsRequest pagedRequest)
+    public async Task<IActionResult> GetPagedProduct([FromQuery] GetPagedProductsRequest pagedRequest, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetPagedProductsCommand(pagedRequest));
+        var result = await Mediator.Send(new GetPagedProductsCommand(pagedRequest), cancellationToken);
         return Ok(ApiResponse<PagedList<ProductDto>>.Success(result));
     }
     
@@ -28,9 +28,9 @@ public class ProductController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetProductById))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ProductDto>))]
-    public async Task<IActionResult> GetProductById([FromQuery] int productId)
+    public async Task<IActionResult> GetProductById([FromQuery] int productId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetProductByIdQuery(productId));
+        var result = await Mediator.Send(new GetProductByIdQuery(productId), cancellationToken);
         return Ok(ApiResponse<ProductDto>.Success(result));
     }
     
@@ -39,9 +39,9 @@ public class ProductController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetTopSellingProducts))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<ShortProductDto>>))]
-    public async Task<IActionResult> GetTopSellingProducts([FromQuery] int top)
+    public async Task<IActionResult> GetTopSellingProducts([FromQuery] int top, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetTopSellingProductsQuery(top));
+        var result = await Mediator.Send(new GetTopSellingProductsQuery(top), cancellationToken);
         return Ok(ApiResponse<ICollection<ShortProductDto>>.Success(result));
     }
     
@@ -50,9 +50,9 @@ public class ProductController : BaseApiController
     /// </summary>
     [HttpGet(nameof(SearchProducts))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<ShortProductDto>>))]
-    public async Task<IActionResult> SearchProducts([FromQuery] string searchString)
+    public async Task<IActionResult> SearchProducts([FromQuery] string searchString, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new SearchProductsQuery(searchString));
+        var result = await Mediator.Send(new SearchProductsQuery(searchString), cancellationToken);
         return Ok(ApiResponse<ICollection<ShortProductDto>>.Success(result));
     }
     
@@ -61,9 +61,9 @@ public class ProductController : BaseApiController
     /// </summary>
     [HttpGet(nameof(GetShortProductByOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<ShortProductDto>>))]
-    public async Task<IActionResult> GetShortProductByOrganization([FromQuery] int organizationId)
+    public async Task<IActionResult> GetShortProductByOrganization([FromQuery] int organizationId, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetProductsByOrganizationQuery(organizationId));
+        var result = await Mediator.Send(new GetProductsByOrganizationQuery(organizationId), cancellationToken);
         return Ok(ApiResponse<ICollection<ShortProductDto>>.Success(result));
     }
     
@@ -73,9 +73,9 @@ public class ProductController : BaseApiController
     [HttpPost(nameof(CreateProduct))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
     [Authorize]
-    public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest requestData)
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest requestData, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new CreateProductCommand(requestData));
+        var result = await Mediator.Send(new CreateProductCommand(requestData), cancellationToken);
         return Ok(ApiResponse<int>.Success(result));
     }
     
@@ -85,9 +85,9 @@ public class ProductController : BaseApiController
     [HttpPut(nameof(UpdateProduct))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<int>))]
     [Authorize]
-    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequest requestData)
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequest requestData, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new UpdateProductCommand(requestData));
+        var result = await Mediator.Send(new UpdateProductCommand(requestData), cancellationToken);
         return Ok(ApiResponse<int>.Success(result));
     }
     
@@ -97,9 +97,9 @@ public class ProductController : BaseApiController
     [HttpDelete(nameof(DeleteProduct))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Unit>))]
     [Authorize]
-    public async Task<IActionResult> DeleteProduct([FromBody] int[] Ids)
+    public async Task<IActionResult> DeleteProduct([FromBody] int[] Ids, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new DeleteProductCommand(Ids));
+        var result = await Mediator.Send(new DeleteProductCommand(Ids), cancellationToken);
         return Ok(ApiResponse<Unit>.Success(result));
     }
 }
