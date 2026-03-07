@@ -82,6 +82,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analytics.Application", "Aa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analytics.ApplicationContract", "Aanlytics\Analytics.ApplicationContract\Analytics.ApplicationContract.csproj", "{9C81515D-FD94-473B-9E06-E9C45F1E5FF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analytics.API", "Aanlytics\Analytics.API\Analytics.API.csproj", "{DC3E2F13-CE67-4765-8553-225D19BB97D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +124,7 @@ Global
 		{04C30A9A-F30F-4E78-AB51-65DB399049B3} = {1AD8DC39-C55F-44A7-A6F2-AC03ABB49A28}
 		{46080A12-8E30-4E2A-876B-53FDBD5888CE} = {1AD8DC39-C55F-44A7-A6F2-AC03ABB49A28}
 		{9C81515D-FD94-473B-9E06-E9C45F1E5FF5} = {1AD8DC39-C55F-44A7-A6F2-AC03ABB49A28}
+		{DC3E2F13-CE67-4765-8553-225D19BB97D5} = {1AD8DC39-C55F-44A7-A6F2-AC03ABB49A28}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D612DDFB-D038-498A-9939-3D97F79E1055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -260,5 +263,9 @@ Global
 		{9C81515D-FD94-473B-9E06-E9C45F1E5FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C81515D-FD94-473B-9E06-E9C45F1E5FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C81515D-FD94-473B-9E06-E9C45F1E5FF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC3E2F13-CE67-4765-8553-225D19BB97D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3E2F13-CE67-4765-8553-225D19BB97D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC3E2F13-CE67-4765-8553-225D19BB97D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3E2F13-CE67-4765-8553-225D19BB97D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
