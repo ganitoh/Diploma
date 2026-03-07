@@ -9,4 +9,9 @@ public class OrderItemAnalyticsRepository : Repository<OrderItemAnalytics, Analy
 {
     public OrderItemAnalyticsRepository(AnalyticsDbContext dbContext) :
         base(dbContext) { }
+
+    public void AddRange(IEnumerable<OrderItemAnalytics> items)
+    {
+        _dbContext.AddRange(items);
+    }
 }

@@ -14,6 +14,8 @@ public class AnalyticsConfigurations :
         builder.ToTable(nameof(OrderAnalytics).ToLower(), "analytics");
         builder.HasKey(x => x.Id);
 
+        builder.HasIndex(x => x.OrderId).IsUnique();
+        
         builder.Property(x => x.BuyerOrganizationId).IsRequired();
         builder.Property(x => x.SellerOrganizationId).IsRequired();
         builder.Property(x => x.Status).IsRequired();

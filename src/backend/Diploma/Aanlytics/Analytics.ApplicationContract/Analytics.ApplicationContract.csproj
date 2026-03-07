@@ -10,4 +10,8 @@
       <Folder Include="Dtos\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Organization\Organization.ApplicationContract\Organization.ApplicationContract.csproj" />
+    </ItemGroup>
+
 </Project>

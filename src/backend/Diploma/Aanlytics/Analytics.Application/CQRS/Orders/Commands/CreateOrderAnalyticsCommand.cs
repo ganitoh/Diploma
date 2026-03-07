@@ -12,12 +12,14 @@ public record CreateOrderAnalyticsCommand(CreateOrderAnalyticsRequest Request) :
 public class CreateOrderAnalyticsCommandHandler : ICommandHandler<CreateOrderAnalyticsCommand, int>
 {
     private readonly IOrderAnalyticsRepository _orderAnalyticsRepository;
+    private readonly IOrderItemAnalyticsRepository _orderItemAnalyticsRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper  _mapper;
 
-    public CreateOrderAnalyticsCommandHandler(IOrderAnalyticsRepository orderAnalyticsRepository, IUnitOfWork unitOfWork, IMapper mapper)
+    public CreateOrderAnalyticsCommandHandler(IOrderAnalyticsRepository orderAnalyticsRepository, IOrderItemAnalyticsRepository orderItemAnalyticsRepository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         _orderAnalyticsRepository = orderAnalyticsRepository;
+        _orderItemAnalyticsRepository = orderItemAnalyticsRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
@@ -25,7 +27,9 @@ public class CreateOrderAnalyticsCommandHandler : ICommandHandler<CreateOrderAna
     public async Task<int> Handle(CreateOrderAnalyticsCommand request, CancellationToken cancellationToken)
     {
         var orderAnalytics = _mapper.Map<OrderAnalytics>(request.Request);
+        var orderItems = _mapper.Map<IEnumerable<OrderItemAnalytics>>(request.Request.Items);
         _orderAnalyticsRepository.Create(orderAnalytics);
+        _orderItemAnalyticsRepository.AddRange(orderItems);
         
         await _unitOfWork.CommitAsync(cancellationToken);
         

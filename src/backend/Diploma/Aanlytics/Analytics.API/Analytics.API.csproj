@@ -19,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Organization\Organization.ApplicationContract\Organization.ApplicationContract.csproj" />
       <ProjectReference Include="..\Analytics.ApplicationContract\Analytics.ApplicationContract.csproj" />
       <ProjectReference Include="..\Analytics.Application\Analytics.Application.csproj" />
       <ProjectReference Include="..\Analytics.Infrastructure\Analytics.Infrastructure.csproj" />

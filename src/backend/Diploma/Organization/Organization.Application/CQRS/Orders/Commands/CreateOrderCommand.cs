@@ -68,7 +68,7 @@ internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, i
             TotalPrice = order.TotalPrice,
             Status = (int)order.Status,
             CreateAtDate = order.CreateAtDate,
-            Items = order.Items.Select(x => new OrderItemDto(x.Id, x.Quantity, x.ProductId)).ToArray(),
+            Items = order.Items.Select(x => new OrderItemDto(x.Name, x.Id, x.Quantity, x.ProductId, x.TotalPrice.Value)).ToArray(),
         }, cancellationToken); 
         
         return order.Id;
