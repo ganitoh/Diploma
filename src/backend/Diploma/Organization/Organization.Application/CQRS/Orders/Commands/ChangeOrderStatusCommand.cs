@@ -1,12 +1,11 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
 using Common.Application.Persistance;
-using Common.Domain.Extensions;
 using Common.Infrastructure.Kafka;
 using Microsoft.EntityFrameworkCore;
-using Notifications.ApplicationContract.MessagesDto;
-using Notifications.Domain.Enums;
 using Organizaiton.Application.Common.Persistance;
+using Organization.ApplicationContract.Dtos;
+using Organization.ApplicationContract.Messages;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Enums;
 using Organization.Domain.Models;
@@ -24,13 +23,13 @@ internal class ChangeOrderStatusCommandHandler : ICommandHandler<ChangeOrderStat
     private readonly IOrderRepository _orderRepository;
     private readonly IReadOnlyOrganizationDbContext _context;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly KafkaProducer<CreateNotificationMessage> _producer;
+    private readonly KafkaProducer<ChangeStatusOrderMessage> _producer;
 
     public ChangeOrderStatusCommandHandler(
         IOrderRepository orderRepository,
         IReadOnlyOrganizationDbContext context,
         IUnitOfWork unitOfWork,
-        KafkaProducer<CreateNotificationMessage> producer)
+        KafkaProducer<ChangeStatusOrderMessage> producer)
     {
         _orderRepository = orderRepository;
         _context = context;
@@ -74,13 +73,10 @@ internal class ChangeOrderStatusCommandHandler : ICommandHandler<ChangeOrderStat
             .Select(x => x.UserId)
             .ToArrayAsync(cancellationToken);
             
-        await _producer.ProduceAsync(new CreateNotificationMessage
+        await _producer.ProduceAsync(new ChangeStatusOrderMessage
         {
-            Title = "Изменен статус заказа",
-            UsersIds = userIds,
-            Text = $"Статус заказа {order.Id} изменен на {order.Status.GetDescription()}",
-            Type = NotificationType.Information,
-            IsSendImmediately = true
+            OrderId = order.Id,
+            OrderStatus = (int)order.Status,
         }, cancellationToken); 
     }
 }

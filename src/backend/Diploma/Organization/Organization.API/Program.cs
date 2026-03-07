@@ -7,7 +7,6 @@ using Common.Infrastructure.Migrator;
 using Organizaiton.Application;
 using Organization.Infrastructure;
 using Organization.Infrastructure.Persistance.Context;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 

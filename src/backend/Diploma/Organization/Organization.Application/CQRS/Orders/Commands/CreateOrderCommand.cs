@@ -1,7 +1,10 @@
 ﻿using Common.Application;
 using Common.Application.Exceptions;
 using Common.Application.Persistance;
+using Common.Infrastructure.Kafka;
 using Organizaiton.Application.Common.Persistance;
+using Organization.ApplicationContract.Dtos;
+using Organization.ApplicationContract.Messages;
 using Organization.ApplicationContract.Requests;
 using Organization.Domain.Models;
 
@@ -18,17 +21,20 @@ internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, i
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IProductRepository _productRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly KafkaProducer<CreateOrderMessage> _producer;
 
     public CreateOrderCommandHandler(
         IOrderRepository orderRepository,
         IOrganizationRepository organizationRepository,
         IProductRepository productRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        KafkaProducer<CreateOrderMessage> producer)
     {
         _orderRepository = orderRepository;
         _organizationRepository = organizationRepository;
         _productRepository = productRepository;
         _unitOfWork = unitOfWork;
+        _producer = producer;
     }
 
     public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -53,6 +59,17 @@ internal class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, i
 
         _orderRepository.Create(order);
         await _unitOfWork.CommitAsync(cancellationToken);
+        
+        await _producer.ProduceAsync(new CreateOrderMessage
+        {
+            OrderId = order.Id,
+            BuyerOrganizationId = order.BuyerOrganizationId,
+            SellerOrganizationId = order.SellerOrganizationId,
+            TotalPrice = order.TotalPrice,
+            Status = (int)order.Status,
+            CreateAtDate = order.CreateAtDate,
+            Items = order.Items.Select(x => new OrderItemDto(x.Id, x.Quantity, x.ProductId)).ToArray(),
+        }, cancellationToken); 
         
         return order.Id;
     }
