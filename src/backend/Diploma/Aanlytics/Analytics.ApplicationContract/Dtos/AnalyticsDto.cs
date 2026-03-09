@@ -1,4 +1,5 @@
-﻿namespace Organization.ApplicationContract.AnaliticsDtos;
+﻿namespace Analytics.ApplicationContract.Dtos;
+
 
 /// <summary>
 /// Аналитические данные

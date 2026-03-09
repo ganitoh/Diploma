@@ -30,7 +30,6 @@
       <Folder Include="CQRS\OrderItems\Commands\" />
       <Folder Include="CQRS\OrderItems\Queries\" />
       <Folder Include="CQRS\OrderItems\Validators\" />
-      <Folder Include="CQRS\Orders\Queries\" />
       <Folder Include="CQRS\Organizations\" />
     </ItemGroup>
 
