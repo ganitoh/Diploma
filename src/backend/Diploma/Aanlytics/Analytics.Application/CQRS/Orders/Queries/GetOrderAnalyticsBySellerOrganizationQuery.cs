@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Analytics.Application.CQRS.Orders.Queries;
 
-public record GetOrderAnalyticsBySellerOrganizationQuery(GetAnalyticsRequest Data) : IQuery<ICollection<AnalyticsDto>>;
+public record GetOrderAnalyticsBySellerOrganizationQuery(GetOrderAnalyticsByStatusRequest Data) : IQuery<ICollection<AnalyticsDto>>;
 
 class GetOrderAnalyticsQueryHandler : IQueryHandler<GetOrderAnalyticsBySellerOrganizationQuery, ICollection<AnalyticsDto>>
 {
@@ -20,12 +20,15 @@ class GetOrderAnalyticsQueryHandler : IQueryHandler<GetOrderAnalyticsBySellerOrg
 
     public async Task<ICollection<AnalyticsDto>> Handle(GetOrderAnalyticsBySellerOrganizationQuery request, CancellationToken cancellationToken)
     {
-        var orders = _context.OrderAnalytics
+        var ordersQuery = _context.OrderAnalytics
             .OrderBy(x => x.CreateAtDate)
             .Where(x => x.SellerOrganizationId == request.Data.EntityId)
             .FilterByDateOrderAnalytics(request.Data.StartDate, request.Data.EndDate);
         
-        var groupedOrders = await orders
+        if (request.Data.OrderStatuses.Length != 0)
+            ordersQuery = ordersQuery.Where(x => request.Data.OrderStatuses.Contains(x.Status));
+        
+        var groupedOrders = await ordersQuery
             .GroupBy(o => o.CreateAtDate.Date)
             .Select(g => new AnalyticsDto
             {
