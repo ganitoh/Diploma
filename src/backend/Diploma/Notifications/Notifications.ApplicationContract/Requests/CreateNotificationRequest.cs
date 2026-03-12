@@ -31,14 +31,20 @@ public class CreateNotificationRequest
     /// Текст уведомления
     /// </summary>
     public string? Text { get; set; }
-
-    /// <summary>
-    /// Адрес электронной почты пользователя.
-    /// </summary>
-    public string? Email { get; set; }
-
+    
     /// <summary>
     /// Отправить сразу
     /// </summary>
     public bool IsSendImmediately { get; set; } = true;
+
+    public CreateNotificationRequest() { }
+    public CreateNotificationRequest(Guid[] usersIds, NotificationType type, bool isEmailNotificationRequired, string? title, string? text,  bool isSendImmediately)
+    {
+        UsersIds = usersIds;
+        Type = type;
+        IsEmailNotificationRequired = isEmailNotificationRequired;
+        Title = title;
+        Text = text;
+        IsSendImmediately = isSendImmediately;
+    }
 }

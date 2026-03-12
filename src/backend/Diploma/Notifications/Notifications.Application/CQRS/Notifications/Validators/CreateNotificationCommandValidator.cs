@@ -8,7 +8,6 @@ public class CreateNotificationCommandValidator : AbstractValidator<CreateNotifi
 {
     public CreateNotificationCommandValidator()
     {
-        RuleFor(x => x.RequestData.Email).NotEmpty();
         RuleFor(x => x.RequestData.Text).NotEmpty();
         RuleFor(x => x.RequestData.Title).NotEmpty();
         

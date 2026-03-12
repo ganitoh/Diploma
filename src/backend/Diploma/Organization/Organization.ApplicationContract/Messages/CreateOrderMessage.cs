@@ -10,5 +10,6 @@ public class CreateOrderMessage
     public int Status { get; set; }
     public int SellerOrganizationId { get; set; }
     public int BuyerOrganizationId { get; set; }
+    public Guid[] UserIds { get; set; } = []; 
     public ICollection<OrderItemDto> Items { get; set; } = new  List<OrderItemDto>();
 }

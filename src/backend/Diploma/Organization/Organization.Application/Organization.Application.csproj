@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Notifications\Notifications.ApplicationContract\Notifications.ApplicationContract.csproj" />
       <ProjectReference Include="..\Organization.ApplicationContract\Organization.ApplicationContract.csproj" />
       <ProjectReference Include="..\Organization.Domain\Organization.Domain.csproj" />
     </ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using Common.Infrastructure.Kafka;
-using Notifications.ApplicationContract.MessagesDto;
+using Organization.ApplicationContract.Messages;
 
 namespace Notifications.API.Consumers;
 
@@ -9,8 +9,8 @@ public static class RegistrationConsumerExtension
     {
         services.Configure<KafkaConfig>(configuration);
 
-        services.AddHostedService<KafkaConsumer<CreateNotificationMessage>>();
-        services.AddScoped<IMessageHandler<CreateNotificationMessage>, NotificationConsumer>();
+        services.AddHostedService<KafkaConsumer<CreateOrderMessage>>();
+        services.AddScoped<IMessageHandler<CreateOrderMessage>, NotificationConsumer>();
         
         return services;
     }

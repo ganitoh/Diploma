@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Analytics.Application.CQRS.Orders.Queries;
 using Analytics.ApplicationContract.Dtos;
 using Analytics.ApplicationContract.Requests;
 using Common.API;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Analytics.API.Controllers;
