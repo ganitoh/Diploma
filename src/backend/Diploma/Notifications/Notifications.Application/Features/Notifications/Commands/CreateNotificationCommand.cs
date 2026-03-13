@@ -1,30 +1,30 @@
 ﻿using AutoMapper;
 using Common.Application;
+using Common.Application.Persistance;
 using MediatR;
+using Notifications.Application.Common.Persistance.Repositories;
 using Notifications.ApplicationContract.Requests;
 using Notifications.Domain.Models;
-using Notifications.Infrastructure.Persistance.Context;
 
 namespace Notifications.Application.CQRS.Notifications.Commands;
 
-/// <summary>
-/// Запрос на создание уведомления
-/// </summary>
 public record CreateNotificationCommand(CreateNotificationRequest RequestData) : IQuery<int>;
 
-/// <inheritdoc />
 internal class CreateNotificationCommandHandler : IQueryHandler<CreateNotificationCommand, int>
 {
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    private readonly NotificationDbContext _context;
+    private readonly INotificationRepository _notificationRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateNotificationCommandHandler(IMapper mapper, IMediator mediator, NotificationDbContext context)
+    public CreateNotificationCommandHandler(IMapper mapper, IMediator mediator, INotificationRepository notificationRepository, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _mediator = mediator;
-        _context = context;
+        _notificationRepository = notificationRepository;
+        _unitOfWork = unitOfWork;
     }
+
 
     public async Task<int> Handle(CreateNotificationCommand request, CancellationToken cancellationToken)
     {
@@ -32,8 +32,8 @@ internal class CreateNotificationCommandHandler : IQueryHandler<CreateNotificati
         notification.CreatedDate = DateTime.UtcNow;
         notification.IsRead = false;
         
-        _context.Notifications.Add(notification);
-        await _context.SaveChangesAsync(cancellationToken);
+        _notificationRepository.Create(notification);
+        await _unitOfWork.CommitAsync(cancellationToken);
         
         if(request.RequestData.IsSendImmediately)
             await _mediator.Send(new SendNotificationCommand(notification.Id), cancellationToken);

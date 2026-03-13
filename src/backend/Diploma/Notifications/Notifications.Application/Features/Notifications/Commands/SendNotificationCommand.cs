@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Common.Application;
 using Common.Application.Exceptions;
+using Common.Application.Persistance;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Notifications.Application.Common.Persistance.Repositories;
 using Notifications.Application.SignalR;
 using Notifications.ApplicationContract.Dtos;
-using Notifications.Infrastructure.Persistance.Context;
 
 namespace Notifications.Application.CQRS.Notifications.Commands;
 
@@ -17,27 +17,35 @@ public record SendNotificationCommand(int NotificationId) : ICommand<Unit>;
 /// <inheritdoc />
 internal class SendNotificationCommandHandler : ICommandHandler<SendNotificationCommand, Unit>
 {
-    private readonly NotificationDbContext _context;
+    private readonly INotificationRepository _notificationRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IHubFactory _hubFactory;
     private readonly IMapper _mapper;
 
-    public SendNotificationCommandHandler(IHubFactory hubFactory, NotificationDbContext context, IMapper mapper)
+    public SendNotificationCommandHandler(
+        INotificationRepository notificationRepository,
+        IUnitOfWork unitOfWork,
+        IHubFactory hubFactory,
+        IMapper mapper)
     {
+        _notificationRepository = notificationRepository;
+        _unitOfWork = unitOfWork;
         _hubFactory = hubFactory;
-        _context = context;
         _mapper = mapper;
     }
 
     public async Task<Unit> Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
-        var notification = await _context.Notifications.FirstOrDefaultAsync(x => x.Id == request.NotificationId, cancellationToken) 
-                           ?? throw new NotFoundException("Уведомление не найдено");
+        var notification = await _notificationRepository.GetByIdAsync(request.NotificationId);
+        
+        if (notification is null)
+            throw new NotFoundException("Уведомление не найдено");
         
         await _hubFactory.GetNotificationHub()
             .SendNotification(_mapper.Map<NotificationDto>(notification), cancellationToken);
         
         notification.SentDate = DateTime.UtcNow;
-        await _context.SaveChangesAsync(cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
         
         return Unit.Value;
     }

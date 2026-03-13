@@ -10,7 +10,6 @@
       <ProjectReference Include="..\..\Organization\Organization.ApplicationContract\Organization.ApplicationContract.csproj" />
       <ProjectReference Include="..\Notifications.ApplicationContract\Notifications.ApplicationContract.csproj" />
       <ProjectReference Include="..\Notifications.Domain\Notifications.Domain.csproj" />
-      <ProjectReference Include="..\Notifications.Infrastructure\Notifications.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
