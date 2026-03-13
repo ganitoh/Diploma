@@ -10,7 +10,6 @@ public static class InfrastructureServiceRegistration
     public static IServiceCollection AddNotificationInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddPersistence(configuration);
-        services.AddDbMigrator();
 
         return services;
     }
