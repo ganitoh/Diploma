@@ -1,8 +1,8 @@
 ﻿using Common.API;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Organizaiton.Application.CQRS.Ratings.Commands;
-using Organizaiton.Application.CQRS.Ratings.Queries;
+using Organizaiton.Application.Features.Ratings.Commands;
+using Organization.Application.Features.Ratings.Queries;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
 

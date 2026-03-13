@@ -3,8 +3,8 @@ using Common.API.Paged;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Organization.Application.CQRS.Products.Commands;
-using Organizaiton.Application.CQRS.Products.Queries;
+using Organization.Application.Features.Products.Commands;
+using Organization.Application.Features.Products.Queries;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
 

@@ -1,4 +1,4 @@
-﻿using Organizaiton.Application.CQRS.Ratings.Commands;
+﻿using Organizaiton.Application.Features.Ratings.Commands;
 using Organization.Domain.Models;
 
 namespace Organizaiton.Application.Common.Persistance;

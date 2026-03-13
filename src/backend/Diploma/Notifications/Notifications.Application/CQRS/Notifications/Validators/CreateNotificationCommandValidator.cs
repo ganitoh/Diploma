@@ -10,6 +10,5 @@ public class CreateNotificationCommandValidator : AbstractValidator<CreateNotifi
     {
         RuleFor(x => x.RequestData.Text).NotEmpty();
         RuleFor(x => x.RequestData.Title).NotEmpty();
-        
     }
 }

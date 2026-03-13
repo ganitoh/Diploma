@@ -2,9 +2,8 @@
 using Common.API.Paged;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Organizaiton.Application.CQRS.Orders.Queries;
-using Organization.Application.CQRS.Orders.Commands;
-using Organization.Application.CQRS.Orders.Queries;
+using Organization.Application.Features.Orders.Commands;
+using Organization.Application.Features.Orders.Queries;
 using Organization.ApplicationContract.Dtos;
 using Organization.ApplicationContract.Requests;
 
