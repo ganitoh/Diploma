@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Notifications.Application.CQRS.Notifications.Commands;
 using Notifications.Application.CQRS.Notifications.Queries;
+using Notifications.Application.Features.Notifications.Queries;
 using Notifications.ApplicationContract.Dtos;
 using Notifications.ApplicationContract.Requests;
 

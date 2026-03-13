@@ -9,12 +9,8 @@ using Notifications.ApplicationContract.Dtos;
 
 namespace Notifications.Application.CQRS.Notifications.Commands;
 
-/// <summary>
-/// Команда для отправки уведомления
-/// </summary>
 public record SendNotificationCommand(int NotificationId) : ICommand<Unit>;
 
-/// <inheritdoc />
 internal class SendNotificationCommandHandler : ICommandHandler<SendNotificationCommand, Unit>
 {
     private readonly INotificationRepository _notificationRepository;
