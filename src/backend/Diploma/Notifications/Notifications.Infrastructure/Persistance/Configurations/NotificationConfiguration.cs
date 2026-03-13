@@ -12,7 +12,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Text).HasMaxLength(512);
+        builder.Property(x => x.Text).HasMaxLength(1024);
         builder.Property(x => x.UserId).IsRequired();
     }
 }
