@@ -6,6 +6,8 @@ public class RatingValue : ValueObject
 {
     public decimal Value { get; }
 
+    protected RatingValue() { }
+    
     public RatingValue(decimal value)
     {
         if(value is < 0 or > 5)

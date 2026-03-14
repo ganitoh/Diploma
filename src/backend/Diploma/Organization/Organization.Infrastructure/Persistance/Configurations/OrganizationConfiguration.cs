@@ -8,7 +8,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Domain.Models.
     public void Configure(EntityTypeBuilder<Domain.Models.Organization> builder)
     {
         builder.ToTable(nameof(Organization).ToLower(), "organization");
-        
         builder.HasKey(x => x.Id);
         
         builder.Property(x => x.Name).IsRequired();

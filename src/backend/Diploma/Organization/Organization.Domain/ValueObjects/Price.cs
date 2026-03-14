@@ -5,7 +5,8 @@ namespace Organization.Domain.Models;
 public class Price : ValueObject
 {
     public decimal Value { get; }
-
+    
+    protected Price() { }
     public Price(decimal value)
     {
         if(value <= 0)
