@@ -12,7 +12,7 @@ using Organization.Infrastructure.Persistance.Context;
 namespace Organization.Infrastructure.Persistance.Migrations
 {
     [DbContext(typeof(OrganizationDbContext))]
-    [Migration("20250620142701_Initial")]
+    [Migration("20260314154601_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Organization.Infrastructure.Persistance.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -36,17 +36,11 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.Property<int>("BuyerOrganizationId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreateDate")
+                    b.Property<DateTime>("CreateAtDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeliveryDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
 
                     b.Property<int>("SellerOrganizationId")
                         .HasColumnType("integer");
@@ -61,11 +55,37 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     b.HasIndex("BuyerOrganizationId");
 
-                    b.HasIndex("ProductId");
-
                     b.HasIndex("SellerOrganizationId");
 
                     b.ToTable("order", "organization");
+                });
+
+            modelBuilder.Entity("Organization.Domain.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("orderitem", "organization");
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Organization", b =>
@@ -76,10 +96,10 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("CreateAtDate")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<string>("Inn")
@@ -92,20 +112,11 @@ namespace Organization.Infrastructure.Persistance.Migrations
                     b.Property<bool>("IsExternal")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("LegalAddress")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("RatingId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("RatingId");
 
                     b.ToTable("organization", "organization");
                 });
@@ -143,7 +154,8 @@ namespace Organization.Infrastructure.Persistance.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
 
                     b.Property<bool>("IsStock")
                         .HasColumnType("boolean");
@@ -155,13 +167,10 @@ namespace Organization.Infrastructure.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<int?>("RatingId")
+                    b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SellOrganizationId")
+                    b.Property<int?>("RatingId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalSold")
@@ -169,9 +178,9 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RatingId");
+                    b.HasIndex("OrganizationId");
 
-                    b.HasIndex("SellOrganizationId");
+                    b.HasIndex("RatingId");
 
                     b.ToTable("product", "organization");
                 });
@@ -186,9 +195,6 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
                     b.Property<int>("Total")
                         .HasColumnType("integer");
-
-                    b.Property<decimal>("Vale")
-                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
@@ -207,14 +213,11 @@ namespace Organization.Infrastructure.Persistance.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<DateTime>("CreateDate")
+                    b.Property<DateTime>("CreateAtDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("RatingId")
                         .HasColumnType("integer");
-
-                    b.Property<decimal>("RatingValue")
-                        .HasColumnType("numeric");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -232,37 +235,98 @@ namespace Organization.Infrastructure.Persistance.Migrations
             modelBuilder.Entity("Organization.Domain.Models.Order", b =>
                 {
                     b.HasOne("Organization.Domain.Models.Organization", "BuyerOrganization")
-                        .WithMany("BuyOrders")
+                        .WithMany()
                         .HasForeignKey("BuyerOrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Organization.Domain.Models.Product", "Product")
-                        .WithMany("Orders")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Organization.Domain.Models.Organization", "SellerOrganization")
-                        .WithMany("SellOrders")
+                        .WithMany()
                         .HasForeignKey("SellerOrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("BuyerOrganization");
 
-                    b.Navigation("Product");
-
                     b.Navigation("SellerOrganization");
+                });
+
+            modelBuilder.Entity("Organization.Domain.Models.OrderItem", b =>
+                {
+                    b.HasOne("Organization.Domain.Models.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Organization.Domain.Models.Price", "PriceUnit", b1 =>
+                        {
+                            b1.Property<int>("OrderItemId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("orderitem", "organization");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId");
+                        });
+
+                    b.OwnsOne("Organization.Domain.Models.Price", "TotalPrice", b1 =>
+                        {
+                            b1.Property<int>("OrderItemId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("orderitem", "organization");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId");
+                        });
+
+                    b.Navigation("Order");
+
+                    b.Navigation("PriceUnit")
+                        .IsRequired();
+
+                    b.Navigation("TotalPrice")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Organization", b =>
                 {
-                    b.HasOne("Organization.Domain.Models.Rating", "Rating")
-                        .WithMany()
-                        .HasForeignKey("RatingId");
+                    b.OwnsOne("Organization.Domain.ValueObjects.Address", "LegalAddress", b1 =>
+                        {
+                            b1.Property<int>("OrganizationId")
+                                .HasColumnType("integer");
 
-                    b.Navigation("Rating");
+                            b1.HasKey("OrganizationId");
+
+                            b1.ToTable("organization", "organization");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrganizationId");
+                        });
+
+                    b.OwnsOne("Organization.Domain.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<int>("OrganizationId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("OrganizationId");
+
+                            b1.ToTable("organization", "organization");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrganizationId");
+                        });
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("LegalAddress")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.OrganizationUser", b =>
@@ -278,19 +342,54 @@ namespace Organization.Infrastructure.Persistance.Migrations
 
             modelBuilder.Entity("Organization.Domain.Models.Product", b =>
                 {
+                    b.HasOne("Organization.Domain.Models.Organization", "Organization")
+                        .WithMany("Products")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Organization.Domain.Models.Rating", "Rating")
                         .WithMany()
                         .HasForeignKey("RatingId");
 
-                    b.HasOne("Organization.Domain.Models.Organization", "SellOrganization")
-                        .WithMany("Products")
-                        .HasForeignKey("SellOrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.OwnsOne("Organization.Domain.Models.Price", "Price", b1 =>
+                        {
+                            b1.Property<int>("ProductId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("ProductId");
+
+                            b1.ToTable("product", "organization");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("Price")
                         .IsRequired();
 
                     b.Navigation("Rating");
+                });
 
-                    b.Navigation("SellOrganization");
+            modelBuilder.Entity("Organization.Domain.Models.Rating", b =>
+                {
+                    b.OwnsOne("Organization.Domain.ValueObjects.RatingValue", "AvgValue", b1 =>
+                        {
+                            b1.Property<int>("RatingId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("RatingId");
+
+                            b1.ToTable("rating", "organization");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RatingId");
+                        });
+
+                    b.Navigation("AvgValue")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.RatingCommentary", b =>
@@ -301,23 +400,35 @@ namespace Organization.Infrastructure.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Organization.Domain.ValueObjects.RatingValue", "RatingValue", b1 =>
+                        {
+                            b1.Property<int>("RatingCommentaryId")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("RatingCommentaryId");
+
+                            b1.ToTable("ratingcommentary", "organization");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RatingCommentaryId");
+                        });
+
                     b.Navigation("Rating");
+
+                    b.Navigation("RatingValue")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Organization.Domain.Models.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Organization", b =>
                 {
-                    b.Navigation("BuyOrders");
-
                     b.Navigation("OrganizationUsers");
 
                     b.Navigation("Products");
-
-                    b.Navigation("SellOrders");
-                });
-
-            modelBuilder.Entity("Organization.Domain.Models.Product", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Organization.Domain.Models.Rating", b =>

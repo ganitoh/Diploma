@@ -13,8 +13,6 @@ public class OrganizationDbContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Rating> Ratings { get; set; }
-
-    public DbSet<OutboxMessage> OutboxMessages { get; set; }
     
     public OrganizationDbContext(DbContextOptions options) 
         : base(options) { }

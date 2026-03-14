@@ -24,8 +24,9 @@ public class RatingConfiguration : IEntityTypeConfiguration<Rating>, IEntityType
         builder.ToTable(nameof(RatingCommentary).ToLower(), "organization");
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Commentary).HasMaxLength(255).IsRequired(false);
-        builder.Property(x => x.RatingValue).IsRequired();
+        builder.Property(x => x.Commentary)
+            .HasMaxLength(255)
+            .IsRequired(false);
         
         builder.OwnsOne(x => x.RatingValue);
         
