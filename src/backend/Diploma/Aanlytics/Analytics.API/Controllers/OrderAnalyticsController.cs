@@ -2,6 +2,7 @@ using Analytics.Application.CQRS.Orders.Queries;
 using Analytics.ApplicationContract.Dtos;
 using Analytics.ApplicationContract.Requests;
 using Common.API;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Analytics.API.Controllers;
@@ -11,6 +12,7 @@ public class OrderAnalyticsController : BaseApiController
     /// <summary>
     /// Получить аналитику по заказам для продающей организации
     /// </summary>
+    [Authorize]
     [HttpPost(nameof(GetOrderAnalyticsBySellerOrganization))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<ICollection<AnalyticsDto>>))]
     public async Task<IActionResult> GetOrderAnalyticsBySellerOrganization([FromBody] GetOrderAnalyticsByStatusRequest request, CancellationToken cancellationToken)

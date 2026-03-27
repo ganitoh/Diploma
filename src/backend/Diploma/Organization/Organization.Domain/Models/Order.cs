@@ -35,7 +35,7 @@ public class Order : Entity<int>
     }
     public void RemoveItem(int orderItemId)
     {
-        _items.RemoveAll(x=>x.Id == orderItemId);
+        _items.RemoveAll(x => x.Id == orderItemId);
         CalculateTotalPrice();
     }
     public void RemoveItem(OrderItem orderItem)
