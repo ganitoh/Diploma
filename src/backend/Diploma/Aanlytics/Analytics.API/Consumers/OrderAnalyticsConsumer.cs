@@ -1,5 +1,4 @@
-﻿using Analytics.Application.CQRS.OrderItems.Commands;
-using Analytics.Application.CQRS.Orders.Commands;
+﻿using Analytics.Application.CQRS.Orders.Commands;
 using Analytics.ApplicationContract.Requests;
 using Common.Infrastructure.Kafka;
 using MediatR;
