@@ -27,8 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="CQRS\OrderItems\Commands\" />
-      <Folder Include="CQRS\OrderItems\Validators\" />
       <Folder Include="CQRS\Organizations\" />
     </ItemGroup>
 
