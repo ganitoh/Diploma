@@ -16,13 +16,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Persistance\Configurations\" />
       <Folder Include="Persistance\Migrations\" />
       <Folder Include="Persistance\Repositories\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Orders.Domain\Orders.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Common">
+        <HintPath>..\..\..\Common\Common\bin\Debug\net9.0\Common.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

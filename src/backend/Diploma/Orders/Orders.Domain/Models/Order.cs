@@ -5,8 +5,8 @@ namespace Orders.Domain.Models;
 
 public class Order : Entity<int>
 {
-    public int BuyerOrganizationId { get; set; }
-    public int SellerOrganizationId { get; set; }
+    public int BuyerOrganizationId { get; private set; }
+    public int SellerOrganizationId { get; private set; }
     public decimal TotalPrice { get; private set; }
     public DateTime? DeliveryDate { get; private set; }
     public DateTime CreateAtDate { get; private set; }
